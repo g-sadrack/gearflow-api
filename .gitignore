@@ -152,6 +152,9 @@ buildNumber.properties
 .mvn/timing.properties
 # https://github.com/takari/maven-wrapper#usage-without-binary-jar
 .mvn/wrapper/maven-wrapper.jar
+.mvn
+mvnw
+mvnw.cmd
 
 # Eclipse m2e generated files
 # Eclipse Core
@@ -202,5 +205,11 @@ gradle-app.setting
 ### Gradle Patch ###
 # Java heap dump
 *.hprof
+
+## GIT ##
+.gitattributes
+
+## MAVEN ##
+
 
 # End of https://www.toptal.com/developers/gitignore/api/java,intellij,gradle,maven,visualstudiocode
