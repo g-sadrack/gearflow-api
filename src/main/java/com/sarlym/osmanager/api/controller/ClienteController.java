@@ -1,11 +1,10 @@
 package com.sarlym.osmanager.api.controller;
 
+import com.sarlym.osmanager.api.dto.request.ClienteRequest;
 import com.sarlym.osmanager.domain.model.Cliente;
 import com.sarlym.osmanager.domain.service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,6 +18,11 @@ public class ClienteController {
     @GetMapping
     public List<Cliente> listarClientes(){
         return clienteService.clientes();
+    }
+
+    @PostMapping
+    public Cliente cadastrarCliente(@RequestBody ClienteRequest clienteRequest){
+        return clienteService.cadastrarCliente(clienteRequest);
     }
 
 }

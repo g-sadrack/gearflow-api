@@ -2,6 +2,10 @@ package com.sarlym.osmanager.domain.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -17,5 +21,9 @@ public class Cliente {
     private String nome;
     private String telefone;
     private String email;
+    //@CreationTimestamp
+    //private LocalDateTime dataCadastro;
+    //@UpdateTimestamp
+    //private LocalDateTime dataAtualizacao;
 
 }
