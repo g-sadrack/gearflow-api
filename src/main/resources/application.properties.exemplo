@@ -3,7 +3,7 @@
 
 spring.application.name=os-manager
 
-spring.datasource.url=jdbc:mysql://localhost:3306/dev_osmanager?createDatabaseIfNotExists=true&serverTimezone=UTC
+spring.datasource.url=jdbc:mysql://localhost:3306/dev_osmanager?createDatabaseIfNotExist=true&serverTimezone=UTC
 spring.datasource.username=root
 spring.datasource.password=password
 
