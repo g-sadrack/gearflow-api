@@ -12,10 +12,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/cliente")
 public class ClienteController {
+
     @Autowired
     private ClienteService clienteService;
+
     @GetMapping
     public List<Cliente> listarClientes(){
         return clienteService.clientes();
     }
+
 }
