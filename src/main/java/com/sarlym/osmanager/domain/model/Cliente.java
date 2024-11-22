@@ -21,9 +21,9 @@ public class Cliente {
     private String nome;
     private String telefone;
     private String email;
-    //@CreationTimestamp
-    //private LocalDateTime dataCadastro;
-    //@UpdateTimestamp
-    //private LocalDateTime dataAtualizacao;
+    @CreationTimestamp
+    private LocalDateTime dataCadastro;
+    @UpdateTimestamp
+    private LocalDateTime dataAtualizacao;
 
 }
