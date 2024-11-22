@@ -15,6 +15,11 @@ public class ClienteController {
     @Autowired
     private ClienteService clienteService;
 
+    @GetMapping("/{id}")
+    public ClienteDTO buscarCliente(@PathVariable Long id){
+        return clienteService.buscarCliente(id);
+    }
+
     @GetMapping
     public List<ClienteDTO> listarClientes(){
         return clienteService.clientes();
