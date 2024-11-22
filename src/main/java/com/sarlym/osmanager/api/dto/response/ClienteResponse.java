@@ -1,4 +1,4 @@
-package com.sarlym.osmanager.api.responseconverter;
+package com.sarlym.osmanager.api.dto.response;
 
 import com.sarlym.osmanager.api.dto.request.ClienteRequest;
 import com.sarlym.osmanager.domain.model.Cliente;
@@ -7,11 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 @Controller
-public class ClienteConverter {
+public class ClienteResponse {
     @Autowired
     private ModelMapper modelMapper;
 
-    public Cliente paraModelo(ClienteRequest clienteRequest) {
+    public Cliente paraModel(ClienteRequest clienteRequest) {
         return modelMapper.map(clienteRequest, Cliente.class);
     }
 
