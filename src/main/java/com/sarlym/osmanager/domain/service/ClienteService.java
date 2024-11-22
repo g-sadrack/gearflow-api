@@ -7,6 +7,7 @@ import com.sarlym.osmanager.api.dto.response.ClienteResponse;
 import com.sarlym.osmanager.domain.model.Cliente;
 import com.sarlym.osmanager.domain.repository.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,8 +25,9 @@ public class ClienteService {
         this.clienteDTOConverter = clienteDTOConverter;
     }
 
-    public ClienteDTO buscarCliente(Long id) {
-        return clienteDTOConverter.paraDTO(clienteRepository.findById(id).orElseThrow(() -> new RuntimeException("Cliente não com ID não encontrado")));
+    public Cliente buscarClienteOuErro(Long id) {
+        return clienteRepository.findById(id).orElseThrow(
+                () -> new RuntimeException("Cliente não com ID não encontrado"));
     }
 
     public List<ClienteDTO> clientes() {
@@ -35,5 +37,22 @@ public class ClienteService {
     public ClienteDTO cadastrarCliente(ClienteRequest clienteRequest) {
         Cliente cliente = clienteResponse.paraModel(clienteRequest);
         return clienteDTOConverter.paraDTO(clienteRepository.save(cliente));
+    }
+
+    public ClienteDTO alterarCliente(Long id, ClienteRequest clienteRequest) {
+       Cliente clienteAntigo = buscarClienteOuErro(id);
+       Cliente cliente = clienteResponse.paraModel(clienteRequest);
+       cliente.setId(clienteAntigo.getId());
+       return clienteDTOConverter.paraDTO(clienteRepository.save(cliente));
+    }
+
+
+    public void deletarCliente(Long id) {
+        try {
+            Cliente cliente = buscarClienteOuErro(id);
+            clienteRepository.delete(cliente);
+        } catch (EmptyResultDataAccessException e){
+            throw new RuntimeException("Item não pode ser deletado");
+        }
     }
 }
