@@ -24,6 +24,10 @@ public class ClienteService {
         this.clienteDTOConverter = clienteDTOConverter;
     }
 
+    public ClienteDTO buscarCliente(Long id) {
+        return clienteDTOConverter.paraDTO(clienteRepository.findById(id).orElseThrow(() -> new RuntimeException("Cliente não com ID não encontrado")));
+    }
+
     public List<ClienteDTO> clientes() {
         return clienteDTOConverter.paraDTOLista(clienteRepository.findAll());
     }
