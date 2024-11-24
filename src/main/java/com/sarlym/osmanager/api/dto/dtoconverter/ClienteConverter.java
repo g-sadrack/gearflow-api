@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
-public class ClienteDTOConverter {
+public class ClienteConverter {
     @Autowired
     private ModelMapper modelMapper;
 
