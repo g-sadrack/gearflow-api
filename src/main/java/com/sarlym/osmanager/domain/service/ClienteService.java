@@ -2,6 +2,8 @@ package com.sarlym.osmanager.domain.service;
 
 import com.sarlym.osmanager.api.dto.request.ClienteRequest;
 import com.sarlym.osmanager.api.dto.response.ClienteResponse;
+import com.sarlym.osmanager.domain.exception.ClienteException;
+import com.sarlym.osmanager.domain.exception.EmailJaExistenteException;
 import com.sarlym.osmanager.domain.model.Cliente;
 import com.sarlym.osmanager.domain.repository.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +25,7 @@ public class ClienteService {
 
     public Cliente buscarClienteOuErro(Long id) {
         return clienteRepository.findById(id).orElseThrow(
-                () -> new RuntimeException("Cliente não com ID não encontrado"));
+                () -> new ClienteException("Cliente não com ID não encontrado"));
     }
 
     public List<Cliente> clientes() {
@@ -32,7 +34,10 @@ public class ClienteService {
 
     public Cliente cadastrarCliente(ClienteRequest clienteRequest) {
         Cliente cliente = clienteResponse.paraModel(clienteRequest);
-        return clienteRepository.save(cliente);
+        if (clienteRepository.existsByEmail(cliente.getEmail())){
+            throw  new EmailJaExistenteException("Email " + cliente.getEmail() + " já cadastrado no sistema");
+        }
+        return cliente;
     }
 
     public Cliente alterarCliente(Long id, ClienteRequest clienteRequest) {
@@ -48,7 +53,7 @@ public class ClienteService {
             Cliente cliente = buscarClienteOuErro(id);
             clienteRepository.delete(cliente);
         } catch (EmptyResultDataAccessException e){
-            throw new RuntimeException("Item não pode ser deletado");
+            throw new ClienteException("Cliente não pode ser deletado pois não foi encontrado");
         }
     }
 }
