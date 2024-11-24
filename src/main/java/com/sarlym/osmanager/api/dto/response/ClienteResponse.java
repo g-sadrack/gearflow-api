@@ -15,7 +15,4 @@ public class ClienteResponse {
         return modelMapper.map(clienteRequest, Cliente.class);
     }
 
-    public void copiaDTOparaModeloDominio(ClienteRequest clienteRequest, Cliente cliente){
-        modelMapper.map(clienteRequest, cliente);
-    }
 }
