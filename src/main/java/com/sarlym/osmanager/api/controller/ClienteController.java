@@ -1,8 +1,8 @@
 package com.sarlym.osmanager.api.controller;
 
 import com.sarlym.osmanager.api.dto.ClienteDTO;
+import com.sarlym.osmanager.api.dto.dtoconverter.ClienteConverter;
 import com.sarlym.osmanager.api.dto.request.ClienteRequest;
-import com.sarlym.osmanager.domain.model.Cliente;
 import com.sarlym.osmanager.domain.service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,26 +16,28 @@ public class ClienteController {
 
     @Autowired
     private ClienteService clienteService;
+    @Autowired
+    private ClienteConverter clienteConverter;
 
     @GetMapping("/{id}")
-    public Cliente buscarCliente(@PathVariable Long id){
-        return clienteService.buscarClienteOuErro(id);
+    public ClienteDTO buscarCliente(@PathVariable Long id){
+        return clienteConverter.paraDTO(clienteService.buscarClienteOuErro(id));
     }
 
     @GetMapping
     public List<ClienteDTO> listarClientes(){
-        return clienteService.clientes();
+        return clienteConverter.paraDTOLista(clienteService.clientes());
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ClienteDTO cadastrarCliente(@RequestBody ClienteRequest clienteRequest){
-        return clienteService.cadastrarCliente(clienteRequest);
+        return clienteConverter.paraDTO(clienteService.cadastrarCliente(clienteRequest));
     }
 
     @PutMapping("/{id}")
     public ClienteDTO alterarCliente(@PathVariable Long id, @RequestBody ClienteRequest clienteRequest){
-        return clienteService.alterarCliente(id,clienteRequest);
+        return clienteConverter.paraDTO(clienteService.alterarCliente(id,clienteRequest));
     }
 
     @DeleteMapping("/{id}")
