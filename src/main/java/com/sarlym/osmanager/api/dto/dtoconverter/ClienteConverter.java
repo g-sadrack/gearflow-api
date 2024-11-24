@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 public class ClienteConverter {
@@ -19,6 +18,6 @@ public class ClienteConverter {
     }
 
     public List<ClienteDTO> paraDTOLista (List<Cliente> clientes){
-        return clientes.stream().map(this::paraDTO).collect(Collectors.toList());
+        return clientes.stream().map(this::paraDTO).toList();
     }
 }
