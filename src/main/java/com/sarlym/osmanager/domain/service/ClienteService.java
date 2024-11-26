@@ -25,7 +25,7 @@ public class ClienteService {
 
     public Cliente buscarClienteOuErro(Long id) {
         return clienteRepository.findById(id).orElseThrow(
-                () -> new ClienteException("Cliente com ID " + id + " não encontrado"));
+                () -> new ClienteException("Cliente não pode ser deletado pois não foi encontrado"));
     }
 
     public List<Cliente> clientes() {
