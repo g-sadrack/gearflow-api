@@ -25,7 +25,7 @@ public class ClienteService {
 
     public Cliente buscarClienteOuErro(Long id) {
         return clienteRepository.findById(id).orElseThrow(
-                () -> new ClienteException("Cliente não com ID não encontrado"));
+                () -> new ClienteException("Cliente não pode ser deletado pois não foi encontrado"));
     }
 
     public List<Cliente> clientes() {
@@ -37,7 +37,7 @@ public class ClienteService {
         if (clienteRepository.existsByEmail(cliente.getEmail())){
             throw  new EmailJaExistenteException("Email " + cliente.getEmail() + " já cadastrado no sistema");
         }
-        return cliente;
+        return clienteRepository.save(cliente);
     }
 
     public Cliente alterarCliente(Long id, ClienteRequest clienteRequest) {
