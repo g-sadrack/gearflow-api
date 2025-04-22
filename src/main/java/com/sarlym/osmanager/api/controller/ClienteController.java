@@ -17,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/cliente", produces = {"application/json"})
-@Tag(name = "OS-Manager")
+@Tag(name = "Clientes", description = "Operações relacionadas aos clientes")
 public class ClienteController {
 
     @Autowired
@@ -33,8 +33,8 @@ public class ClienteController {
     })
     @GetMapping("/{id}")
     public ClienteDTO buscarCliente(
-            @Parameter(name = "id", description = "ID único do cliente", required = true, example = "1"
-            )@PathVariable Long id){
+            @Parameter(name = "id", description = "ID único do cliente", required = true, example = "1")
+            @PathVariable(value = "id") Long id){
         return clienteConverter.paraDTO(clienteService.buscarClienteOuErro(id));
     }
 
@@ -63,9 +63,14 @@ public class ClienteController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Alteração realizada com sucesso"),
             @ApiResponse(responseCode = "404", description = "ID de cliente não encontrado"),
+
     })
     @PutMapping("/{id}")
-    public ClienteDTO alterarCliente(@PathVariable Long id, @RequestBody ClienteRequest clienteRequest){
+    public ClienteDTO alterarCliente(
+            @Parameter(name = "id", description = "ID único do cliente", required = true, example = "1")
+            @PathVariable(value = "id") Long id,
+            @RequestBody ClienteRequest clienteRequest){
+
         return clienteConverter.paraDTO(clienteService.alterarCliente(id,clienteRequest));
     }
 
@@ -75,7 +80,9 @@ public class ClienteController {
             @ApiResponse(responseCode = "404", description = "ID de cliente não encontrado"),
     })
     @DeleteMapping("/{id}")
-    public void deletarCliente(@PathVariable Long id){
+    public void deletarCliente(
+            @Parameter(name = "id", description = "ID único do cliente", required = true, example = "1")
+            @PathVariable(value = "id" ) Long id) {
         clienteService.deletarCliente(id);
     }
 

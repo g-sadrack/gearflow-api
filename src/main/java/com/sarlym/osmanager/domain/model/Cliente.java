@@ -17,10 +17,11 @@ public class Cliente {
     @Id
     @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
     private String nome;
     private String telefone;
     private String email;
+    private String cpf;
     @CreationTimestamp
     private LocalDateTime dataCadastro;
     @UpdateTimestamp
