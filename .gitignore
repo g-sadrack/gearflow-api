@@ -164,6 +164,7 @@ mvnw.cmd
 .classpath
 
 ### VisualStudioCode ###
+.vscode
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
