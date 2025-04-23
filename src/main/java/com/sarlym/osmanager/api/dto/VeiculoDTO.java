@@ -9,11 +9,11 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ClienteDTO {
-
-    private String nome;
-    private String telefone;
-    private String cpf;
-    private String email;
-
+public class VeiculoDTO {
+    private String placa;
+    private String marca;
+    private String modelo;
+    private Integer ano;
+    private String cor;
+    private Integer quilometragem;
 }
