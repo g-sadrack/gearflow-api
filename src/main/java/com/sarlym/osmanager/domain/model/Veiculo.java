@@ -14,7 +14,7 @@ public class Veiculo {
     @Id
     @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
     private String placa;
     private String marca;
     private String modelo;

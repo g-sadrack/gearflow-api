@@ -174,9 +174,9 @@ class ClienteServiceTest {
     }
 
     void startCliente() {
-        clienteAntigo = new Cliente(2L, "Antigo Nome", "61 98544-8654", "antigo@email.com", LocalDateTime.now(), LocalDateTime.now());
-        clienteAtualizado = new Cliente(3L, "Novo Nome", "61 98544-8654", "novo@email.com", LocalDateTime.now(), LocalDateTime.now());
-        cliente = new Cliente(1L, "Guarda Belo", "61 98544-8654", "guarda22belo@gmail.com", LocalDateTime.now(), LocalDateTime.now());
+        clienteAntigo = new Cliente(2L, "Antigo Nome", "61 98544-8654", "antigo@email.com"," ", LocalDateTime.now(), LocalDateTime.now());
+        clienteAtualizado = new Cliente(3L, "Novo Nome", "61 98544-8654", "novo@email.com", " ", LocalDateTime.now(), LocalDateTime.now());
+        cliente = new Cliente(1L, "Guarda Belo", "61 98544-8654", "guarda22belo@gmail.com"," ", LocalDateTime.now(), LocalDateTime.now());
         clienteRequest = new ClienteRequest("Batatinha", "61 99851-3445", "batatinha123@email.com");
 
         clientes = new ArrayList<>();
