@@ -15,10 +15,14 @@ import com.sarlym.osmanager.domain.service.MecanicoService;
 @RequestMapping("/mecanico")
 public class MecanicoController {
 
+    private final MecanicoService mecanicoService;
+    private final MecanicoConverter mecanicoConverter;
+
     @Autowired
-    private MecanicoService mecanicoService;
-    @Autowired
-    private MecanicoConverter mecanicoConverter;
+    public MecanicoController(MecanicoService mecanicoService, MecanicoConverter mecanicoConverter) {
+        this.mecanicoService = mecanicoService;
+        this.mecanicoConverter = mecanicoConverter;
+    }
 
     @GetMapping("/{id}")
     public MecanicoDTO buscarMecanico(@PathVariable Long id) {
@@ -42,6 +46,7 @@ public class MecanicoController {
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletarMecanico(@PathVariable Long id) {
         mecanicoService.excluirMecanico(id);
     }

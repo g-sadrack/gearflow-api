@@ -6,6 +6,7 @@ import com.sarlym.osmanager.api.dto.request.VeiculoRequest;
 import com.sarlym.osmanager.domain.service.VeiculoService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,6 +36,7 @@ public class VeiculoController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public VeiculoDTO cadastrarVeiculo(@RequestBody VeiculoRequest veiculoRequest) {
         return veiculosConverter.paraDTO(veiculoService.cadastrarVeiculo(veiculoRequest));
     }
@@ -45,6 +47,7 @@ public class VeiculoController {
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletarVeiculo(@PathVariable Long id) {
         veiculoService.deletarVeiculo(id);
     }
