@@ -4,13 +4,14 @@ import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Component;
 
 import com.sarlym.osmanager.api.dto.MecanicoDTO;
 import com.sarlym.osmanager.domain.model.Mecanico;
 
-@Controller
+@Component
 public class MecanicoConverter {
+
     @Autowired
     private ModelMapper modelMapper;
 
@@ -21,4 +22,5 @@ public class MecanicoConverter {
     public List<MecanicoDTO> paraDTOLista(List<Mecanico> mecanicos) {
         return mecanicos.stream().map(this::paraDTO).toList();
     }
+    
 }
