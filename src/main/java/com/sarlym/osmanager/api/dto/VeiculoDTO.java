@@ -1,19 +1,16 @@
 package com.sarlym.osmanager.api.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@Data
 public class VeiculoDTO {
+
+    private Long id;
     private String placa;
     private String marca;
     private String modelo;
     private Integer ano;
     private String cor;
     private Integer quilometragem;
+
 }
