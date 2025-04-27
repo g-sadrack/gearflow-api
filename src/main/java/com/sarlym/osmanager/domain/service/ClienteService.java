@@ -6,13 +6,13 @@ import com.sarlym.osmanager.domain.exception.ClienteException;
 import com.sarlym.osmanager.domain.exception.EmailJaExistenteException;
 import com.sarlym.osmanager.domain.model.Cliente;
 import com.sarlym.osmanager.domain.repository.ClienteRepository;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class ClienteService {
+
     private final ClienteResponse clienteResponse;
     private final ClienteRepository clienteRepository;
 
@@ -32,26 +32,22 @@ public class ClienteService {
 
     public Cliente cadastrarCliente(ClienteRequest clienteRequest) {
         Cliente cliente = clienteResponse.paraModel(clienteRequest);
-        if (clienteRepository.existsByEmail(cliente.getEmail())){
-            throw  new EmailJaExistenteException("Email " + cliente.getEmail() + " já cadastrado no sistema");
+        if (clienteRepository.existsByEmail(cliente.getEmail())) {
+            throw new EmailJaExistenteException("Email " + cliente.getEmail() + " já cadastrado no sistema");
         }
         return clienteRepository.save(cliente);
     }
 
     public Cliente alterarCliente(Long id, ClienteRequest clienteRequest) {
-       Cliente clienteAntigo = buscarClienteOuErro(id);
-       Cliente cliente = clienteResponse.paraModel(clienteRequest);
-       cliente.setId(clienteAntigo.getId());
-       return clienteRepository.save(cliente);
+        Cliente clienteAntigo = buscarClienteOuErro(id);
+        Cliente cliente = clienteResponse.paraModel(clienteRequest);
+        cliente.setId(clienteAntigo.getId());
+        return clienteRepository.save(cliente);
     }
 
-
     public void deletarCliente(Long id) {
-        try {
-            Cliente cliente = buscarClienteOuErro(id);
-            clienteRepository.delete(cliente);
-        } catch (EmptyResultDataAccessException e){
-            throw new ClienteException("Cliente não pode ser deletado pois não foi encontrado");
-        }
+        Cliente cliente = buscarClienteOuErro(id);
+        clienteRepository.delete(cliente);
+        clienteRepository.flush();
     }
 }
