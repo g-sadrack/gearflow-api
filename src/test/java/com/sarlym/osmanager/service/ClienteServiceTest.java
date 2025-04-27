@@ -41,38 +41,37 @@ class ClienteServiceTest {
     private ClienteService clienteService;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         MockitoAnnotations.openMocks(this);
-        clienteService = new ClienteService( clienteRepository,  clienteResponse);
+        clienteService = new ClienteService(clienteRepository, clienteResponse);
         startCliente();
     }
 
     @Test
-    void quandoBuscarClientePorIdRetonarApenasUm(){
+    void quandoBuscarClientePorIdRetonarApenasUm() {
         when(clienteRepository.findById(anyLong())).thenReturn(Optional.of(cliente));
 
-        Cliente cliente1 =  clienteService.buscarClienteOuErro(1L);
+        Cliente cliente1 = clienteService.buscarClienteOuErro(1L);
 
         assertNotNull(cliente1);
         assertEquals(cliente.getId(), cliente1.getId());
         verify(clienteRepository, times(1)).findById(cliente.getId());
     }
 
-//    @Test
-//    void quandoBuscarClienteInexistenteRetornarErro(){
-//        when(clienteRepository.findById(anyLong())).thenReturn(Optional.empty());
-//
-//        ClienteException exception = assertThrows(ClienteException.class, () -> {
-//            clienteService.buscarClienteOuErro(2L);
-//        });
-//
-//
-//        assertEquals("Cliente não pode ser deletado pois não foi encontrado", exception.getMessage());
-//        verify(clienteRepository, times(1)).findById(2L);
-//    }
+    @Test
+    void quandoBuscarClienteInexistenteRetornarErro() {
+        when(clienteRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        ClienteException exception = assertThrows(ClienteException.class, () -> {
+            clienteService.buscarClienteOuErro(2L);
+        });
+
+        assertEquals("Cliente não pode ser deletado pois não foi encontrado", exception.getMessage());
+        verify(clienteRepository, times(1)).findById(2L);
+    }
 
     @Test
-    void quandoListarClienteEntaoRetornarSucesso(){
+    void quandoListarClienteEntaoRetornarSucesso() {
         when(clienteRepository.findAll()).thenReturn(clientes);
 
         List<Cliente> clienteList = clienteService.clientes();
@@ -92,7 +91,7 @@ class ClienteServiceTest {
     }
 
     @Test
-    void quandoCadastrarClienteEntaoReotrnarSucesso(){
+    void quandoCadastrarClienteEntaoReotrnarSucesso() {
         when(clienteResponse.paraModel(clienteRequest)).thenReturn(cliente);
         when(clienteRepository.existsByEmail(cliente.getEmail())).thenReturn(false);
         when(clienteRepository.save(cliente)).thenReturn(cliente);
@@ -134,20 +133,21 @@ class ClienteServiceTest {
         assertEquals(clienteAtualizado.getNome(), resultado.getNome());
     }
 
-//    @Test
-//    void quandoAlterarClienteInexistenteEntaoLancarExcecao() {
-//        when(clienteRepository.findById(anyLong())).thenReturn(Optional.empty());
-//
-//        ClienteException exception = assertThrows(ClienteException.class, () -> {
-//            clienteService.alterarCliente(99L, clienteRequest);
-//        });
-//
-//        assertEquals("Cliente não pode ser deletado pois não foi encontrado", exception.getMessage());
-//
-//        verify(clienteRepository, times(1)).findById(99L);
-//        verify(clienteResponse, never()).paraModel(any());
-//        verify(clienteRepository, never()).save(any());
-//    }
+    @Test
+    void quandoAlterarClienteInexistenteEntaoLancarExcecao() {
+        when(clienteRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        ClienteException exception = assertThrows(ClienteException.class, () -> {
+            clienteService.alterarCliente(99L, clienteRequest);
+        });
+
+        assertEquals("Cliente não pode ser deletado pois não foi encontrado",
+                exception.getMessage());
+
+        verify(clienteRepository, times(1)).findById(99L);
+        verify(clienteResponse, never()).paraModel(any());
+        verify(clienteRepository, never()).save(any());
+    }
 
     @Test
     void quandoExcluirClienteEntaoDeveRemoverComSucesso() {
@@ -174,9 +174,12 @@ class ClienteServiceTest {
     }
 
     void startCliente() {
-        clienteAntigo = new Cliente(2L, "Antigo Nome", "61 98544-8654", "antigo@email.com"," ", LocalDateTime.now(), LocalDateTime.now());
-        clienteAtualizado = new Cliente(3L, "Novo Nome", "61 98544-8654", "novo@email.com", " ", LocalDateTime.now(), LocalDateTime.now());
-        cliente = new Cliente(1L, "Guarda Belo", "61 98544-8654", "guarda22belo@gmail.com"," ", LocalDateTime.now(), LocalDateTime.now());
+        clienteAntigo = new Cliente(2L, "Antigo Nome", "61 98544-8654", "antigo@email.com", " ", LocalDateTime.now(),
+                LocalDateTime.now());
+        clienteAtualizado = new Cliente(3L, "Novo Nome", "61 98544-8654", "novo@email.com", " ", LocalDateTime.now(),
+                LocalDateTime.now());
+        cliente = new Cliente(1L, "Guarda Belo", "61 98544-8654", "guarda22belo@gmail.com", " ", LocalDateTime.now(),
+                LocalDateTime.now());
         clienteRequest = new ClienteRequest("Batatinha", "61 99851-3445", "batatinha123@email.com");
 
         clientes = new ArrayList<>();
