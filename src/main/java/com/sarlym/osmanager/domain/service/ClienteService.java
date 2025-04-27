@@ -6,7 +6,6 @@ import com.sarlym.osmanager.domain.exception.ClienteException;
 import com.sarlym.osmanager.domain.exception.EmailJaExistenteException;
 import com.sarlym.osmanager.domain.model.Cliente;
 import com.sarlym.osmanager.domain.repository.ClienteRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +16,6 @@ public class ClienteService {
     private final ClienteResponse clienteResponse;
     private final ClienteRepository clienteRepository;
 
-    @Autowired
     public ClienteService(ClienteRepository clienteRepository, ClienteResponse clienteResponse) {
         this.clienteRepository = clienteRepository;
         this.clienteResponse = clienteResponse;

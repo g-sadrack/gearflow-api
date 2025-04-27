@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +22,6 @@ public class ClienteController {
     private final ClienteService clienteService;
     private final ClienteConverter clienteConverter;
     
-    @Autowired
     public ClienteController(ClienteService clienteService, ClienteConverter clienteConverter) {
         this.clienteService = clienteService;
         this.clienteConverter = clienteConverter;

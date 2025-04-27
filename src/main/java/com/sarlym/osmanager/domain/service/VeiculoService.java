@@ -5,7 +5,6 @@ import com.sarlym.osmanager.api.dto.response.VeiculoResponse;
 import com.sarlym.osmanager.domain.exception.NegocioException;
 import com.sarlym.osmanager.domain.model.Veiculo;
 import com.sarlym.osmanager.domain.repository.VeiculoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,7 +15,6 @@ public class VeiculoService {
     private final VeiculoRepository veiculoRepository;
     private final VeiculoResponse veiculoResponse;
 
-    @Autowired
     public VeiculoService(VeiculoRepository veiculoRepository, VeiculoResponse veiculoResponse) {
         this.veiculoRepository = veiculoRepository;
         this.veiculoResponse = veiculoResponse;
