@@ -5,7 +5,9 @@ import com.sarlym.osmanager.api.dto.response.VeiculoResponse;
 import com.sarlym.osmanager.domain.exception.NegocioException;
 import com.sarlym.osmanager.domain.model.Veiculo;
 import com.sarlym.osmanager.domain.repository.VeiculoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import jakarta.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,25 +18,27 @@ public class VeiculoService {
     private final VeiculoRepository veiculoRepository;
     private final VeiculoResponse veiculoResponse;
 
-    @Autowired
     public VeiculoService(VeiculoRepository veiculoRepository, VeiculoResponse veiculoResponse) {
         this.veiculoRepository = veiculoRepository;
         this.veiculoResponse = veiculoResponse;
     }
 
     public Veiculo buscarVeiculoOuErro(Long id) {
-        return veiculoRepository.findById(id).orElseThrow(() -> new NegocioException("Veiculo nao encontrado"));
+        return veiculoRepository.findById(id)
+                .orElseThrow(() -> new NegocioException("Veiculo com id %d nao encontrado"));
     }
 
     public List<Veiculo> listarVeiculos() {
         return veiculoRepository.findAll();
     }
 
+    @Transactional
     public Veiculo cadastrarVeiculo(VeiculoRequest veiculoRequest) {
         Veiculo veiculo = veiculoResponse.paraModel(veiculoRequest);
         return veiculoRepository.save(veiculo);
     }
 
+    @Transactional
     public Veiculo alterarVeiculo(Long id, VeiculoRequest veiculoRequest) {
         Veiculo veiculoAntigo = buscarVeiculoOuErro(id);
         Veiculo veiculo = veiculoResponse.paraModel(veiculoRequest);
@@ -42,8 +46,11 @@ public class VeiculoService {
         return veiculoRepository.save(veiculo);
     }
 
+    @Transactional
     public void deletarVeiculo(Long id) {
-        veiculoRepository.deleteById(id);
+        Veiculo veiculo = buscarVeiculoOuErro(id);
+        veiculoRepository.delete(veiculo);
+        veiculoRepository.flush();
     }
 
 }
