@@ -6,11 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.sarlym.osmanager.api.dto.ServicoDTO;
 import com.sarlym.osmanager.domain.model.Servico;
 
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Controller
+@Component
 public class ServicoConverter {
     
     @Autowired

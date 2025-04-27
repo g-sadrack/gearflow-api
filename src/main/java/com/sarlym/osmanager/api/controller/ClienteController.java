@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,10 +19,13 @@ import java.util.List;
 @Tag(name = "Clientes", description = "Operações relacionadas aos clientes")
 public class ClienteController {
 
-    @Autowired
-    private ClienteService clienteService;
-    @Autowired
-    private ClienteConverter clienteConverter;
+    private final ClienteService clienteService;
+    private final ClienteConverter clienteConverter;
+    
+    public ClienteController(ClienteService clienteService, ClienteConverter clienteConverter) {
+        this.clienteService = clienteService;
+        this.clienteConverter = clienteConverter;
+    }
 
     @Operation(summary = "Realiza busca de cliente por ID", description = "Busca um cliente no sistema utilizando o ID como parametro.",method = "GET")
     @ApiResponses(value = {
@@ -80,6 +82,7 @@ public class ClienteController {
             @ApiResponse(responseCode = "404", description = "ID de cliente não encontrado"),
     })
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletarCliente(
             @Parameter(name = "id", description = "ID único do cliente", required = true, example = "1")
             @PathVariable(value = "id" ) Long id) {

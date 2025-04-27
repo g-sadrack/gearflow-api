@@ -4,11 +4,11 @@ import com.sarlym.osmanager.api.dto.VeiculoDTO;
 import com.sarlym.osmanager.domain.model.Veiculo;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Controller
+@Component
 public class VeiculoConverter {
 
     @Autowired
@@ -21,6 +21,5 @@ public class VeiculoConverter {
     public List<VeiculoDTO> paraDTOLista(List<Veiculo> veiculos) {
         return veiculos.stream().map(this::paraDTO).toList();
     }
-
 
 }
