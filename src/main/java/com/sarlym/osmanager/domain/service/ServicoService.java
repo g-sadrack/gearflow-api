@@ -2,7 +2,6 @@ package com.sarlym.osmanager.domain.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.sarlym.osmanager.api.dto.request.ServicoRequest;
@@ -17,7 +16,6 @@ public class ServicoService {
     private ServicoRepository servicoRepository;
     private ServicoResponse servicoResponse;
 
-    @Autowired
     public ServicoService(ServicoRepository servicoRepository, ServicoResponse servicoResponse) {
         this.servicoRepository = servicoRepository;
         this.servicoResponse = servicoResponse;
