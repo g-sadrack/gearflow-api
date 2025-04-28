@@ -26,7 +26,7 @@ public class MecanicoService {
 
     public Mecanico buscarMecanicoOuErro(Long id) {
         return mecanicoRepository.findById(id).orElseThrow(
-                () -> new EntidadeNaoEncontradaException(ACAO_NAO_PODE_SER_REALIZADA_MECANICO_NAO_ENCONTRADO));
+                () -> new EntidadeNaoEncontradaException(String.format(ACAO_NAO_PODE_SER_REALIZADA_MECANICO_NAO_ENCONTRADO, id)));
     }
 
     public List<Mecanico> listarMecanicos() {
