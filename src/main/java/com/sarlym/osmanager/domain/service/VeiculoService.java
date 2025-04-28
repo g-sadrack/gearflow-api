@@ -15,6 +15,7 @@ import java.util.List;
 @Service
 public class VeiculoService {
 
+    private static final String VEICULO_NAO_ENCONTRADO = "Veiculo com id %d nao encontrado";
     private final VeiculoRepository veiculoRepository;
     private final VeiculoResponse veiculoResponse;
 
@@ -25,7 +26,7 @@ public class VeiculoService {
 
     public Veiculo buscarVeiculoOuErro(Long id) {
         return veiculoRepository.findById(id)
-                .orElseThrow(() -> new NegocioException("Veiculo com id %d nao encontrado"));
+                .orElseThrow(() -> new NegocioException(String.format(VEICULO_NAO_ENCONTRADO, id)));
     }
 
     public List<Veiculo> listarVeiculos() {
