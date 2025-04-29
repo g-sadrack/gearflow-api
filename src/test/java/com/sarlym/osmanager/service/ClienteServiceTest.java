@@ -5,6 +5,7 @@ import com.sarlym.osmanager.api.dto.response.ClienteResponse;
 import com.sarlym.osmanager.domain.exception.ClienteException;
 import com.sarlym.osmanager.domain.exception.EmailJaExistenteException;
 import com.sarlym.osmanager.domain.model.Cliente;
+import com.sarlym.osmanager.domain.model.Veiculo;
 import com.sarlym.osmanager.domain.repository.ClienteRepository;
 import com.sarlym.osmanager.domain.service.ClienteService;
 import org.junit.jupiter.api.BeforeEach;
@@ -174,12 +175,13 @@ class ClienteServiceTest {
     }
 
     void startCliente() {
+        List<Veiculo> veiculos = new ArrayList<>();
         clienteAntigo = new Cliente(2L, "Antigo Nome", "61 98544-8654", "antigo@email.com", " ", LocalDateTime.now(),
-                LocalDateTime.now());
+                LocalDateTime.now(),veiculos);
         clienteAtualizado = new Cliente(3L, "Novo Nome", "61 98544-8654", "novo@email.com", " ", LocalDateTime.now(),
-                LocalDateTime.now());
+                LocalDateTime.now(),veiculos);
         cliente = new Cliente(1L, "Guarda Belo", "61 98544-8654", "guarda22belo@gmail.com", " ", LocalDateTime.now(),
-                LocalDateTime.now());
+                LocalDateTime.now(),veiculos);
         clienteRequest = new ClienteRequest("Batatinha", "61 99851-3445", "batatinha123@email.com");
 
         clientes = new ArrayList<>();

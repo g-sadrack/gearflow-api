@@ -1,5 +1,7 @@
 package com.sarlym.osmanager.api.dto;
 
+import java.util.List;
+
 import lombok.Data;
 
 @Data
@@ -10,5 +12,5 @@ public class ClienteDTO {
     private String telefone;
     private String cpf;
     private String email;
-
+    private List<VeiculoDTO> veiculos;
 }

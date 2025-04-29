@@ -3,6 +3,7 @@ package com.sarlym.osmanager.service;
 import com.sarlym.osmanager.api.dto.request.VeiculoRequest;
 import com.sarlym.osmanager.api.dto.response.VeiculoResponse;
 import com.sarlym.osmanager.domain.exception.NegocioException;
+import com.sarlym.osmanager.domain.model.Cliente;
 import com.sarlym.osmanager.domain.model.Veiculo;
 import com.sarlym.osmanager.domain.repository.VeiculoRepository;
 import com.sarlym.osmanager.domain.service.VeiculoService;
@@ -169,6 +170,7 @@ class VeiculoServiceTest {
     }
 
     void startVeiculo() {
+        Cliente cliente =  new Cliente();
         // Veículo Antigo
         veiculoAntigo = new Veiculo(
                 2L,
@@ -179,7 +181,9 @@ class VeiculoServiceTest {
                 "Prata",
                 35000,
                 LocalDateTime.parse("2024-01-01T10:00:00"),
-                LocalDateTime.parse("2024-05-01T15:30:00"));
+                LocalDateTime.parse("2024-05-01T15:30:00"),
+                cliente
+                );
 
         // Veículo Atualizado
         veiculoAtualizado = new Veiculo(
@@ -191,7 +195,8 @@ class VeiculoServiceTest {
                 "Preto",
                 15000,
                 LocalDateTime.now(),
-                LocalDateTime.now());
+                LocalDateTime.now(),
+                cliente);
 
         // Veículo Básico
         veiculo = new Veiculo(
@@ -203,7 +208,8 @@ class VeiculoServiceTest {
                 "Branco",
                 20000,
                 LocalDateTime.parse("2024-03-15T09:15:00"),
-                LocalDateTime.parse("2024-05-20T14:00:00"));
+                LocalDateTime.parse("2024-05-20T14:00:00"),
+                cliente);
 
         // Request para teste
         veiculoRequest = new VeiculoRequest();

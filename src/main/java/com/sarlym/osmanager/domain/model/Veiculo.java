@@ -27,4 +27,7 @@ public class Veiculo {
     private LocalDateTime dataCadastro;
     @UpdateTimestamp
     private LocalDateTime dataAtualizacao;
+    @ManyToOne
+    @JoinColumn(name = "cliente_id")
+    private Cliente proprietario;
 }
