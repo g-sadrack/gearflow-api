@@ -6,6 +6,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -25,5 +27,16 @@ public class Cliente {
     private LocalDateTime dataCadastro;
     @UpdateTimestamp
     private LocalDateTime dataAtualizacao;
+    @OneToMany(mappedBy = "proprietario", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Veiculo> veiculos = new ArrayList<>();
 
+    public void adicionarVeiculo(Veiculo veiculo) {
+        veiculos.add(veiculo);
+        veiculo.setProprietario(this);
+    }
+    
+    public void removerVeiculo(Veiculo veiculo) {
+        veiculos.remove(veiculo);
+        veiculo.setProprietario(null);
+    }
 }
