@@ -2,6 +2,8 @@ package com.sarlym.osmanager.domain.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -13,6 +15,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.*;
 
 @Data
@@ -35,5 +40,15 @@ public class OrdemServico {
     @UpdateTimestamp
     private LocalDateTime dataAlteracao;
     private LocalDateTime dataFinalizacao;
-       
+    private Boolean ativo = Boolean.TRUE;
+    @ManyToOne
+    @JoinColumn(name = "veiculo_id")
+    private Veiculo veiculo;
+
+    @ManyToOne
+    @JoinColumn(name = "mecanico_id")
+    private Mecanico mecanico;
+
+    @OneToMany(mappedBy = "ordemServico")
+    private List<ItemServico> servicos = new ArrayList<>();
 }
