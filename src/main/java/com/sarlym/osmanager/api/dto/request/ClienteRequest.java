@@ -13,6 +13,7 @@ public class ClienteRequest {
 
     private String nome;
     private String telefone;
+    private String cpf;
     private String email;
 
 }
