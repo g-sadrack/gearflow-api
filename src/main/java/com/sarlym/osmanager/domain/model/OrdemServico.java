@@ -51,4 +51,7 @@ public class OrdemServico {
 
     @OneToMany(mappedBy = "ordemServico")
     private List<ItemServico> servicos = new ArrayList<>();
+
+    @OneToMany(mappedBy = "ordemServico")
+    private List<ItemPeca> pecas =  new ArrayList<>();
 }
