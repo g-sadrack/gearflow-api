@@ -182,7 +182,7 @@ class ClienteServiceTest {
                 LocalDateTime.now(),veiculos);
         cliente = new Cliente(1L, "Guarda Belo", "61 98544-8654", "guarda22belo@gmail.com", " ", LocalDateTime.now(),
                 LocalDateTime.now(),veiculos);
-        clienteRequest = new ClienteRequest("Batatinha", "61 99851-3445", "batatinha123@email.com");
+        clienteRequest = new ClienteRequest("Batatinha", "61 99851-3445", "1234567891011","batatinha123@email.com");
 
         clientes = new ArrayList<>();
         clientes.add(cliente);
