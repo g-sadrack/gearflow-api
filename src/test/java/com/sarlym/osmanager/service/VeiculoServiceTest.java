@@ -1,7 +1,7 @@
 package com.sarlym.osmanager.service;
 
+import com.sarlym.osmanager.api.dto.mapper.VeiculoMapper;
 import com.sarlym.osmanager.api.dto.request.VeiculoRequest;
-import com.sarlym.osmanager.api.dto.response.VeiculoResponse;
 import com.sarlym.osmanager.domain.exception.NegocioException;
 import com.sarlym.osmanager.domain.model.Cliente;
 import com.sarlym.osmanager.domain.model.Veiculo;
@@ -35,7 +35,7 @@ class VeiculoServiceTest {
     @Mock
     private Veiculo veiculoAtualizado;
     @Mock
-    private VeiculoResponse veiculoResponse;
+    private VeiculoMapper veiculoResponse;
     @Mock
     private VeiculoRepository veiculoRepository;
     @Mock

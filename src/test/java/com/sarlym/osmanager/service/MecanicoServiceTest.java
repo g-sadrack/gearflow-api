@@ -1,7 +1,7 @@
 package com.sarlym.osmanager.service;
 
+import com.sarlym.osmanager.api.dto.mapper.MecanicoMapper;
 import com.sarlym.osmanager.api.dto.request.MecanicoRequest;
-import com.sarlym.osmanager.api.dto.response.MecanicoResponse;
 import com.sarlym.osmanager.domain.exception.EntidadeNaoEncontradaException;
 import com.sarlym.osmanager.domain.model.Mecanico;
 import com.sarlym.osmanager.domain.repository.MecanicoRepository;
@@ -31,7 +31,7 @@ class MecanicoServiceTest {
     @Mock
     private Mecanico mecanicoAtualizado;
     @Mock
-    private MecanicoResponse mecanicoResponse;
+    private MecanicoMapper mecanicoResponse;
     @Mock
     private MecanicoRepository mecanicoRepository;
     @Mock

@@ -1,4 +1,4 @@
-package com.sarlym.osmanager.api.dto;
+package com.sarlym.osmanager.api.dto.response;
 
 import java.math.BigDecimal;
 

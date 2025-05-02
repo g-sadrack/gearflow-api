@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sarlym.osmanager.api.dto.ServicoDTO;
-import com.sarlym.osmanager.api.dto.dtoconverter.ServicoConverter;
+import com.sarlym.osmanager.api.dto.mapper.ServicoMapper;
 import com.sarlym.osmanager.api.dto.request.ServicoRequest;
+import com.sarlym.osmanager.api.dto.response.ServicoDTO;
 import com.sarlym.osmanager.domain.service.ServicoService;
 
 @RequestMapping("/servicos")
@@ -23,32 +23,32 @@ import com.sarlym.osmanager.domain.service.ServicoService;
 public class ServicoController {
 
     private final ServicoService servicoService;
-    private final ServicoConverter servicoConverter;
-    
-    public ServicoController(ServicoService servicoService, ServicoConverter servicoConverter) {
+    private final ServicoMapper servicoMapper;
+
+    public ServicoController(ServicoService servicoService, ServicoMapper servicoMapper) {
         this.servicoService = servicoService;
-        this.servicoConverter = servicoConverter;
+        this.servicoMapper = servicoMapper;
     }
 
     @GetMapping
     public List<ServicoDTO> listarServicos() {
-        return servicoConverter.paraDTOLista(servicoService.listarServicos());
+        return servicoMapper.paraDTOLista(servicoService.listarServicos());
     }
 
     @GetMapping("/{id}")
     public ServicoDTO buscarServico(@PathVariable Long id) {
-        return servicoConverter.paraDTO(servicoService.buscarServicoOuErro(id));
+        return servicoMapper.paraDTO(servicoService.buscarServicoOuErro(id));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ServicoDTO cadastrarServico(@RequestBody ServicoRequest servicoRequest) {
-        return servicoConverter.paraDTO(servicoService.cadastrarServico(servicoRequest));
+        return servicoMapper.paraDTO(servicoService.cadastrarServico(servicoRequest));
     }
 
     @PutMapping("/{id}")
     public ServicoDTO alterarServico(@PathVariable Long id, @RequestBody ServicoRequest servicoRequest) {
-        return servicoConverter.paraDTO(servicoService.alterarServico(id, servicoRequest));
+        return servicoMapper.paraDTO(servicoService.alterarServico(id, servicoRequest));
     }
 
     @DeleteMapping("/{id}")

@@ -1,4 +1,7 @@
-package com.sarlym.osmanager.api.dto.dtoconverter;
+package com.sarlym.osmanager.api.dto.mapper;
+
+import com.sarlym.osmanager.api.dto.response.OrdemServicoDTO;
+import com.sarlym.osmanager.domain.model.OrdemServico;
 
 import java.util.List;
 
@@ -6,20 +9,18 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.sarlym.osmanager.api.dto.OrdemServicoDTO;
-import com.sarlym.osmanager.domain.model.OrdemServico;
-
 @Component
-public class OrdemServicoConverter {
+public class OrdemServicoMapper {
 
     @Autowired
     private ModelMapper modelMapper;
 
-    public OrdemServicoDTO paraDto (OrdemServico ordemServico){
+    public OrdemServicoDTO paraDTO(OrdemServico ordemServico) {
         return modelMapper.map(ordemServico, OrdemServicoDTO.class);
     }
 
     public List<OrdemServicoDTO> paraListaDTO(List<OrdemServico> ordens) {
-        return ordens.stream().map(this::paraDto).toList();
+        return ordens.stream().map(this::paraDTO).toList();
     }
+
 }
