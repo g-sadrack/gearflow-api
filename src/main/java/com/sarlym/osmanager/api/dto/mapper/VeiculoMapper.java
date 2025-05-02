@@ -1,18 +1,23 @@
-package com.sarlym.osmanager.api.dto.dtoconverter;
+package com.sarlym.osmanager.api.dto.mapper;
 
-import com.sarlym.osmanager.api.dto.VeiculoDTO;
+import com.sarlym.osmanager.api.dto.request.VeiculoRequest;
+import com.sarlym.osmanager.api.dto.response.VeiculoDTO;
 import com.sarlym.osmanager.domain.model.Veiculo;
+
+import java.util.List;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
 @Component
-public class VeiculoConverter {
-
+public class VeiculoMapper {
     @Autowired
     private ModelMapper modelMapper;
+
+    public Veiculo paraModel(VeiculoRequest veiculoRequest) {
+        return modelMapper.map(veiculoRequest, Veiculo.class);
+    }
 
     public VeiculoDTO paraDTO(Veiculo veiculo) {
         return modelMapper.map(veiculo, VeiculoDTO.class);

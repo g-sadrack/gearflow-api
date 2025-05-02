@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sarlym.osmanager.api.core.enums.Status;
-import com.sarlym.osmanager.api.dto.OrdemServicoDTO;
-import com.sarlym.osmanager.api.dto.dtoconverter.OrdemServicoConverter;
+import com.sarlym.osmanager.api.dto.mapper.OrdemServicoMapper;
+import com.sarlym.osmanager.api.dto.response.OrdemServicoDTO;
 import com.sarlym.osmanager.domain.model.OrdemServico;
 import com.sarlym.osmanager.domain.service.OrdemServicoService;
 
@@ -23,17 +23,17 @@ import com.sarlym.osmanager.domain.service.OrdemServicoService;
 public class OrdemDeServicoController {
 
     private OrdemServicoService ordemServicoService;
-    private OrdemServicoConverter ordemServicoConverter;
+    private OrdemServicoMapper ordemServicoMapper;
 
     public OrdemDeServicoController(OrdemServicoService ordemServicoService,
-            OrdemServicoConverter ordemServicoConverter) {
+            OrdemServicoMapper ordemServicoMapper) {
         this.ordemServicoService = ordemServicoService;
-        this.ordemServicoConverter = ordemServicoConverter;
+        this.ordemServicoMapper = ordemServicoMapper;
     }
 
     @GetMapping("/{id}")
     public OrdemServicoDTO buOrdemServico(@PathVariable Long id) {
-        return ordemServicoConverter.paraDto(ordemServicoService.buscaOrdemServicoOuErro(id));
+        return ordemServicoMapper.paraDTO(ordemServicoService.buscaOrdemServicoOuErro(id));
     }
 
     @GetMapping
@@ -43,7 +43,8 @@ public class OrdemDeServicoController {
             @RequestParam(required = false) Long veiculoId,
             @RequestParam(required = false) @DateTimeFormat(iso = ISO.DATE_TIME) LocalDateTime dataInicio,
             @RequestParam(required = false) @DateTimeFormat(iso = ISO.DATE_TIME) LocalDateTime dataFim) {
-        List<OrdemServico> ordens = ordemServicoService.buscaComFiltros(numeroOs, status, veiculoId, dataInicio, dataFim);
-        return ResponseEntity.ok(ordemServicoConverter.paraListaDTO(ordens));
+        List<OrdemServico> ordens = ordemServicoService.buscaComFiltros(numeroOs, status, veiculoId, dataInicio,
+                dataFim);
+        return ResponseEntity.ok(ordemServicoMapper.paraListaDTO(ordens));
     }
 }

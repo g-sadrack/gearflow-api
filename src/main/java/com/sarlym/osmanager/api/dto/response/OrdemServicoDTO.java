@@ -1,4 +1,4 @@
-package com.sarlym.osmanager.api.dto;
+package com.sarlym.osmanager.api.dto.response;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -8,11 +8,11 @@ import com.sarlym.osmanager.api.core.enums.Status;
 import com.sarlym.osmanager.domain.model.ItemPeca;
 import com.sarlym.osmanager.domain.model.ItemServico;
 
-
 import lombok.Data;
 
 @Data
 public class OrdemServicoDTO {
+
     private Long id;
     private String numero_os;
     private Status status;
@@ -27,4 +27,5 @@ public class OrdemServicoDTO {
     private MecanicoDTO mecanico;
     private List<ItemServico> servicos;
     private List<ItemPeca> pecas;
+
 }

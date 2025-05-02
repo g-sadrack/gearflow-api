@@ -1,7 +1,7 @@
 package com.sarlym.osmanager.domain.service;
 
+import com.sarlym.osmanager.api.dto.mapper.ClienteMapper;
 import com.sarlym.osmanager.api.dto.request.ClienteRequest;
-import com.sarlym.osmanager.api.dto.response.ClienteResponse;
 import com.sarlym.osmanager.domain.exception.ClienteException;
 import com.sarlym.osmanager.domain.exception.EmailJaExistenteException;
 import com.sarlym.osmanager.domain.model.Cliente;
@@ -13,12 +13,12 @@ import java.util.List;
 @Service
 public class ClienteService {
 
-    private final ClienteResponse clienteResponse;
+    private final ClienteMapper clienteMapper;
     private final ClienteRepository clienteRepository;
 
-    public ClienteService(ClienteRepository clienteRepository, ClienteResponse clienteResponse) {
+    public ClienteService(ClienteRepository clienteRepository, ClienteMapper clienteMapper) {
         this.clienteRepository = clienteRepository;
-        this.clienteResponse = clienteResponse;
+        this.clienteMapper = clienteMapper;
     }
 
     public Cliente buscarClienteOuErro(Long id) {
@@ -31,7 +31,7 @@ public class ClienteService {
     }
 
     public Cliente cadastrarCliente(ClienteRequest clienteRequest) {
-        Cliente cliente = clienteResponse.paraModel(clienteRequest);
+        Cliente cliente = clienteMapper.paraModel(clienteRequest);
         if (clienteRepository.existsByEmail(cliente.getEmail())) {
             throw new EmailJaExistenteException("Email " + cliente.getEmail() + " já cadastrado no sistema");
         }
@@ -40,7 +40,7 @@ public class ClienteService {
 
     public Cliente alterarCliente(Long id, ClienteRequest clienteRequest) {
         Cliente clienteAntigo = buscarClienteOuErro(id);
-        Cliente cliente = clienteResponse.paraModel(clienteRequest);
+        Cliente cliente = clienteMapper.paraModel(clienteRequest);
         cliente.setId(clienteAntigo.getId());
         return clienteRepository.save(cliente);
     }

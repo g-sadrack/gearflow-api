@@ -1,8 +1,8 @@
 package com.sarlym.osmanager.api.controller;
 
-import com.sarlym.osmanager.api.dto.VeiculoDTO;
-import com.sarlym.osmanager.api.dto.dtoconverter.VeiculoConverter;
+import com.sarlym.osmanager.api.dto.mapper.VeiculoMapper;
 import com.sarlym.osmanager.api.dto.request.VeiculoRequest;
+import com.sarlym.osmanager.api.dto.response.VeiculoDTO;
 import com.sarlym.osmanager.domain.service.VeiculoService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
@@ -16,32 +16,32 @@ import java.util.List;
 public class VeiculoController {
 
     private final VeiculoService veiculoService;
-    private final VeiculoConverter veiculosConverter;
+    private final VeiculoMapper veiculoMapper;
 
-    public VeiculoController(VeiculoService veiculoService, VeiculoConverter veiculosConverter) {
+    public VeiculoController(VeiculoService veiculoService, VeiculoMapper veiculoMapper) {
         this.veiculoService = veiculoService;
-        this.veiculosConverter = veiculosConverter;
+        this.veiculoMapper = veiculoMapper;
     }
 
     @GetMapping
     public List<VeiculoDTO> listarVeiculos() {
-        return veiculosConverter.paraDTOLista(veiculoService.listarVeiculos());
+        return veiculoMapper.paraDTOLista(veiculoService.listarVeiculos());
     }
 
     @GetMapping("/{id}")
     public VeiculoDTO buscarVeiculo(@PathVariable Long id) {
-        return veiculosConverter.paraDTO(veiculoService.buscarVeiculoOuErro(id));
+        return veiculoMapper.paraDTO(veiculoService.buscarVeiculoOuErro(id));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public VeiculoDTO cadastrarVeiculo(@RequestBody VeiculoRequest veiculoRequest) {
-        return veiculosConverter.paraDTO(veiculoService.cadastrarVeiculo(veiculoRequest));
+        return veiculoMapper.paraDTO(veiculoService.cadastrarVeiculo(veiculoRequest));
     }
 
     @PutMapping("/{id}")
     public VeiculoDTO alterarVeiculo(@PathVariable Long id, @RequestBody VeiculoRequest veiculoRequest) {
-        return veiculosConverter.paraDTO(veiculoService.alterarVeiculo(id, veiculoRequest));
+        return veiculoMapper.paraDTO(veiculoService.alterarVeiculo(id, veiculoRequest));
     }
 
     @DeleteMapping("/{id}")

@@ -1,7 +1,7 @@
 package com.sarlym.osmanager.service;
 
+import com.sarlym.osmanager.api.dto.mapper.ServicoMapper;
 import com.sarlym.osmanager.api.dto.request.ServicoRequest;
-import com.sarlym.osmanager.api.dto.response.ServicoResponse;
 import com.sarlym.osmanager.domain.exception.NegocioException;
 import com.sarlym.osmanager.domain.model.Servico;
 import com.sarlym.osmanager.domain.repository.ServicoRepository;
@@ -31,7 +31,7 @@ class ServicoServiceTest {
     @Mock
     private Servico servicoAtualizado;
     @Mock
-    private ServicoResponse servicoResponse;
+    private ServicoMapper servicoResponse;
     @Mock
     private ServicoRepository servicoRepository;
     @Mock

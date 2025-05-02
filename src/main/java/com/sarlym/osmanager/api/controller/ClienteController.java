@@ -1,8 +1,8 @@
 package com.sarlym.osmanager.api.controller;
 
-import com.sarlym.osmanager.api.dto.ClienteDTO;
-import com.sarlym.osmanager.api.dto.dtoconverter.ClienteConverter;
+import com.sarlym.osmanager.api.dto.mapper.ClienteMapper;
 import com.sarlym.osmanager.api.dto.request.ClienteRequest;
+import com.sarlym.osmanager.api.dto.response.ClienteDTO;
 import com.sarlym.osmanager.domain.service.ClienteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -15,19 +15,19 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/cliente", produces = {"application/json"})
+@RequestMapping(value = "/cliente", produces = { "application/json" })
 @Tag(name = "Clientes", description = "Operações relacionadas aos clientes")
 public class ClienteController {
 
     private final ClienteService clienteService;
-    private final ClienteConverter clienteConverter;
-    
-    public ClienteController(ClienteService clienteService, ClienteConverter clienteConverter) {
+    private final ClienteMapper clienteMapper;
+
+    public ClienteController(ClienteService clienteService, ClienteMapper clienteMapper) {
         this.clienteService = clienteService;
-        this.clienteConverter = clienteConverter;
+        this.clienteMapper = clienteMapper;
     }
 
-    @Operation(summary = "Realiza busca de cliente por ID", description = "Busca um cliente no sistema utilizando o ID como parametro.",method = "GET")
+    @Operation(summary = "Realiza busca de cliente por ID", description = "Busca um cliente no sistema utilizando o ID como parametro.", method = "GET")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso"),
             @ApiResponse(responseCode = "404", description = "Cliente não encontrado"),
@@ -35,9 +35,8 @@ public class ClienteController {
     })
     @GetMapping("/{id}")
     public ClienteDTO buscarCliente(
-            @Parameter(name = "id", description = "ID único do cliente", required = true, example = "1")
-            @PathVariable(value = "id") Long id){
-        return clienteConverter.paraDTO(clienteService.buscarClienteOuErro(id));
+            @Parameter(name = "id", description = "ID único do cliente", required = true, example = "1") @PathVariable(value = "id") Long id) {
+        return clienteMapper.paraDTO(clienteService.buscarClienteOuErro(id));
     }
 
     @Operation(summary = "Realiza listagem de clientes", description = "Lista os clientes cadastrados no sistema, mostrando o nome, e-mail e telefone.", method = "GET")
@@ -46,19 +45,19 @@ public class ClienteController {
             @ApiResponse(responseCode = "500", description = "Erro ao realizar a busca de clientes"),
     })
     @GetMapping
-    public List<ClienteDTO> listarClientes(){
-        return clienteConverter.paraDTOLista(clienteService.clientes());
+    public List<ClienteDTO> listarClientes() {
+        return clienteMapper.paraDTOLista(clienteService.clientes());
     }
 
-    @Operation(summary = "Realiza cadastro de cliente", description = "Cadastra no sistema uma pessoa ao passar o nome, e-mail e telefone.",method = "POST")
+    @Operation(summary = "Realiza cadastro de cliente", description = "Cadastra no sistema uma pessoa ao passar o nome, e-mail e telefone.", method = "POST")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Cadastro realizado com sucesso"),
             @ApiResponse(responseCode = "500", description = "Erro ao realizar a cadastro de cliente, e-mail já cadastrado."),
     })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ClienteDTO cadastrarCliente(@RequestBody ClienteRequest clienteRequest){
-        return clienteConverter.paraDTO(clienteService.cadastrarCliente(clienteRequest));
+    public ClienteDTO cadastrarCliente(@RequestBody ClienteRequest clienteRequest) {
+        return clienteMapper.paraDTO(clienteService.cadastrarCliente(clienteRequest));
     }
 
     @Operation(summary = "Alteração de cliente", description = "Altera uma informação do cliente", method = "PUT")
@@ -69,11 +68,10 @@ public class ClienteController {
     })
     @PutMapping("/{id}")
     public ClienteDTO alterarCliente(
-            @Parameter(name = "id", description = "ID único do cliente", required = true, example = "1")
-            @PathVariable(value = "id") Long id,
-            @RequestBody ClienteRequest clienteRequest){
+            @Parameter(name = "id", description = "ID único do cliente", required = true, example = "1") @PathVariable(value = "id") Long id,
+            @RequestBody ClienteRequest clienteRequest) {
 
-        return clienteConverter.paraDTO(clienteService.alterarCliente(id,clienteRequest));
+        return clienteMapper.paraDTO(clienteService.alterarCliente(id, clienteRequest));
     }
 
     @Operation(summary = "Deletar de cliente", description = "Deleta um registro de cliente", method = "DELETE")
@@ -84,8 +82,7 @@ public class ClienteController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletarCliente(
-            @Parameter(name = "id", description = "ID único do cliente", required = true, example = "1")
-            @PathVariable(value = "id" ) Long id) {
+            @Parameter(name = "id", description = "ID único do cliente", required = true, example = "1") @PathVariable(value = "id") Long id) {
         clienteService.deletarCliente(id);
     }
 

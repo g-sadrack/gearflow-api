@@ -1,7 +1,7 @@
 package com.sarlym.osmanager.service;
 
+import com.sarlym.osmanager.api.dto.mapper.ClienteMapper;
 import com.sarlym.osmanager.api.dto.request.ClienteRequest;
-import com.sarlym.osmanager.api.dto.response.ClienteResponse;
 import com.sarlym.osmanager.domain.exception.ClienteException;
 import com.sarlym.osmanager.domain.exception.EmailJaExistenteException;
 import com.sarlym.osmanager.domain.model.Cliente;
@@ -31,7 +31,7 @@ class ClienteServiceTest {
     @Mock
     private Cliente clienteAtualizado;
     @Mock
-    private ClienteResponse clienteResponse;
+    private ClienteMapper clienteResponse;
     @Mock
     private ClienteRepository clienteRepository;
     @Mock

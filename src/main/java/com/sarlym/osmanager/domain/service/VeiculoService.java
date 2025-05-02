@@ -1,7 +1,7 @@
 package com.sarlym.osmanager.domain.service;
 
+import com.sarlym.osmanager.api.dto.mapper.VeiculoMapper;
 import com.sarlym.osmanager.api.dto.request.VeiculoRequest;
-import com.sarlym.osmanager.api.dto.response.VeiculoResponse;
 import com.sarlym.osmanager.domain.exception.NegocioException;
 import com.sarlym.osmanager.domain.model.Veiculo;
 import com.sarlym.osmanager.domain.repository.VeiculoRepository;
@@ -17,11 +17,11 @@ public class VeiculoService {
 
     private static final String VEICULO_NAO_ENCONTRADO = "Veiculo com id %d nao encontrado";
     private final VeiculoRepository veiculoRepository;
-    private final VeiculoResponse veiculoResponse;
+    private final VeiculoMapper veiculoMapper;
 
-    public VeiculoService(VeiculoRepository veiculoRepository, VeiculoResponse veiculoResponse) {
+    public VeiculoService(VeiculoRepository veiculoRepository, VeiculoMapper veiculoMapper) {
         this.veiculoRepository = veiculoRepository;
-        this.veiculoResponse = veiculoResponse;
+        this.veiculoMapper = veiculoMapper;
     }
 
     public Veiculo buscarVeiculoOuErro(Long id) {
@@ -35,14 +35,14 @@ public class VeiculoService {
 
     @Transactional
     public Veiculo cadastrarVeiculo(VeiculoRequest veiculoRequest) {
-        Veiculo veiculo = veiculoResponse.paraModel(veiculoRequest);
+        Veiculo veiculo = veiculoMapper.paraModel(veiculoRequest);
         return veiculoRepository.save(veiculo);
     }
 
     @Transactional
     public Veiculo alterarVeiculo(Long id, VeiculoRequest veiculoRequest) {
         Veiculo veiculoAntigo = buscarVeiculoOuErro(id);
-        Veiculo veiculo = veiculoResponse.paraModel(veiculoRequest);
+        Veiculo veiculo = veiculoMapper.paraModel(veiculoRequest);
         veiculo.setId(veiculoAntigo.getId());
         return veiculoRepository.save(veiculo);
     }

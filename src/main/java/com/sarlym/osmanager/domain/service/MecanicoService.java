@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.sarlym.osmanager.api.dto.mapper.MecanicoMapper;
 import com.sarlym.osmanager.api.dto.request.MecanicoRequest;
-import com.sarlym.osmanager.api.dto.response.MecanicoResponse;
 import com.sarlym.osmanager.domain.exception.EntidadeNaoEncontradaException;
 import com.sarlym.osmanager.domain.model.Mecanico;
 import com.sarlym.osmanager.domain.repository.MecanicoRepository;
@@ -17,16 +17,17 @@ public class MecanicoService {
 
     private static final String ACAO_NAO_PODE_SER_REALIZADA_MECANICO_NAO_ENCONTRADO = "Mecanico com id %d, nao encontrado";
     private final MecanicoRepository mecanicoRepository;
-    private final MecanicoResponse mecanicoResponse;
+    private final MecanicoMapper mecanicoMapper;
 
-    public MecanicoService(MecanicoRepository mecanicoRepository, MecanicoResponse mecanicoResponse) {
+    public MecanicoService(MecanicoRepository mecanicoRepository, MecanicoMapper mecanicoMapper) {
         this.mecanicoRepository = mecanicoRepository;
-        this.mecanicoResponse = mecanicoResponse;
+        this.mecanicoMapper = mecanicoMapper;
     }
 
     public Mecanico buscarMecanicoOuErro(Long id) {
         return mecanicoRepository.findById(id).orElseThrow(
-                () -> new EntidadeNaoEncontradaException(String.format(ACAO_NAO_PODE_SER_REALIZADA_MECANICO_NAO_ENCONTRADO, id)));
+                () -> new EntidadeNaoEncontradaException(
+                        String.format(ACAO_NAO_PODE_SER_REALIZADA_MECANICO_NAO_ENCONTRADO, id)));
     }
 
     public List<Mecanico> listarMecanicos() {
@@ -35,14 +36,14 @@ public class MecanicoService {
 
     @Transactional
     public Mecanico cadastrarMecanico(MecanicoRequest mecanicoRequest) {
-        Mecanico mecanico = mecanicoResponse.paraModel(mecanicoRequest);
+        Mecanico mecanico = mecanicoMapper.paraModel(mecanicoRequest);
         return mecanicoRepository.save(mecanico);
     }
 
     @Transactional
     public Mecanico atualizarMecanico(Long id, MecanicoRequest mecanicoRequest) {
         Mecanico mecanicoAntigo = buscarMecanicoOuErro(id);
-        Mecanico mecanico = mecanicoResponse.paraModel(mecanicoRequest);
+        Mecanico mecanico = mecanicoMapper.paraModel(mecanicoRequest);
         mecanico.setId(mecanicoAntigo.getId());
         return mecanicoRepository.save(mecanico);
     }
