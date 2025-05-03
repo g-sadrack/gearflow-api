@@ -23,8 +23,8 @@ public class OrdemServicoDTO {
     private LocalDateTime dataAlteracao;
     private LocalDateTime dataFinalizacao;
     private Boolean ativo;
-    private VeiculoDTO veiculo;
-    private MecanicoDTO mecanico;
+    private VeiculoResumo veiculo;
+    private MecanicoResumo mecanico;
     private List<ItemServico> servicos;
     private List<ItemPeca> pecas;
 
