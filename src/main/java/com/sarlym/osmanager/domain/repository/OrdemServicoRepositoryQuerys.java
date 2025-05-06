@@ -3,6 +3,7 @@ package com.sarlym.osmanager.domain.repository;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.stereotype.Repository;
 
 import com.sarlym.osmanager.api.core.enums.Status;

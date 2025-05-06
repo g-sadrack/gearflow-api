@@ -1,22 +1,39 @@
 package com.sarlym.osmanager.domain.service;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
 import com.sarlym.osmanager.api.core.enums.Status;
+import com.sarlym.osmanager.api.dto.mapper.OrdemServicoMapper;
+import com.sarlym.osmanager.api.dto.request.OrdemServicoRequest;
 import com.sarlym.osmanager.domain.exception.EntidadeNaoEncontradaException;
+import com.sarlym.osmanager.domain.model.Cliente;
+import com.sarlym.osmanager.domain.model.Mecanico;
 import com.sarlym.osmanager.domain.model.OrdemServico;
+import com.sarlym.osmanager.domain.model.Veiculo;
 import com.sarlym.osmanager.domain.repository.OrdemServicoRepository;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class OrdemServicoService {
 
     private OrdemServicoRepository ordemServicoRepository;
+    private MecanicoService mecanicoService;
+    private VeiculoService veiculoService;
+    private ClienteService clienteService;
+    private OrdemServicoMapper ordemServicoMapper;
 
-    public OrdemServicoService(OrdemServicoRepository ordemServicoRepository) {
+    public OrdemServicoService(OrdemServicoRepository ordemServicoRepository, MecanicoService mecanicoService,
+            VeiculoService veiculoService, ClienteService clienteService, OrdemServicoMapper ordemServicoMapper) {
         this.ordemServicoRepository = ordemServicoRepository;
+        this.mecanicoService = mecanicoService;
+        this.veiculoService = veiculoService;
+        this.clienteService = clienteService;
+        this.ordemServicoMapper = ordemServicoMapper;
     }
 
     public OrdemServico buscaOrdemServicoOuErro(Long id) {
@@ -28,6 +45,30 @@ public class OrdemServicoService {
     public List<OrdemServico> buscaComFiltros(String numeroOs, Status status, Long veiculoId,
             LocalDateTime dataInicio, LocalDateTime dataFim) {
         return ordemServicoRepository.find(numeroOs, status, veiculoId, dataInicio, dataFim);
+    }
+
+    @Transactional
+    public OrdemServico salvar(OrdemServicoRequest request) {
+        Mecanico mecanico = mecanicoService.buscarMecanicoOuErro(request.getMecanico());
+        Veiculo veiculo = veiculoService.buscarVeiculoOuErro(request.getVeiculo());
+
+        OrdemServico os = ordemServicoMapper.paraModelo(request);
+        System.out.println("\n\n" + os);
+        os.setMecanico(mecanico); // Definido manualmente
+        os.setVeiculo(veiculo); // Definido manualmente
+        geradorNumOs(os);
+        return ordemServicoRepository.save(os);
+    }
+
+    public void geradorNumOs(OrdemServico os) {
+        LocalDateTime dataAtual = LocalDateTime.now();
+        DateTimeFormatter padraoCodigoOs = DateTimeFormatter.ofPattern("MMddHHmmss");
+
+        String sufixoCodigo = dataAtual.format(padraoCodigoOs);
+        int prefixoCodigo = dataAtual.getYear();
+
+        String codigoOs = prefixoCodigo + "-" + sufixoCodigo;
+        os.setNumero_os(codigoOs);
     }
 
 }

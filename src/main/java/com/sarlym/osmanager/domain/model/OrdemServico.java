@@ -12,6 +12,7 @@ import com.sarlym.osmanager.api.core.enums.Status;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -41,11 +42,12 @@ public class OrdemServico {
     private LocalDateTime dataAlteracao;
     private LocalDateTime dataFinalizacao;
     private Boolean ativo = Boolean.TRUE;
-    @ManyToOne
+    
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "veiculo_id")
     private Veiculo veiculo;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mecanico_id")
     private Mecanico mecanico;
 
