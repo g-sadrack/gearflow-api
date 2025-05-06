@@ -11,6 +11,6 @@ public class VeiculoResumo {
     private Integer ano;
     private String cor;
     private Integer quilometragem;
-    private ClienteResumo cliente;
+    private ClienteResumo proprietario;
     
 }
