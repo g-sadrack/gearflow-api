@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -52,8 +53,10 @@ public class OrdemServico {
     private Mecanico mecanico;
 
     @OneToMany(mappedBy = "ordemServico")
+    @BatchSize(size = 20)
     private List<ItemServico> servicos = new ArrayList<>();
 
     @OneToMany(mappedBy = "ordemServico")
+    @BatchSize(size = 20)
     private List<ItemPeca> pecas =  new ArrayList<>();
 }

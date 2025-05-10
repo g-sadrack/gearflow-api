@@ -5,18 +5,16 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.sarlym.osmanager.api.core.enums.Status;
 import com.sarlym.osmanager.api.dto.mapper.OrdemServicoMapper;
 import com.sarlym.osmanager.api.dto.request.OrdemServicoRequest;
 import com.sarlym.osmanager.domain.exception.EntidadeNaoEncontradaException;
-import com.sarlym.osmanager.domain.model.Cliente;
 import com.sarlym.osmanager.domain.model.Mecanico;
 import com.sarlym.osmanager.domain.model.OrdemServico;
 import com.sarlym.osmanager.domain.model.Veiculo;
 import com.sarlym.osmanager.domain.repository.OrdemServicoRepository;
-
-import jakarta.transaction.Transactional;
 
 @Service
 public class OrdemServicoService {
@@ -24,7 +22,6 @@ public class OrdemServicoService {
     private OrdemServicoRepository ordemServicoRepository;
     private MecanicoService mecanicoService;
     private VeiculoService veiculoService;
-    private ClienteService clienteService;
     private OrdemServicoMapper ordemServicoMapper;
 
     public OrdemServicoService(OrdemServicoRepository ordemServicoRepository, MecanicoService mecanicoService,
@@ -32,10 +29,10 @@ public class OrdemServicoService {
         this.ordemServicoRepository = ordemServicoRepository;
         this.mecanicoService = mecanicoService;
         this.veiculoService = veiculoService;
-        this.clienteService = clienteService;
         this.ordemServicoMapper = ordemServicoMapper;
     }
 
+    @Transactional(readOnly = true)
     public OrdemServico buscaOrdemServicoOuErro(Long id) {
         return ordemServicoRepository.findById(id)
                 .orElseThrow(() -> new EntidadeNaoEncontradaException(
