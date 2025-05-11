@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.sarlym.osmanager.api.core.enums.Status;
 import com.sarlym.osmanager.api.dto.mapper.OrdemServicoMapper;
 import com.sarlym.osmanager.api.dto.request.OrdemServicoRequest;
+import com.sarlym.osmanager.api.dto.response.OrdemServicoDTO;
 import com.sarlym.osmanager.domain.exception.EntidadeNaoEncontradaException;
 import com.sarlym.osmanager.domain.model.Mecanico;
 import com.sarlym.osmanager.domain.model.OrdemServico;
@@ -66,6 +67,19 @@ public class OrdemServicoService {
 
         String codigoOs = prefixoCodigo + "-" + sufixoCodigo;
         os.setNumero_os(codigoOs);
+    }
+
+    @Transactional
+    public OrdemServicoDTO alterarOrdemServico(Long id, OrdemServicoRequest ordemServicoRequest) {
+        OrdemServico ordemServico = buscaOrdemServicoOuErro(id);
+        Veiculo veiculo = veiculoService.buscarVeiculoOuErro(ordemServicoRequest.getVeiculo());
+        Mecanico mecanico =  mecanicoService.buscarMecanicoOuErro(ordemServicoRequest.getMecanico());
+        
+        ordemServico.setMecanico(mecanico);
+        ordemServico.setVeiculo(veiculo);
+        ordemServico.setDescricaoProblema(ordemServicoRequest.getDescricaoProblema());
+
+        return ordemServicoMapper.paraDTO(ordemServicoRepository.save(ordemServico));
     }
 
 }
