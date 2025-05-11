@@ -10,8 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.sarlym.osmanager.api.core.enums.Status;
 import com.sarlym.osmanager.api.dto.mapper.MecanicoMapper;
 import com.sarlym.osmanager.api.dto.mapper.OrdemServicoMapper;
+import com.sarlym.osmanager.api.dto.mapper.VeiculoMapper;
 import com.sarlym.osmanager.api.dto.request.OrdemServicoRequest;
 import com.sarlym.osmanager.api.dto.response.OrdemServicoDTO;
+import com.sarlym.osmanager.api.dto.response.OrdemServicoResumo;
 import com.sarlym.osmanager.domain.exception.EntidadeNaoEncontradaException;
 import com.sarlym.osmanager.domain.model.Mecanico;
 import com.sarlym.osmanager.domain.model.OrdemServico;
@@ -25,41 +27,45 @@ public class OrdemServicoService {
     private MecanicoService mecanicoService;
     private MecanicoMapper mecanicoMapper;
     private VeiculoService veiculoService;
+    private VeiculoMapper veiculoMapper;
     private OrdemServicoMapper ordemServicoMapper;
 
     public OrdemServicoService(OrdemServicoRepository ordemServicoRepository, MecanicoService mecanicoService,
             VeiculoService veiculoService, ClienteService clienteService, OrdemServicoMapper ordemServicoMapper,
-            MecanicoMapper mecanicoMapper) {
+            MecanicoMapper mecanicoMapper, VeiculoMapper veiculoMapper) {
         this.ordemServicoRepository = ordemServicoRepository;
         this.mecanicoService = mecanicoService;
         this.veiculoService = veiculoService;
         this.ordemServicoMapper = ordemServicoMapper;
         this.mecanicoMapper = mecanicoMapper;
+        this.veiculoMapper = veiculoMapper;
     }
 
     @Transactional(readOnly = true)
-    public OrdemServico buscaOrdemServicoOuErro(Long id) {
-        return ordemServicoRepository.findById(id)
+    public OrdemServicoDTO buscaOrdemServicoOuErro(Long id) {
+        return ordemServicoMapper.modeloParaDTO(ordemServicoRepository.findById(id)
                 .orElseThrow(() -> new EntidadeNaoEncontradaException(
-                        String.format("Ordem de servico com id %d nao encontrada", id)));
+                        String.format("Ordem de servico com id %d nao encontrada", id))));
     }
 
-    public List<OrdemServico> buscaComFiltros(String numeroOs, Status status, Long veiculoId,
+    public List<OrdemServicoResumo> buscaComFiltros(String numeroOs, Status status, Long veiculoId,
             LocalDateTime dataInicio, LocalDateTime dataFim) {
-        return ordemServicoRepository.find(numeroOs, status, veiculoId, dataInicio, dataFim);
+        return ordemServicoMapper
+                .modeloListaParaListaDTOResumo(
+                        ordemServicoRepository.find(numeroOs, status, veiculoId, dataInicio, dataFim));
     }
 
     @Transactional
-    public OrdemServico salvar(OrdemServicoRequest request) {
-        Mecanico mecanico = mecanicoMapper.DTOParaModel(mecanicoService.buscarMecanicoOuErro(request.getMecanico()));
-        Veiculo veiculo = veiculoService.buscarVeiculoOuErro(request.getVeiculo());
+    public OrdemServicoDTO salvar(OrdemServicoRequest request) {
+        Mecanico mecanico = mecanicoMapper.dtoParaModel(mecanicoService.buscarMecanicoOuErro(request.getMecanico()));
+        Veiculo veiculo = veiculoMapper.dtoParaModel(veiculoService.buscarVeiculoOuErro(request.getVeiculo()));
 
-        OrdemServico os = ordemServicoMapper.paraModelo(request);
+        OrdemServico os = ordemServicoMapper.requestParaModelo(request);
         System.out.println("\n\n" + os);
         os.setMecanico(mecanico); // Definido manualmente
         os.setVeiculo(veiculo); // Definido manualmente
         geradorNumOs(os);
-        return ordemServicoRepository.save(os);
+        return ordemServicoMapper.modeloParaDTO(ordemServicoRepository.save(os));
     }
 
     public void geradorNumOs(OrdemServico os) {
@@ -75,16 +81,17 @@ public class OrdemServicoService {
 
     @Transactional
     public OrdemServicoDTO alterarOrdemServico(Long id, OrdemServicoRequest ordemServicoRequest) {
-        OrdemServico ordemServico = buscaOrdemServicoOuErro(id);
-        Veiculo veiculo = veiculoService.buscarVeiculoOuErro(ordemServicoRequest.getVeiculo());
+        OrdemServico ordemServico = ordemServicoMapper.dtoParaModelo(buscaOrdemServicoOuErro(id));
+        Veiculo veiculo = veiculoMapper
+                .dtoParaModel(veiculoService.buscarVeiculoOuErro(ordemServicoRequest.getVeiculo()));
         Mecanico mecanico = mecanicoMapper
-                .DTOParaModel(mecanicoService.buscarMecanicoOuErro(ordemServicoRequest.getMecanico()));
+                .dtoParaModel(mecanicoService.buscarMecanicoOuErro(ordemServicoRequest.getMecanico()));
 
         ordemServico.setMecanico(mecanico);
         ordemServico.setVeiculo(veiculo);
         ordemServico.setDescricaoProblema(ordemServicoRequest.getDescricaoProblema());
 
-        return ordemServicoMapper.paraDTO(ordemServicoRepository.save(ordemServico));
+        return ordemServicoMapper.modeloParaDTO(ordemServicoRepository.save(ordemServico));
     }
 
 }

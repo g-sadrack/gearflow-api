@@ -17,24 +17,32 @@ public class OrdemServicoMapper {
     @Autowired
     private ModelMapper modelMapper;
 
-    public OrdemServicoDTO paraDTO(OrdemServico ordemServico) {
+    public OrdemServicoDTO modeloParaDTO(OrdemServico ordemServico) {
         return modelMapper.map(ordemServico, OrdemServicoDTO.class);
     }
 
-    public List<OrdemServicoDTO> paraListaDTO(List<OrdemServico> ordens) {
-        return ordens.stream().map(this::paraDTO).toList();
+    public OrdemServicoDTO resumoParaDTO(OrdemServicoResumo ordemServicoResumo) {
+        return modelMapper.map(ordemServicoResumo, OrdemServicoDTO.class);
     }
 
-    public OrdemServicoResumo paraDTOResumo(OrdemServico ordemServico) {
+    public List<OrdemServicoDTO> modeloListaResumoParaDTOLista(List<OrdemServicoResumo> ordens) {
+        return ordens.stream().map(this::resumoParaDTO).toList();
+    }
+
+    public OrdemServicoResumo modeloParaDTOResumo(OrdemServico ordemServico) {
         return modelMapper.map(ordemServico, OrdemServicoResumo.class);
     }
 
-    public List<OrdemServicoResumo> paraListaDTOResumo(List<OrdemServico> ordens) {
-        return ordens.stream().map(this::paraDTOResumo).toList();
+    public List<OrdemServicoResumo> modeloListaParaListaDTOResumo(List<OrdemServico> ordens) {
+        return ordens.stream().map(this::modeloParaDTOResumo).toList();
     }
-    
-    public OrdemServico paraModelo(OrdemServicoRequest request) {
+
+    public OrdemServico requestParaModelo(OrdemServicoRequest request) {
         return modelMapper.map(request, OrdemServico.class);
+    }
+
+    public OrdemServico dtoParaModelo(OrdemServicoDTO ordemServicoDTO) {
+        return modelMapper.map(ordemServicoDTO, OrdemServico.class);
     }
 
 }

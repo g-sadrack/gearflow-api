@@ -26,32 +26,32 @@ public class MecanicoService {
     }
 
     public MecanicoDTO buscarMecanicoOuErro(Long id) {
-        return mecanicoMapper.ModelParaDTO(mecanicoRepository.findById(id).orElseThrow(
+        return mecanicoMapper.modelParaDTO(mecanicoRepository.findById(id).orElseThrow(
                 () -> new EntidadeNaoEncontradaException(
                         String.format(ACAO_NAO_PODE_SER_REALIZADA_MECANICO_NAO_ENCONTRADO, id))));
     }
 
     public List<MecanicoDTO> listarMecanicos() {
-        return mecanicoMapper.ModelListaParaDTOLista(mecanicoRepository.findAll());
+        return mecanicoMapper.modelListaParaDTOLista(mecanicoRepository.findAll());
     }
 
     @Transactional
     public MecanicoDTO cadastrarMecanico(MecanicoRequest mecanicoRequest) {
-        Mecanico mecanico = mecanicoMapper.RequestparaModel(mecanicoRequest);
-        return mecanicoMapper.ModelParaDTO(mecanicoRepository.save(mecanico));
+        Mecanico mecanico = mecanicoMapper.requestParaModel(mecanicoRequest);
+        return mecanicoMapper.modelParaDTO(mecanicoRepository.save(mecanico));
     }
 
     @Transactional
     public MecanicoDTO atualizarMecanico(Long id, MecanicoRequest mecanicoRequest) {
-        Mecanico mecanicoAntigo = mecanicoMapper.DTOParaModel(buscarMecanicoOuErro(id));
-        Mecanico mecanico = mecanicoMapper.RequestparaModel(mecanicoRequest);
+        Mecanico mecanicoAntigo = mecanicoMapper.dtoParaModel(buscarMecanicoOuErro(id));
+        Mecanico mecanico = mecanicoMapper.requestParaModel(mecanicoRequest);
         mecanico.setId(mecanicoAntigo.getId());
-        return mecanicoMapper.ModelParaDTO(mecanicoRepository.save(mecanico));
+        return mecanicoMapper.modelParaDTO(mecanicoRepository.save(mecanico));
     }
 
     @Transactional
     public void excluirMecanico(Long id) {
-        Mecanico mecanico = mecanicoMapper.DTOParaModel(buscarMecanicoOuErro(id));
+        Mecanico mecanico = mecanicoMapper.dtoParaModel(buscarMecanicoOuErro(id));
         mecanicoRepository.delete(mecanico);
         mecanicoRepository.flush();
     }

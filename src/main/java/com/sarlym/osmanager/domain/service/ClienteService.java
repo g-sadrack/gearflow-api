@@ -23,31 +23,31 @@ public class ClienteService {
     }
 
     public ClienteDTO buscarClienteOuErro(Long id) {
-        return clienteMapper.ModelParaDTO(clienteRepository.findById(id).orElseThrow(
+        return clienteMapper.modelParaDTO(clienteRepository.findById(id).orElseThrow(
                 () -> new ClienteException("Cliente não pode ser deletado pois não foi encontrado")));
     }
 
     public List<ClienteDTO> clientes() {
-        return clienteMapper.ModelListaParaDTOLista(clienteRepository.findAll());
+        return clienteMapper.modelListaParaDTOLista(clienteRepository.findAll());
     }
 
     public ClienteDTO cadastrarCliente(ClienteRequest clienteRequest) {
-        Cliente cliente = clienteMapper.RequestParaModel(clienteRequest);
+        Cliente cliente = clienteMapper.requestParaModel(clienteRequest);
         if (clienteRepository.existsByEmail(cliente.getEmail())) {
             throw new EmailJaExistenteException("Email " + cliente.getEmail() + " já cadastrado no sistema");
         }
-        return clienteMapper.ModelParaDTO(clienteRepository.save(cliente));
+        return clienteMapper.modelParaDTO(clienteRepository.save(cliente));
     }
 
     public ClienteDTO alterarCliente(Long id, ClienteRequest clienteRequest) {
-        Cliente clienteAntigo = clienteMapper.DTOParaModel(buscarClienteOuErro(id));
-        Cliente cliente = clienteMapper.RequestParaModel(clienteRequest);
+        Cliente clienteAntigo = clienteMapper.dTOParaModel(buscarClienteOuErro(id));
+        Cliente cliente = clienteMapper.requestParaModel(clienteRequest);
         cliente.setId(clienteAntigo.getId());
-        return clienteMapper.ModelParaDTO(clienteRepository.save(cliente));
+        return clienteMapper.modelParaDTO(clienteRepository.save(cliente));
     }
 
     public void deletarCliente(Long id) {
-        Cliente cliente = clienteMapper.DTOParaModel(buscarClienteOuErro(id));
+        Cliente cliente = clienteMapper.dTOParaModel(buscarClienteOuErro(id));
         clienteRepository.delete(cliente);
         clienteRepository.flush();
     }

@@ -1,6 +1,5 @@
 package com.sarlym.osmanager.api.controller;
 
-import com.sarlym.osmanager.api.dto.mapper.VeiculoMapper;
 import com.sarlym.osmanager.api.dto.request.VeiculoRequest;
 import com.sarlym.osmanager.api.dto.response.VeiculoDTO;
 import com.sarlym.osmanager.domain.service.VeiculoService;
@@ -16,32 +15,30 @@ import java.util.List;
 public class VeiculoController {
 
     private final VeiculoService veiculoService;
-    private final VeiculoMapper veiculoMapper;
 
-    public VeiculoController(VeiculoService veiculoService, VeiculoMapper veiculoMapper) {
+    public VeiculoController(VeiculoService veiculoService) {
         this.veiculoService = veiculoService;
-        this.veiculoMapper = veiculoMapper;
     }
 
     @GetMapping
     public List<VeiculoDTO> listarVeiculos() {
-        return veiculoMapper.paraDTOLista(veiculoService.listarVeiculos());
+        return veiculoService.listarVeiculos();
     }
 
     @GetMapping("/{id}")
     public VeiculoDTO buscarVeiculo(@PathVariable Long id) {
-        return veiculoMapper.paraDTO(veiculoService.buscarVeiculoOuErro(id));
+        return veiculoService.buscarVeiculoOuErro(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public VeiculoDTO cadastrarVeiculo(@RequestBody VeiculoRequest veiculoRequest) {
-        return veiculoMapper.paraDTO(veiculoService.cadastrarVeiculo(veiculoRequest));
+        return veiculoService.cadastrarVeiculo(veiculoRequest);
     }
 
     @PutMapping("/{id}")
     public VeiculoDTO alterarVeiculo(@PathVariable Long id, @RequestBody VeiculoRequest veiculoRequest) {
-        return veiculoMapper.paraDTO(veiculoService.alterarVeiculo(id, veiculoRequest));
+        return veiculoService.alterarVeiculo(id, veiculoRequest);
     }
 
     @DeleteMapping("/{id}")

@@ -16,11 +16,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sarlym.osmanager.api.core.enums.Status;
-import com.sarlym.osmanager.api.dto.mapper.OrdemServicoMapper;
 import com.sarlym.osmanager.api.dto.request.OrdemServicoRequest;
 import com.sarlym.osmanager.api.dto.response.OrdemServicoDTO;
 import com.sarlym.osmanager.api.dto.response.OrdemServicoResumo;
-import com.sarlym.osmanager.domain.model.OrdemServico;
 import com.sarlym.osmanager.domain.service.OrdemServicoService;
 
 @RestController
@@ -28,17 +26,14 @@ import com.sarlym.osmanager.domain.service.OrdemServicoService;
 public class OrdemDeServicoController {
 
     private OrdemServicoService ordemServicoService;
-    private OrdemServicoMapper ordemServicoMapper;
 
-    public OrdemDeServicoController(OrdemServicoService ordemServicoService,
-            OrdemServicoMapper ordemServicoMapper) {
+    public OrdemDeServicoController(OrdemServicoService ordemServicoService) {
         this.ordemServicoService = ordemServicoService;
-        this.ordemServicoMapper = ordemServicoMapper;
     }
 
     @GetMapping("/{id}")
     public OrdemServicoDTO buOrdemServico(@PathVariable Long id) {
-        return ordemServicoMapper.paraDTO(ordemServicoService.buscaOrdemServicoOuErro(id));
+        return ordemServicoService.buscaOrdemServicoOuErro(id);
     }
 
     @GetMapping
@@ -48,18 +43,19 @@ public class OrdemDeServicoController {
             @RequestParam(required = false) Long veiculoId,
             @RequestParam(required = false) @DateTimeFormat(iso = ISO.DATE_TIME) LocalDateTime dataInicio,
             @RequestParam(required = false) @DateTimeFormat(iso = ISO.DATE_TIME) LocalDateTime dataFim) {
-        List<OrdemServico> ordens = ordemServicoService.buscaComFiltros(numeroOs, status, veiculoId, dataInicio,
+        List<OrdemServicoResumo> ordens = ordemServicoService.buscaComFiltros(numeroOs, status, veiculoId, dataInicio,
                 dataFim);
-        return ResponseEntity.ok(ordemServicoMapper.paraListaDTOResumo(ordens));
+        return ResponseEntity.ok(ordens);
     }
 
     @PostMapping
-    public OrdemServicoDTO criaOrdemDeServico (@RequestBody OrdemServicoRequest ordemServicoRequest){
-        return ordemServicoMapper.paraDTO(ordemServicoService.salvar(ordemServicoRequest));
+    public OrdemServicoDTO criaOrdemDeServico(@RequestBody OrdemServicoRequest ordemServicoRequest) {
+        return ordemServicoService.salvar(ordemServicoRequest);
     }
 
     @PutMapping("/{id}")
-    public OrdemServicoDTO alteraOrdemServico (@PathVariable Long id, @RequestBody OrdemServicoRequest ordemServicoRequest){
+    public OrdemServicoDTO alteraOrdemServico(@PathVariable Long id,
+            @RequestBody OrdemServicoRequest ordemServicoRequest) {
         return ordemServicoService.alterarOrdemServico(id, ordemServicoRequest);
     }
 }
