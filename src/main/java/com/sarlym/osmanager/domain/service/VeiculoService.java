@@ -24,6 +24,7 @@ public class VeiculoService {
         this.veiculoMapper = veiculoMapper;
     }
 
+    @Transactional
     public Veiculo buscarVeiculoOuErro(Long id) {
         return veiculoRepository.findById(id)
                 .orElseThrow(() -> new NegocioException(String.format(VEICULO_NAO_ENCONTRADO, id)));
