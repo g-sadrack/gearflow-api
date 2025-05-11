@@ -16,16 +16,20 @@ public class ClienteMapper {
     @Autowired
     private ModelMapper modelMapper;
 
-    public Cliente paraModel(ClienteRequest clienteRequest) {
+    public Cliente RequestParaModel(ClienteRequest clienteRequest) {
         return modelMapper.map(clienteRequest, Cliente.class);
     }
 
-    public ClienteDTO paraDTO(Cliente cliente) {
+    public ClienteDTO ModelParaDTO(Cliente cliente) {
         return modelMapper.map(cliente, ClienteDTO.class);
     }
 
-    public List<ClienteDTO> paraDTOLista(List<Cliente> clientes) {
-        return clientes.stream().map(this::paraDTO).toList();
+    public Cliente DTOParaModel(ClienteDTO clienteDTO) {
+        return modelMapper.map(clienteDTO, Cliente.class);
+    }
+
+    public List<ClienteDTO> ModelListaParaDTOLista(List<Cliente> clientes) {
+        return clientes.stream().map(this::ModelParaDTO).toList();
     }
 
 }
