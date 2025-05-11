@@ -5,8 +5,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.sarlym.osmanager.api.core.enums.Status;
-import com.sarlym.osmanager.domain.model.ItemPeca;
-import com.sarlym.osmanager.domain.model.ItemServico;
 
 import lombok.Data;
 
@@ -25,7 +23,7 @@ public class OrdemServicoDTO {
     private Boolean ativo;
     private VeiculoResumo veiculo;
     private MecanicoResumo mecanico;
-    private List<ItemServico> servicos;
-    private List<ItemPeca> pecas;
+    private List<ItemServicoResumo> servicos;
+    private List<ItemPecaResumo> pecas;
 
 }
