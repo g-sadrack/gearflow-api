@@ -28,6 +28,7 @@ public class Cliente {
     @UpdateTimestamp
     private LocalDateTime dataAtualizacao;
     @OneToMany(mappedBy = "proprietario", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
     private List<Veiculo> veiculos = new ArrayList<>();
 
     public void adicionarVeiculo(Veiculo veiculo) {
