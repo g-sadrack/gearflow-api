@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sarlym.osmanager.api.core.enums.Status;
+import com.sarlym.osmanager.api.dto.mapper.MecanicoMapper;
 import com.sarlym.osmanager.api.dto.mapper.OrdemServicoMapper;
 import com.sarlym.osmanager.api.dto.request.OrdemServicoRequest;
 import com.sarlym.osmanager.api.dto.response.OrdemServicoDTO;
@@ -22,15 +23,18 @@ public class OrdemServicoService {
 
     private OrdemServicoRepository ordemServicoRepository;
     private MecanicoService mecanicoService;
+    private MecanicoMapper mecanicoMapper;
     private VeiculoService veiculoService;
     private OrdemServicoMapper ordemServicoMapper;
 
     public OrdemServicoService(OrdemServicoRepository ordemServicoRepository, MecanicoService mecanicoService,
-            VeiculoService veiculoService, ClienteService clienteService, OrdemServicoMapper ordemServicoMapper) {
+            VeiculoService veiculoService, ClienteService clienteService, OrdemServicoMapper ordemServicoMapper,
+            MecanicoMapper mecanicoMapper) {
         this.ordemServicoRepository = ordemServicoRepository;
         this.mecanicoService = mecanicoService;
         this.veiculoService = veiculoService;
         this.ordemServicoMapper = ordemServicoMapper;
+        this.mecanicoMapper = mecanicoMapper;
     }
 
     @Transactional(readOnly = true)
@@ -47,7 +51,7 @@ public class OrdemServicoService {
 
     @Transactional
     public OrdemServico salvar(OrdemServicoRequest request) {
-        Mecanico mecanico = mecanicoService.buscarMecanicoOuErro(request.getMecanico());
+        Mecanico mecanico = mecanicoMapper.DTOParaModel(mecanicoService.buscarMecanicoOuErro(request.getMecanico()));
         Veiculo veiculo = veiculoService.buscarVeiculoOuErro(request.getVeiculo());
 
         OrdemServico os = ordemServicoMapper.paraModelo(request);
@@ -73,8 +77,9 @@ public class OrdemServicoService {
     public OrdemServicoDTO alterarOrdemServico(Long id, OrdemServicoRequest ordemServicoRequest) {
         OrdemServico ordemServico = buscaOrdemServicoOuErro(id);
         Veiculo veiculo = veiculoService.buscarVeiculoOuErro(ordemServicoRequest.getVeiculo());
-        Mecanico mecanico =  mecanicoService.buscarMecanicoOuErro(ordemServicoRequest.getMecanico());
-        
+        Mecanico mecanico = mecanicoMapper
+                .DTOParaModel(mecanicoService.buscarMecanicoOuErro(ordemServicoRequest.getMecanico()));
+
         ordemServico.setMecanico(mecanico);
         ordemServico.setVeiculo(veiculo);
         ordemServico.setDescricaoProblema(ordemServicoRequest.getDescricaoProblema());
