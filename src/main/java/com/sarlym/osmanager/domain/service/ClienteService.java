@@ -2,6 +2,7 @@ package com.sarlym.osmanager.domain.service;
 
 import com.sarlym.osmanager.api.dto.mapper.ClienteMapper;
 import com.sarlym.osmanager.api.dto.request.ClienteRequest;
+import com.sarlym.osmanager.api.dto.response.ClienteDTO;
 import com.sarlym.osmanager.domain.exception.ClienteException;
 import com.sarlym.osmanager.domain.exception.EmailJaExistenteException;
 import com.sarlym.osmanager.domain.model.Cliente;
@@ -21,32 +22,32 @@ public class ClienteService {
         this.clienteMapper = clienteMapper;
     }
 
-    public Cliente buscarClienteOuErro(Long id) {
-        return clienteRepository.findById(id).orElseThrow(
-                () -> new ClienteException("Cliente não pode ser deletado pois não foi encontrado"));
+    public ClienteDTO buscarClienteOuErro(Long id) {
+        return clienteMapper.ModelParaDTO(clienteRepository.findById(id).orElseThrow(
+                () -> new ClienteException("Cliente não pode ser deletado pois não foi encontrado")));
     }
 
-    public List<Cliente> clientes() {
-        return clienteRepository.findAll();
+    public List<ClienteDTO> clientes() {
+        return clienteMapper.ModelListaParaDTOLista(clienteRepository.findAll());
     }
 
-    public Cliente cadastrarCliente(ClienteRequest clienteRequest) {
-        Cliente cliente = clienteMapper.paraModel(clienteRequest);
+    public ClienteDTO cadastrarCliente(ClienteRequest clienteRequest) {
+        Cliente cliente = clienteMapper.RequestParaModel(clienteRequest);
         if (clienteRepository.existsByEmail(cliente.getEmail())) {
             throw new EmailJaExistenteException("Email " + cliente.getEmail() + " já cadastrado no sistema");
         }
-        return clienteRepository.save(cliente);
+        return clienteMapper.ModelParaDTO(clienteRepository.save(cliente));
     }
 
-    public Cliente alterarCliente(Long id, ClienteRequest clienteRequest) {
-        Cliente clienteAntigo = buscarClienteOuErro(id);
-        Cliente cliente = clienteMapper.paraModel(clienteRequest);
+    public ClienteDTO alterarCliente(Long id, ClienteRequest clienteRequest) {
+        Cliente clienteAntigo = clienteMapper.DTOParaModel(buscarClienteOuErro(id));
+        Cliente cliente = clienteMapper.RequestParaModel(clienteRequest);
         cliente.setId(clienteAntigo.getId());
-        return clienteRepository.save(cliente);
+        return clienteMapper.ModelParaDTO(clienteRepository.save(cliente));
     }
 
     public void deletarCliente(Long id) {
-        Cliente cliente = buscarClienteOuErro(id);
+        Cliente cliente = clienteMapper.DTOParaModel(buscarClienteOuErro(id));
         clienteRepository.delete(cliente);
         clienteRepository.flush();
     }
