@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sarlym.osmanager.api.dto.mapper.ServicoMapper;
 import com.sarlym.osmanager.api.dto.request.ServicoRequest;
 import com.sarlym.osmanager.api.dto.response.ServicoDTO;
 import com.sarlym.osmanager.domain.service.ServicoService;
@@ -23,32 +22,30 @@ import com.sarlym.osmanager.domain.service.ServicoService;
 public class ServicoController {
 
     private final ServicoService servicoService;
-    private final ServicoMapper servicoMapper;
 
-    public ServicoController(ServicoService servicoService, ServicoMapper servicoMapper) {
+    public ServicoController(ServicoService servicoService) {
         this.servicoService = servicoService;
-        this.servicoMapper = servicoMapper;
     }
 
     @GetMapping
     public List<ServicoDTO> listarServicos() {
-        return servicoMapper.paraDTOLista(servicoService.listarServicos());
+        return servicoService.listarServicos();
     }
 
     @GetMapping("/{id}")
     public ServicoDTO buscarServico(@PathVariable Long id) {
-        return servicoMapper.paraDTO(servicoService.buscarServicoOuErro(id));
+        return servicoService.buscarServicoOuErro(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ServicoDTO cadastrarServico(@RequestBody ServicoRequest servicoRequest) {
-        return servicoMapper.paraDTO(servicoService.cadastrarServico(servicoRequest));
+        return servicoService.cadastrarServico(servicoRequest);
     }
 
     @PutMapping("/{id}")
     public ServicoDTO alterarServico(@PathVariable Long id, @RequestBody ServicoRequest servicoRequest) {
-        return servicoMapper.paraDTO(servicoService.alterarServico(id, servicoRequest));
+        return servicoService.alterarServico(id, servicoRequest);
     }
 
     @DeleteMapping("/{id}")

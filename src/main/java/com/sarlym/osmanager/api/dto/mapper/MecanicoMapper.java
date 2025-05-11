@@ -15,19 +15,19 @@ public class MecanicoMapper {
     @Autowired
     private ModelMapper modelMapper;
 
-    public Mecanico RequestparaModel(MecanicoRequest mecanicoRequest) {
+    public Mecanico requestParaModel(MecanicoRequest mecanicoRequest) {
         return modelMapper.map(mecanicoRequest, Mecanico.class);
     }
 
-    public MecanicoDTO ModelParaDTO(Mecanico mecanico) {
+    public MecanicoDTO modelParaDTO(Mecanico mecanico) {
         return modelMapper.map(mecanico, MecanicoDTO.class);
     }
 
-    public List<MecanicoDTO> ModelListaParaDTOLista(List<Mecanico> mecanicos) {
-        return mecanicos.stream().map(this::ModelParaDTO).toList();
+    public List<MecanicoDTO> modelListaParaDTOLista(List<Mecanico> mecanicos) {
+        return mecanicos.stream().map(this::modelParaDTO).toList();
     }
 
-    public Mecanico DTOParaModel(MecanicoDTO mecanicoDTO) {
+    public Mecanico dtoParaModel(MecanicoDTO mecanicoDTO) {
         return modelMapper.map(mecanicoDTO, Mecanico.class);
     }
 

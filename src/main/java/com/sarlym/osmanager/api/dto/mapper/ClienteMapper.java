@@ -12,24 +12,24 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ClienteMapper {
-    
+
     @Autowired
     private ModelMapper modelMapper;
 
-    public Cliente RequestParaModel(ClienteRequest clienteRequest) {
+    public Cliente requestParaModel(ClienteRequest clienteRequest) {
         return modelMapper.map(clienteRequest, Cliente.class);
     }
 
-    public ClienteDTO ModelParaDTO(Cliente cliente) {
+    public ClienteDTO modelParaDTO(Cliente cliente) {
         return modelMapper.map(cliente, ClienteDTO.class);
     }
 
-    public Cliente DTOParaModel(ClienteDTO clienteDTO) {
+    public Cliente dTOParaModel(ClienteDTO clienteDTO) {
         return modelMapper.map(clienteDTO, Cliente.class);
     }
 
-    public List<ClienteDTO> ModelListaParaDTOLista(List<Cliente> clientes) {
-        return clientes.stream().map(this::ModelParaDTO).toList();
+    public List<ClienteDTO> modelListaParaDTOLista(List<Cliente> clientes) {
+        return clientes.stream().map(this::modelParaDTO).toList();
     }
 
 }

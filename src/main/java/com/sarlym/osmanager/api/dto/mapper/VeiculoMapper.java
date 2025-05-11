@@ -15,16 +15,20 @@ public class VeiculoMapper {
     @Autowired
     private ModelMapper modelMapper;
 
-    public Veiculo paraModel(VeiculoRequest veiculoRequest) {
+    public Veiculo requestParaModel(VeiculoRequest veiculoRequest) {
         return modelMapper.map(veiculoRequest, Veiculo.class);
     }
 
-    public VeiculoDTO paraDTO(Veiculo veiculo) {
+    public VeiculoDTO modeloParaDTO(Veiculo veiculo) {
         return modelMapper.map(veiculo, VeiculoDTO.class);
     }
 
-    public List<VeiculoDTO> paraDTOLista(List<Veiculo> veiculos) {
-        return veiculos.stream().map(this::paraDTO).toList();
+    public List<VeiculoDTO> modelListaParaDTOLista(List<Veiculo> veiculos) {
+        return veiculos.stream().map(this::modeloParaDTO).toList();
+    }
+
+    public Veiculo dtoParaModel(VeiculoDTO veiculoDTO) {
+        return modelMapper.map(veiculoDTO, Veiculo.class);
     }
 
 }

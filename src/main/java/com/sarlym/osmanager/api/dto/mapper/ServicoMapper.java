@@ -16,15 +16,19 @@ public class ServicoMapper {
     @Autowired
     private ModelMapper modelMapper;
 
-    public Servico paraModel(ServicoRequest servicoRequest) {
+    public Servico requestParaModel(ServicoRequest servicoRequest) {
         return modelMapper.map(servicoRequest, Servico.class);
     }
 
-    public ServicoDTO paraDTO(Servico servico) {
+    public ServicoDTO modelParaDTO(Servico servico) {
         return modelMapper.map(servico, ServicoDTO.class);
     }
 
-    public List<ServicoDTO> paraDTOLista(List<Servico> servicos) {
-        return servicos.stream().map(this::paraDTO).toList();
+    public List<ServicoDTO> modelLitaParaDTOLista(List<Servico> servicos) {
+        return servicos.stream().map(this::modelParaDTO).toList();
+    }
+
+    public Servico dtoParaModel(ServicoDTO servicoDTO) {
+        return modelMapper.map(servicoDTO, Servico.class);
     }
 }
