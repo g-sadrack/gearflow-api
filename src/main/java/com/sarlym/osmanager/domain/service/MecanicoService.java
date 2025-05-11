@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.sarlym.osmanager.api.dto.mapper.MecanicoMapper;
 import com.sarlym.osmanager.api.dto.request.MecanicoRequest;
+import com.sarlym.osmanager.api.dto.response.MecanicoDTO;
 import com.sarlym.osmanager.domain.exception.EntidadeNaoEncontradaException;
 import com.sarlym.osmanager.domain.model.Mecanico;
 import com.sarlym.osmanager.domain.repository.MecanicoRepository;
@@ -24,33 +25,33 @@ public class MecanicoService {
         this.mecanicoMapper = mecanicoMapper;
     }
 
-    public Mecanico buscarMecanicoOuErro(Long id) {
-        return mecanicoRepository.findById(id).orElseThrow(
+    public MecanicoDTO buscarMecanicoOuErro(Long id) {
+        return mecanicoMapper.ModelParaDTO(mecanicoRepository.findById(id).orElseThrow(
                 () -> new EntidadeNaoEncontradaException(
-                        String.format(ACAO_NAO_PODE_SER_REALIZADA_MECANICO_NAO_ENCONTRADO, id)));
+                        String.format(ACAO_NAO_PODE_SER_REALIZADA_MECANICO_NAO_ENCONTRADO, id))));
     }
 
-    public List<Mecanico> listarMecanicos() {
-        return mecanicoRepository.findAll();
-    }
-
-    @Transactional
-    public Mecanico cadastrarMecanico(MecanicoRequest mecanicoRequest) {
-        Mecanico mecanico = mecanicoMapper.paraModel(mecanicoRequest);
-        return mecanicoRepository.save(mecanico);
+    public List<MecanicoDTO> listarMecanicos() {
+        return mecanicoMapper.ModelListaParaDTOLista(mecanicoRepository.findAll());
     }
 
     @Transactional
-    public Mecanico atualizarMecanico(Long id, MecanicoRequest mecanicoRequest) {
-        Mecanico mecanicoAntigo = buscarMecanicoOuErro(id);
-        Mecanico mecanico = mecanicoMapper.paraModel(mecanicoRequest);
+    public MecanicoDTO cadastrarMecanico(MecanicoRequest mecanicoRequest) {
+        Mecanico mecanico = mecanicoMapper.RequestparaModel(mecanicoRequest);
+        return mecanicoMapper.ModelParaDTO(mecanicoRepository.save(mecanico));
+    }
+
+    @Transactional
+    public MecanicoDTO atualizarMecanico(Long id, MecanicoRequest mecanicoRequest) {
+        Mecanico mecanicoAntigo = mecanicoMapper.DTOParaModel(buscarMecanicoOuErro(id));
+        Mecanico mecanico = mecanicoMapper.RequestparaModel(mecanicoRequest);
         mecanico.setId(mecanicoAntigo.getId());
-        return mecanicoRepository.save(mecanico);
+        return mecanicoMapper.ModelParaDTO(mecanicoRepository.save(mecanico));
     }
 
     @Transactional
     public void excluirMecanico(Long id) {
-        Mecanico mecanico = buscarMecanicoOuErro(id);
+        Mecanico mecanico = mecanicoMapper.DTOParaModel(buscarMecanicoOuErro(id));
         mecanicoRepository.delete(mecanico);
         mecanicoRepository.flush();
     }
