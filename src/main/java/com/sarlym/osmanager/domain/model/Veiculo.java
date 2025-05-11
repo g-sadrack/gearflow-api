@@ -29,5 +29,6 @@ public class Veiculo {
     private LocalDateTime dataAtualizacao;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cliente_id")
+    @ToString.Exclude
     private Cliente proprietario;
 }
