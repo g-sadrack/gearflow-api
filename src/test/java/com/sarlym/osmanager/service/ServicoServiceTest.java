@@ -2,6 +2,7 @@ package com.sarlym.osmanager.service;
 
 import com.sarlym.osmanager.api.dto.mapper.ServicoMapper;
 import com.sarlym.osmanager.api.dto.request.ServicoRequest;
+import com.sarlym.osmanager.api.dto.response.ServicoDTO;
 import com.sarlym.osmanager.domain.exception.NegocioException;
 import com.sarlym.osmanager.domain.model.Servico;
 import com.sarlym.osmanager.domain.repository.ServicoRepository;
@@ -52,7 +53,7 @@ class ServicoServiceTest {
     void quandoBuscarServicoPorIdRetornarApenasUm() {
         when(servicoRepository.findById(anyLong())).thenReturn(Optional.of(servico));
 
-        Servico resultado = servicoService.buscarServicoOuErro(1L);
+        ServicoDTO resultado = servicoService.buscarServicoOuErro(1L);
 
         assertNotNull(resultado);
         assertEquals(servico.getId(), resultado.getId());
@@ -75,7 +76,7 @@ class ServicoServiceTest {
     void quandoListarServicosEntaoRetornarSucesso() {
         when(servicoRepository.findAll()).thenReturn(servicos);
 
-        List<Servico> resultado = servicoService.listarServicos();
+        List<ServicoDTO> resultado = servicoService.listarServicos();
 
         assertNotNull(resultado);
     }
@@ -84,7 +85,7 @@ class ServicoServiceTest {
     void deveRetornarListaVaziaQuandoNaoExistiremServicos() {
         when(servicoRepository.findAll()).thenReturn(List.of());
 
-        List<Servico> resultado = servicoService.listarServicos();
+        List<ServicoDTO> resultado = servicoService.listarServicos();
 
         assertNotNull(resultado);
         assertTrue(resultado.isEmpty());
@@ -94,10 +95,10 @@ class ServicoServiceTest {
     @Test
     @Transactional
     void quandoCadastrarServicoEntaoRetornarSucesso() {
-        when(servicoResponse.paraModel(servicoRequest)).thenReturn(servico);
+        when(servicoResponse.requestParaModel(servicoRequest)).thenReturn(servico);
         when(servicoRepository.save(servico)).thenReturn(servico);
 
-        Servico resultado = servicoService.cadastrarServico(servicoRequest);
+        ServicoDTO resultado = servicoService.cadastrarServico(servicoRequest);
 
         assertNotNull(resultado);
         verify(servicoRepository, times(1)).save(servico);
@@ -107,13 +108,13 @@ class ServicoServiceTest {
     @Transactional
     void quandoAlterarServicoEntaoRetornarServicoAtualizado() {
         when(servicoRepository.findById(servicoAntigo.getId())).thenReturn(Optional.of(servicoAntigo));
-        when(servicoResponse.paraModel(servicoRequest)).thenReturn(servicoAtualizado);
+        when(servicoResponse.requestParaModel(servicoRequest)).thenReturn(servicoAtualizado);
         when(servicoRepository.save(servicoAtualizado)).thenReturn(servicoAtualizado);
 
-        Servico resultado = servicoService.alterarServico(servicoAntigo.getId(), servicoRequest);
+        ServicoDTO resultado = servicoService.alterarServico(servicoAntigo.getId(), servicoRequest);
 
         verify(servicoRepository, times(1)).findById(servicoAntigo.getId());
-        verify(servicoResponse, times(1)).paraModel(servicoRequest);
+        verify(servicoResponse, times(1)).requestParaModel(servicoRequest);
         verify(servicoRepository, times(1)).save(servicoAtualizado);
 
         assertNotNull(resultado);
@@ -132,7 +133,7 @@ class ServicoServiceTest {
 
         assertEquals("Servico nao encontrado", exception.getMessage());
         verify(servicoRepository, times(1)).findById(99L);
-        verify(servicoResponse, never()).paraModel(any());
+        verify(servicoResponse, never()).requestParaModel(any());
         verify(servicoRepository, never()).save(any());
     }
 

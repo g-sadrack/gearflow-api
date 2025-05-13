@@ -2,6 +2,7 @@ package com.sarlym.osmanager.service;
 
 import com.sarlym.osmanager.api.dto.mapper.VeiculoMapper;
 import com.sarlym.osmanager.api.dto.request.VeiculoRequest;
+import com.sarlym.osmanager.api.dto.response.VeiculoDTO;
 import com.sarlym.osmanager.domain.exception.NegocioException;
 import com.sarlym.osmanager.domain.model.Cliente;
 import com.sarlym.osmanager.domain.model.Veiculo;
@@ -56,7 +57,7 @@ class VeiculoServiceTest {
     void quandoBuscarVeiculoPorIdRetornarApenasUm() {
         when(veiculoRepository.findById(anyLong())).thenReturn(Optional.of(veiculo));
 
-        Veiculo resultado = veiculoService.buscarVeiculoOuErro(1L);
+        VeiculoDTO resultado = veiculoService.buscarVeiculoOuErro(1L);
 
         assertNotNull(resultado);
         assertEquals(veiculo.getId(), resultado.getId());
@@ -80,7 +81,7 @@ class VeiculoServiceTest {
     void quandoListarVeiculosEntaoRetornarSucesso() {
         when(veiculoRepository.findAll()).thenReturn(veiculos);
 
-        List<Veiculo> resultado = veiculoService.listarVeiculos();
+        List<VeiculoDTO> resultado = veiculoService.listarVeiculos();
 
         assertNotNull(resultado);
     }
@@ -89,7 +90,7 @@ class VeiculoServiceTest {
     void deveRetornarListaVaziaQuandoNaoExistiremVeiculos() {
         when(veiculoRepository.findAll()).thenReturn(List.of());
 
-        List<Veiculo> resultado = veiculoService.listarVeiculos();
+        List<VeiculoDTO> resultado = veiculoService.listarVeiculos();
 
         assertNotNull(resultado);
         assertTrue(resultado.isEmpty());
@@ -99,10 +100,10 @@ class VeiculoServiceTest {
     @Test
     @Transactional
     void quandoCadastrarVeiculoEntaoRetornarSucesso() {
-        when(veiculoResponse.paraModel(veiculoRequest)).thenReturn(veiculo);
+        when(veiculoResponse.requestParaModel(veiculoRequest)).thenReturn(veiculo);
         when(veiculoRepository.save(veiculo)).thenReturn(veiculo);
 
-        Veiculo resultado = veiculoService.cadastrarVeiculo(veiculoRequest);
+        VeiculoDTO resultado = veiculoService.cadastrarVeiculo(veiculoRequest);
 
         assertNotNull(resultado);
         verify(veiculoRepository, times(1)).save(veiculo);
@@ -112,13 +113,13 @@ class VeiculoServiceTest {
     @Transactional
     void quandoAlterarVeiculoEntaoRetornarVeiculoAtualizado() {
         when(veiculoRepository.findById(veiculoAntigo.getId())).thenReturn(Optional.of(veiculoAntigo));
-        when(veiculoResponse.paraModel(veiculoRequest)).thenReturn(veiculoAtualizado);
+        when(veiculoResponse.requestParaModel(veiculoRequest)).thenReturn(veiculoAtualizado);
         when(veiculoRepository.save(veiculoAtualizado)).thenReturn(veiculoAtualizado);
 
-        Veiculo resultado = veiculoService.alterarVeiculo(veiculoAntigo.getId(), veiculoRequest);
+        VeiculoDTO resultado = veiculoService.alterarVeiculo(veiculoAntigo.getId(), veiculoRequest);
 
         verify(veiculoRepository, times(1)).findById(veiculoAntigo.getId());
-        verify(veiculoResponse, times(1)).paraModel(veiculoRequest);
+        verify(veiculoResponse, times(1)).requestParaModel(veiculoRequest);
         verify(veiculoRepository, times(1)).save(veiculoAtualizado);
 
         assertNotNull(resultado);
@@ -138,7 +139,7 @@ class VeiculoServiceTest {
 
         assertEquals("Veiculo com id 99 nao encontrado", exception.getMessage());
         verify(veiculoRepository, times(1)).findById(idInexistente);
-        verify(veiculoResponse, never()).paraModel(any());
+        verify(veiculoResponse, never()).requestParaModel(any());
         verify(veiculoRepository, never()).save(any());
     }
 

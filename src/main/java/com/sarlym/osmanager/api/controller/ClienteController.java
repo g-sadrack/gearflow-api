@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/cliente", produces = { "application/json" })
+@RequestMapping(value = "api/clientes", produces = { "application/json" })
 @Tag(name = "Clientes", description = "Operações relacionadas aos clientes")
 public class ClienteController {
 
@@ -53,7 +53,7 @@ public class ClienteController {
     })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ClienteDTO cadastrarCliente(@RequestBody ClienteRequest clienteRequest) {
+    public ClienteDTO cadastrarCliente(@RequestBody(required = true) ClienteRequest clienteRequest) {
         return clienteService.cadastrarCliente(clienteRequest);
     }
 
