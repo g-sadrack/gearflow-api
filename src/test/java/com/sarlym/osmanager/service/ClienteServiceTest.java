@@ -2,6 +2,7 @@ package com.sarlym.osmanager.service;
 
 import com.sarlym.osmanager.api.dto.mapper.ClienteMapper;
 import com.sarlym.osmanager.api.dto.request.ClienteRequest;
+import com.sarlym.osmanager.api.dto.response.ClienteDTO;
 import com.sarlym.osmanager.domain.exception.ClienteException;
 import com.sarlym.osmanager.domain.exception.EmailJaExistenteException;
 import com.sarlym.osmanager.domain.model.Cliente;
@@ -40,11 +41,12 @@ class ClienteServiceTest {
     private List<Cliente> clientes;
 
     private ClienteService clienteService;
+    private ClienteMapper clienteMapper;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        clienteService = new ClienteService(clienteRepository, clienteResponse);
+        clienteService = new ClienteService(clienteRepository, clienteMapper);
         startCliente();
     }
 
@@ -52,7 +54,7 @@ class ClienteServiceTest {
     void quandoBuscarClientePorIdRetonarApenasUm() {
         when(clienteRepository.findById(anyLong())).thenReturn(Optional.of(cliente));
 
-        Cliente cliente1 = clienteService.buscarClienteOuErro(1L);
+        Cliente cliente1 = clienteMapper.dTOParaModel(clienteService.buscarClienteOuErro(1L));
 
         assertNotNull(cliente1);
         assertEquals(cliente.getId(), cliente1.getId());
@@ -75,7 +77,7 @@ class ClienteServiceTest {
     void quandoListarClienteEntaoRetornarSucesso() {
         when(clienteRepository.findAll()).thenReturn(clientes);
 
-        List<Cliente> clienteList = clienteService.clientes();
+        List<ClienteDTO> clienteList = clienteService.clientes();
 
         assertNotNull(clienteList);
     }
@@ -84,7 +86,7 @@ class ClienteServiceTest {
     void deveRetornarListaVaziaQuandoNaoExistiremClientes() {
         when(clienteRepository.findAll()).thenReturn(List.of());
 
-        List<Cliente> clienteList = clienteService.clientes();
+        List<ClienteDTO> clienteList = clienteService.clientes();
 
         assertNotNull(clienteList);
         assertTrue(clienteList.isEmpty());
@@ -93,11 +95,11 @@ class ClienteServiceTest {
 
     @Test
     void quandoCadastrarClienteEntaoReotrnarSucesso() {
-        when(clienteResponse.paraModel(clienteRequest)).thenReturn(cliente);
+        when(clienteResponse.requestParaModel(clienteRequest)).thenReturn(cliente);
         when(clienteRepository.existsByEmail(cliente.getEmail())).thenReturn(false);
         when(clienteRepository.save(cliente)).thenReturn(cliente);
 
-        Cliente clienteTeste = clienteService.cadastrarCliente(clienteRequest);
+        ClienteDTO clienteTeste = clienteService.cadastrarCliente(clienteRequest);
 
         assertNotNull(clienteTeste);
         verify(clienteRepository, times(1)).existsByEmail(cliente.getEmail());
@@ -106,7 +108,7 @@ class ClienteServiceTest {
 
     @Test
     void deveLancarExcecaoQuandoEmailJaExistir() {
-        when(clienteResponse.paraModel(clienteRequest)).thenReturn(cliente);
+        when(clienteResponse.requestParaModel(clienteRequest)).thenReturn(cliente);
         when(clienteRepository.existsByEmail(cliente.getEmail())).thenReturn(true);
 
         EmailJaExistenteException exception = assertThrows(EmailJaExistenteException.class,
@@ -120,13 +122,13 @@ class ClienteServiceTest {
     @Test
     void quandoAlterarClienteEntaoRetornarClienteAtualizado() {
         when(clienteRepository.findById(clienteAntigo.getId())).thenReturn(Optional.of(clienteAntigo));
-        when(clienteResponse.paraModel(clienteRequest)).thenReturn(clienteAtualizado);
+        when(clienteResponse.requestParaModel(clienteRequest)).thenReturn(clienteAtualizado);
         when(clienteRepository.save(clienteAtualizado)).thenReturn(clienteAtualizado);
 
-        Cliente resultado = clienteService.alterarCliente(clienteAntigo.getId(), clienteRequest);
+        ClienteDTO resultado = clienteService.alterarCliente(clienteAntigo.getId(), clienteRequest);
 
         verify(clienteRepository, times(1)).findById(clienteAntigo.getId());
-        verify(clienteResponse, times(1)).paraModel(clienteRequest);
+        verify(clienteResponse, times(1)).requestParaModel(clienteRequest);
         verify(clienteRepository, times(1)).save(clienteAtualizado);
 
         assertNotNull(resultado);
@@ -146,7 +148,7 @@ class ClienteServiceTest {
                 exception.getMessage());
 
         verify(clienteRepository, times(1)).findById(99L);
-        verify(clienteResponse, never()).paraModel(any());
+        verify(clienteResponse, never()).requestParaModel(any());
         verify(clienteRepository, never()).save(any());
     }
 
@@ -177,12 +179,12 @@ class ClienteServiceTest {
     void startCliente() {
         List<Veiculo> veiculos = new ArrayList<>();
         clienteAntigo = new Cliente(2L, "Antigo Nome", "61 98544-8654", "antigo@email.com", " ", LocalDateTime.now(),
-                LocalDateTime.now(),veiculos);
+                LocalDateTime.now(), veiculos);
         clienteAtualizado = new Cliente(3L, "Novo Nome", "61 98544-8654", "novo@email.com", " ", LocalDateTime.now(),
-                LocalDateTime.now(),veiculos);
+                LocalDateTime.now(), veiculos);
         cliente = new Cliente(1L, "Guarda Belo", "61 98544-8654", "guarda22belo@gmail.com", " ", LocalDateTime.now(),
-                LocalDateTime.now(),veiculos);
-        clienteRequest = new ClienteRequest("Batatinha", "61 99851-3445", "1234567891011","batatinha123@email.com");
+                LocalDateTime.now(), veiculos);
+        clienteRequest = new ClienteRequest("Batatinha", "61 99851-3445", "1234567891011", "batatinha123@email.com");
 
         clientes = new ArrayList<>();
         clientes.add(cliente);

@@ -2,6 +2,7 @@ package com.sarlym.osmanager.service;
 
 import com.sarlym.osmanager.api.dto.mapper.MecanicoMapper;
 import com.sarlym.osmanager.api.dto.request.MecanicoRequest;
+import com.sarlym.osmanager.api.dto.response.MecanicoDTO;
 import com.sarlym.osmanager.domain.exception.EntidadeNaoEncontradaException;
 import com.sarlym.osmanager.domain.model.Mecanico;
 import com.sarlym.osmanager.domain.repository.MecanicoRepository;
@@ -52,7 +53,7 @@ class MecanicoServiceTest {
     void quandoBuscarMecanicoPorIdRetornarApenasUm() {
         when(mecanicoRepository.findById(anyLong())).thenReturn(Optional.of(mecanico));
 
-        Mecanico resultado = mecanicoService.buscarMecanicoOuErro(1L);
+        MecanicoDTO resultado = mecanicoService.buscarMecanicoOuErro(1L);
 
         assertNotNull(resultado);
         assertEquals(mecanico.getId(), resultado.getId());
@@ -75,7 +76,7 @@ class MecanicoServiceTest {
     void quandoListarMecanicosEntaoRetornarSucesso() {
         when(mecanicoRepository.findAll()).thenReturn(mecanicos);
 
-        List<Mecanico> resultado = mecanicoService.listarMecanicos();
+        List<MecanicoDTO> resultado = mecanicoService.listarMecanicos();
 
         assertNotNull(resultado);
     }
@@ -84,7 +85,7 @@ class MecanicoServiceTest {
     void deveRetornarListaVaziaQuandoNaoExistiremMecanicos() {
         when(mecanicoRepository.findAll()).thenReturn(List.of());
 
-        List<Mecanico> resultado = mecanicoService.listarMecanicos();
+        List<MecanicoDTO> resultado = mecanicoService.listarMecanicos();
 
         assertNotNull(resultado);
         assertTrue(resultado.isEmpty());
@@ -93,10 +94,10 @@ class MecanicoServiceTest {
 
     @Test
     void quandoCadastrarMecanicoEntaoRetornarSucesso() {
-        when(mecanicoResponse.paraModel(mecanicoRequest)).thenReturn(mecanico);
+        when(mecanicoResponse.requestParaModel(mecanicoRequest)).thenReturn(mecanico);
         when(mecanicoRepository.save(mecanico)).thenReturn(mecanico);
 
-        Mecanico resultado = mecanicoService.cadastrarMecanico(mecanicoRequest);
+        MecanicoDTO resultado = mecanicoService.cadastrarMecanico(mecanicoRequest);
 
         assertNotNull(resultado);
         verify(mecanicoRepository, times(1)).save(mecanico);
@@ -105,13 +106,13 @@ class MecanicoServiceTest {
     @Test
     void quandoAtualizarMecanicoEntaoRetornarMecanicoAtualizado() {
         when(mecanicoRepository.findById(mecanicoAntigo.getId())).thenReturn(Optional.of(mecanicoAntigo));
-        when(mecanicoResponse.paraModel(mecanicoRequest)).thenReturn(mecanicoAtualizado);
+        when(mecanicoResponse.requestParaModel(mecanicoRequest)).thenReturn(mecanicoAtualizado);
         when(mecanicoRepository.save(mecanicoAtualizado)).thenReturn(mecanicoAtualizado);
 
-        Mecanico resultado = mecanicoService.atualizarMecanico(mecanicoAntigo.getId(), mecanicoRequest);
+        MecanicoDTO resultado = mecanicoService.atualizarMecanico(mecanicoAntigo.getId(), mecanicoRequest);
 
         verify(mecanicoRepository, times(1)).findById(mecanicoAntigo.getId());
-        verify(mecanicoResponse, times(1)).paraModel(mecanicoRequest);
+        verify(mecanicoResponse, times(1)).requestParaModel(mecanicoRequest);
         verify(mecanicoRepository, times(1)).save(mecanicoAtualizado);
 
         assertNotNull(resultado);
@@ -129,7 +130,7 @@ class MecanicoServiceTest {
 
         assertEquals("Mecanico com id 99, nao encontrado", exception.getMessage());
         verify(mecanicoRepository, times(1)).findById(99L);
-        verify(mecanicoResponse, never()).paraModel(any());
+        verify(mecanicoResponse, never()).requestParaModel(any());
         verify(mecanicoRepository, never()).save(any());
     }
 

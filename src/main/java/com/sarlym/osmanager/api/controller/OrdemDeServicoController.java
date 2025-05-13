@@ -21,8 +21,15 @@ import com.sarlym.osmanager.api.dto.response.OrdemServicoDTO;
 import com.sarlym.osmanager.api.dto.response.OrdemServicoResumo;
 import com.sarlym.osmanager.domain.service.OrdemServicoService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
-@RequestMapping(value = "api/ordens-servico")
+@RequestMapping(value = "api/ordens-servico", produces = {"application/json"})
+@Tag(name = "Ordens-Servico", description = "Operações com as ordens de serviço")
 public class OrdemDeServicoController {
 
     private OrdemServicoService ordemServicoService;
@@ -31,11 +38,24 @@ public class OrdemDeServicoController {
         this.ordemServicoService = ordemServicoService;
     }
 
+    @Operation(summary = "Busca por ordem de serviço", description = "Busca uma OS no sistema utilizando o ID como parametro.", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Mecanico não encontrado"),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar a busca de Ordem de Serviço"),
+    })
     @GetMapping("/{id}")
-    public OrdemServicoDTO buOrdemServico(@PathVariable Long id) {
+    public OrdemServicoDTO buscamosOrdemServico(
+            @Parameter(name = "id", description = "ID único da ordem de serviço", required = true, example = "1") @PathVariable(value = "id") Long id) {
         return ordemServicoService.buscaOrdemServicoOuErro(id);
     }
 
+    @Operation(summary = "Busca por ordem de serviço", description = "Busca uma OS no sistema utilizando vários parametros.", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Mecanico não encontrado"),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar a busca de Ordem de Serviço"),
+    })
     @GetMapping
     public ResponseEntity<List<OrdemServicoResumo>> buscaFiltrada(
             @RequestParam(required = false) String numeroOs,
@@ -48,14 +68,27 @@ public class OrdemDeServicoController {
         return ResponseEntity.ok(ordens);
     }
 
+    @Operation(summary = "Cadastra ordem de serviço", description = "Cadastra uma nova ordem de serviço ao passar os valores veiculoID, mecanicoID e descrição do problema", method = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Ordem de serviço não encontrada"),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar pesquisa")
+    })
     @PostMapping
-    public OrdemServicoDTO criaOrdemDeServico(@RequestBody OrdemServicoRequest ordemServicoRequest) {
+    public OrdemServicoDTO criaOrdemDeServico(@RequestBody(required = true) OrdemServicoRequest ordemServicoRequest) {
         return ordemServicoService.salvar(ordemServicoRequest);
     }
 
+    @Operation(summary = "Alterar o serviço", description = "Altera um registro de uma ordem de serviço")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Alteração realizada com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Ordem de serviço, mecanico ou veiculo não encontrada"),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar atualização")
+    })
     @PutMapping("/{id}")
-    public OrdemServicoDTO alteraOrdemServico(@PathVariable Long id,
-            @RequestBody OrdemServicoRequest ordemServicoRequest) {
+    public OrdemServicoDTO alteraOrdemServico(
+            @Parameter(name = "id", description = "ID único da ordem de serviço", required = true, example = "1") @PathVariable(name = "id") Long id,
+            @RequestBody(required = true) OrdemServicoRequest ordemServicoRequest) {
         return ordemServicoService.alterarOrdemServico(id, ordemServicoRequest);
     }
 }
