@@ -5,9 +5,8 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import com.sarlym.osmanager.api.dto.MecanicoDTO;
-import com.sarlym.osmanager.api.dto.dtoconverter.MecanicoConverter;
 import com.sarlym.osmanager.api.dto.request.MecanicoRequest;
+import com.sarlym.osmanager.api.dto.response.MecanicoDTO;
 import com.sarlym.osmanager.domain.service.MecanicoService;
 
 @RestController
@@ -15,32 +14,30 @@ import com.sarlym.osmanager.domain.service.MecanicoService;
 public class MecanicoController {
 
     private final MecanicoService mecanicoService;
-    private final MecanicoConverter mecanicoConverter;
 
-    public MecanicoController(MecanicoService mecanicoService, MecanicoConverter mecanicoConverter) {
+    public MecanicoController(MecanicoService mecanicoService) {
         this.mecanicoService = mecanicoService;
-        this.mecanicoConverter = mecanicoConverter;
     }
 
     @GetMapping("/{id}")
     public MecanicoDTO buscarMecanico(@PathVariable Long id) {
-        return mecanicoConverter.paraDTO(mecanicoService.buscarMecanicoOuErro(id));
+        return mecanicoService.buscarMecanicoOuErro(id);
     }
 
     @GetMapping
     public List<MecanicoDTO> listarMecanicos() {
-        return mecanicoConverter.paraDTOLista(mecanicoService.listarMecanicos());
+        return mecanicoService.listarMecanicos();
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public MecanicoDTO cadastrarMecanico(@RequestBody MecanicoRequest mecanicoRequest) {
-        return mecanicoConverter.paraDTO(mecanicoService.cadastrarMecanico(mecanicoRequest));
+        return mecanicoService.cadastrarMecanico(mecanicoRequest);
     }
 
     @PutMapping("/{id}")
     public MecanicoDTO alterarMecanico(@PathVariable Long id, @RequestBody MecanicoRequest MecanicoRequest) {
-        return mecanicoConverter.paraDTO(mecanicoService.atualizarMecanico(id, MecanicoRequest));
+        return mecanicoService.atualizarMecanico(id, MecanicoRequest);
     }
 
     @DeleteMapping("/{id}")

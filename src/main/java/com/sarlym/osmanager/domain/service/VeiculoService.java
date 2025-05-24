@@ -1,7 +1,8 @@
 package com.sarlym.osmanager.domain.service;
 
+import com.sarlym.osmanager.api.dto.mapper.VeiculoMapper;
 import com.sarlym.osmanager.api.dto.request.VeiculoRequest;
-import com.sarlym.osmanager.api.dto.response.VeiculoResponse;
+import com.sarlym.osmanager.api.dto.response.VeiculoDTO;
 import com.sarlym.osmanager.domain.exception.NegocioException;
 import com.sarlym.osmanager.domain.model.Veiculo;
 import com.sarlym.osmanager.domain.repository.VeiculoRepository;
@@ -17,39 +18,40 @@ public class VeiculoService {
 
     private static final String VEICULO_NAO_ENCONTRADO = "Veiculo com id %d nao encontrado";
     private final VeiculoRepository veiculoRepository;
-    private final VeiculoResponse veiculoResponse;
+    private final VeiculoMapper veiculoMapper;
 
-    public VeiculoService(VeiculoRepository veiculoRepository, VeiculoResponse veiculoResponse) {
+    public VeiculoService(VeiculoRepository veiculoRepository, VeiculoMapper veiculoMapper) {
         this.veiculoRepository = veiculoRepository;
-        this.veiculoResponse = veiculoResponse;
-    }
-
-    public Veiculo buscarVeiculoOuErro(Long id) {
-        return veiculoRepository.findById(id)
-                .orElseThrow(() -> new NegocioException(String.format(VEICULO_NAO_ENCONTRADO, id)));
-    }
-
-    public List<Veiculo> listarVeiculos() {
-        return veiculoRepository.findAll();
+        this.veiculoMapper = veiculoMapper;
     }
 
     @Transactional
-    public Veiculo cadastrarVeiculo(VeiculoRequest veiculoRequest) {
-        Veiculo veiculo = veiculoResponse.paraModel(veiculoRequest);
-        return veiculoRepository.save(veiculo);
+    public VeiculoDTO buscarVeiculoOuErro(Long id) {
+        return veiculoMapper.modeloParaDTO(veiculoRepository.findById(id)
+                .orElseThrow(() -> new NegocioException(String.format(VEICULO_NAO_ENCONTRADO, id))));
+    }
+
+    public List<VeiculoDTO> listarVeiculos() {
+        return veiculoMapper.modelListaParaDTOLista(veiculoRepository.findAll());
     }
 
     @Transactional
-    public Veiculo alterarVeiculo(Long id, VeiculoRequest veiculoRequest) {
-        Veiculo veiculoAntigo = buscarVeiculoOuErro(id);
-        Veiculo veiculo = veiculoResponse.paraModel(veiculoRequest);
+    public VeiculoDTO cadastrarVeiculo(VeiculoRequest veiculoRequest) {
+        Veiculo veiculo = veiculoMapper.requestParaModel(veiculoRequest);
+        return veiculoMapper.modeloParaDTO(veiculoRepository.save(veiculo));
+    }
+
+    @Transactional
+    public VeiculoDTO alterarVeiculo(Long id, VeiculoRequest veiculoRequest) {
+        Veiculo veiculoAntigo = veiculoMapper.dtoParaModel(buscarVeiculoOuErro(id));
+        Veiculo veiculo = veiculoMapper.requestParaModel(veiculoRequest);
         veiculo.setId(veiculoAntigo.getId());
-        return veiculoRepository.save(veiculo);
+        return veiculoMapper.modeloParaDTO(veiculoRepository.save(veiculo));
     }
 
     @Transactional
     public void deletarVeiculo(Long id) {
-        Veiculo veiculo = buscarVeiculoOuErro(id);
+        Veiculo veiculo = veiculoMapper.dtoParaModel(buscarVeiculoOuErro(id));
         veiculoRepository.delete(veiculo);
         veiculoRepository.flush();
     }

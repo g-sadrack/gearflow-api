@@ -1,14 +1,12 @@
-package com.sarlym.osmanager.api.dto;
+package com.sarlym.osmanager.api.dto.response;
 
 import lombok.Data;
 
 @Data
-public class MecanicoDTO {
-    
-    private Long id;
+public class MecanicoResumo {
+
     private String nome;
     private String especialidade;
     private String matricula;
-    private Boolean ativo;
 
 }

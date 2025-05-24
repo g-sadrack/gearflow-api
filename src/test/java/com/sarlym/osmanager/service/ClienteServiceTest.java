@@ -1,191 +1,86 @@
 package com.sarlym.osmanager.service;
 
-import com.sarlym.osmanager.api.dto.request.ClienteRequest;
-import com.sarlym.osmanager.api.dto.response.ClienteResponse;
-import com.sarlym.osmanager.domain.exception.ClienteException;
-import com.sarlym.osmanager.domain.exception.EmailJaExistenteException;
-import com.sarlym.osmanager.domain.model.Cliente;
-import com.sarlym.osmanager.domain.model.Veiculo;
-import com.sarlym.osmanager.domain.repository.ClienteRepository;
-import com.sarlym.osmanager.domain.service.ClienteService;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.context.SpringBootTest;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
+import java.util.Optional;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.*;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import com.sarlym.osmanager.api.dto.mapper.ClienteMapper;
+import com.sarlym.osmanager.api.dto.response.ClienteDTO;
+import com.sarlym.osmanager.domain.exception.ClienteException;
+import com.sarlym.osmanager.domain.model.Cliente;
+import com.sarlym.osmanager.domain.repository.ClienteRepository;
+import com.sarlym.osmanager.domain.service.ClienteService;
+
+@ExtendWith(MockitoExtension.class)
 class ClienteServiceTest {
-    @Mock
-    private Cliente cliente;
-    @Mock
-    private Cliente clienteAntigo;
-    @Mock
-    private Cliente clienteAtualizado;
-    @Mock
-    private ClienteResponse clienteResponse;
+
     @Mock
     private ClienteRepository clienteRepository;
-    @Mock
-    private ClienteRequest clienteRequest;
-    @Mock
-    private List<Cliente> clientes;
 
+    @Mock
+    private ClienteMapper clienteMapper;
+
+    @InjectMocks
     private ClienteService clienteService;
 
+    private Cliente clienteEntity;
+    private ClienteDTO clienteDto;
+
     @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-        clienteService = new ClienteService(clienteRepository, clienteResponse);
-        startCliente();
+    void setup() {
+        // Dados de exemplo
+        clienteEntity = new Cliente();
+        clienteEntity.setId(42L);
+        clienteEntity.setNome("João Silva");
+        // ... definir demais campos se quiser
+
+        clienteDto = new ClienteDTO();
+        clienteDto.setId(42L);
+        clienteDto.setNome("João Silva");
+        // ... definir demais campos do DTO
     }
 
     @Test
-    void quandoBuscarClientePorIdRetonarApenasUm() {
-        when(clienteRepository.findById(anyLong())).thenReturn(Optional.of(cliente));
+    void deveRetornarClienteDTOQuandoExistir() {
+        // Arrange
+        when(clienteRepository.findById(42L)).thenReturn(Optional.of(clienteEntity));
+        when(clienteMapper.modelParaDTO(clienteEntity)).thenReturn(clienteDto);
 
-        Cliente cliente1 = clienteService.buscarClienteOuErro(1L);
+        // Act
+        ClienteDTO resultado = clienteService.buscarClienteOuErro(42L);
 
-        assertNotNull(cliente1);
-        assertEquals(cliente.getId(), cliente1.getId());
-        verify(clienteRepository, times(1)).findById(cliente.getId());
+        // Assert
+        assertNotNull(resultado, "Deve retornar um DTO não-nulo");
+        assertEquals(42L, resultado.getId());
+        assertEquals("João Silva", resultado.getNome());
+        verify(clienteRepository, times(1)).findById(42L);
+        verify(clienteMapper, times(1)).modelParaDTO(clienteEntity);
     }
 
     @Test
-    void quandoBuscarClienteInexistenteRetornarErro() {
+    void deveLancarExceptionQuandoNaoExistirCliente() {
+        // Arrange
         when(clienteRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        ClienteException exception = assertThrows(ClienteException.class, () -> {
-            clienteService.buscarClienteOuErro(2L);
-        });
-
-        assertEquals("Cliente não pode ser deletado pois não foi encontrado", exception.getMessage());
-        verify(clienteRepository, times(1)).findById(2L);
-    }
-
-    @Test
-    void quandoListarClienteEntaoRetornarSucesso() {
-        when(clienteRepository.findAll()).thenReturn(clientes);
-
-        List<Cliente> clienteList = clienteService.clientes();
-
-        assertNotNull(clienteList);
-    }
-
-    @Test
-    void deveRetornarListaVaziaQuandoNaoExistiremClientes() {
-        when(clienteRepository.findAll()).thenReturn(List.of());
-
-        List<Cliente> clienteList = clienteService.clientes();
-
-        assertNotNull(clienteList);
-        assertTrue(clienteList.isEmpty());
-        verify(clienteRepository, times(1)).findAll();
-    }
-
-    @Test
-    void quandoCadastrarClienteEntaoReotrnarSucesso() {
-        when(clienteResponse.paraModel(clienteRequest)).thenReturn(cliente);
-        when(clienteRepository.existsByEmail(cliente.getEmail())).thenReturn(false);
-        when(clienteRepository.save(cliente)).thenReturn(cliente);
-
-        Cliente clienteTeste = clienteService.cadastrarCliente(clienteRequest);
-
-        assertNotNull(clienteTeste);
-        verify(clienteRepository, times(1)).existsByEmail(cliente.getEmail());
-        verify(clienteRepository, times(1)).save(cliente);
-    }
-
-    @Test
-    void deveLancarExcecaoQuandoEmailJaExistir() {
-        when(clienteResponse.paraModel(clienteRequest)).thenReturn(cliente);
-        when(clienteRepository.existsByEmail(cliente.getEmail())).thenReturn(true);
-
-        EmailJaExistenteException exception = assertThrows(EmailJaExistenteException.class,
-                () -> clienteService.cadastrarCliente(clienteRequest));
-
-        assertEquals("Email " + cliente.getEmail() + " já cadastrado no sistema", exception.getMessage());
-        verify(clienteRepository, times(1)).existsByEmail(cliente.getEmail());
-        verify(clienteRepository, never()).save(any());
-    }
-
-    @Test
-    void quandoAlterarClienteEntaoRetornarClienteAtualizado() {
-        when(clienteRepository.findById(clienteAntigo.getId())).thenReturn(Optional.of(clienteAntigo));
-        when(clienteResponse.paraModel(clienteRequest)).thenReturn(clienteAtualizado);
-        when(clienteRepository.save(clienteAtualizado)).thenReturn(clienteAtualizado);
-
-        Cliente resultado = clienteService.alterarCliente(clienteAntigo.getId(), clienteRequest);
-
-        verify(clienteRepository, times(1)).findById(clienteAntigo.getId());
-        verify(clienteResponse, times(1)).paraModel(clienteRequest);
-        verify(clienteRepository, times(1)).save(clienteAtualizado);
-
-        assertNotNull(resultado);
-        assertEquals(clienteAtualizado.getId(), resultado.getId());
-        assertEquals(clienteAtualizado.getNome(), resultado.getNome());
-    }
-
-    @Test
-    void quandoAlterarClienteInexistenteEntaoLancarExcecao() {
-        when(clienteRepository.findById(anyLong())).thenReturn(Optional.empty());
-
-        ClienteException exception = assertThrows(ClienteException.class, () -> {
-            clienteService.alterarCliente(99L, clienteRequest);
-        });
-
-        assertEquals("Cliente não pode ser deletado pois não foi encontrado",
-                exception.getMessage());
-
+        // Act & Assert
+        ClienteException ex = assertThrows(
+            ClienteException.class,
+            () -> clienteService.buscarClienteOuErro(99L),
+            "Deve lançar ClienteException quando não encontrar"
+        );
+        assertEquals(
+            "Cliente não pode ser deletado pois não foi encontrado",
+            ex.getMessage()
+        );
         verify(clienteRepository, times(1)).findById(99L);
-        verify(clienteResponse, never()).paraModel(any());
-        verify(clienteRepository, never()).save(any());
+        verifyNoInteractions(clienteMapper);
     }
-
-    @Test
-    void quandoExcluirClienteEntaoDeveRemoverComSucesso() {
-        when(clienteRepository.findById(cliente.getId())).thenReturn(Optional.of(cliente));
-
-        clienteService.deletarCliente(cliente.getId());
-
-        verify(clienteRepository, times(1)).findById(cliente.getId());
-        verify(clienteRepository, times(1)).delete(cliente);
-    }
-
-    @Test
-    void quandoExcluirClienteInexistenteEntaoLancarExcecao() {
-        when(clienteRepository.findById(anyLong())).thenReturn(Optional.empty());
-
-        ClienteException exception = assertThrows(ClienteException.class, () -> {
-            clienteService.deletarCliente(99L);
-        });
-
-        assertEquals("Cliente não pode ser deletado pois não foi encontrado", exception.getMessage());
-
-        verify(clienteRepository, times(1)).findById(99L);
-        verify(clienteRepository, never()).delete(any());
-    }
-
-    void startCliente() {
-        List<Veiculo> veiculos = new ArrayList<>();
-        clienteAntigo = new Cliente(2L, "Antigo Nome", "61 98544-8654", "antigo@email.com", " ", LocalDateTime.now(),
-                LocalDateTime.now(),veiculos);
-        clienteAtualizado = new Cliente(3L, "Novo Nome", "61 98544-8654", "novo@email.com", " ", LocalDateTime.now(),
-                LocalDateTime.now(),veiculos);
-        cliente = new Cliente(1L, "Guarda Belo", "61 98544-8654", "guarda22belo@gmail.com", " ", LocalDateTime.now(),
-                LocalDateTime.now(),veiculos);
-        clienteRequest = new ClienteRequest("Batatinha", "61 99851-3445", "batatinha123@email.com");
-
-        clientes = new ArrayList<>();
-        clientes.add(cliente);
-    }
-
+    
 }

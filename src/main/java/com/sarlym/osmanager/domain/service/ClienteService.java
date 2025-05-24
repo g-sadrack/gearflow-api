@@ -1,7 +1,8 @@
 package com.sarlym.osmanager.domain.service;
 
+import com.sarlym.osmanager.api.dto.mapper.ClienteMapper;
 import com.sarlym.osmanager.api.dto.request.ClienteRequest;
-import com.sarlym.osmanager.api.dto.response.ClienteResponse;
+import com.sarlym.osmanager.api.dto.response.ClienteDTO;
 import com.sarlym.osmanager.domain.exception.ClienteException;
 import com.sarlym.osmanager.domain.exception.EmailJaExistenteException;
 import com.sarlym.osmanager.domain.model.Cliente;
@@ -13,40 +14,40 @@ import java.util.List;
 @Service
 public class ClienteService {
 
-    private final ClienteResponse clienteResponse;
+    private final ClienteMapper clienteMapper;
     private final ClienteRepository clienteRepository;
 
-    public ClienteService(ClienteRepository clienteRepository, ClienteResponse clienteResponse) {
+    public ClienteService(ClienteRepository clienteRepository, ClienteMapper clienteMapper) {
         this.clienteRepository = clienteRepository;
-        this.clienteResponse = clienteResponse;
+        this.clienteMapper = clienteMapper;
     }
 
-    public Cliente buscarClienteOuErro(Long id) {
-        return clienteRepository.findById(id).orElseThrow(
-                () -> new ClienteException("Cliente não pode ser deletado pois não foi encontrado"));
+    public ClienteDTO buscarClienteOuErro(Long id) {
+        return clienteMapper.modelParaDTO(clienteRepository.findById(id).orElseThrow(
+                () -> new ClienteException("Cliente não pode ser deletado pois não foi encontrado")));
     }
 
-    public List<Cliente> clientes() {
-        return clienteRepository.findAll();
+    public List<ClienteDTO> clientes() {
+        return clienteMapper.modelListaParaDTOLista(clienteRepository.findAll());
     }
 
-    public Cliente cadastrarCliente(ClienteRequest clienteRequest) {
-        Cliente cliente = clienteResponse.paraModel(clienteRequest);
+    public ClienteDTO cadastrarCliente(ClienteRequest clienteRequest) {
+        Cliente cliente = clienteMapper.requestParaModel(clienteRequest);
         if (clienteRepository.existsByEmail(cliente.getEmail())) {
             throw new EmailJaExistenteException("Email " + cliente.getEmail() + " já cadastrado no sistema");
         }
-        return clienteRepository.save(cliente);
+        return clienteMapper.modelParaDTO(clienteRepository.save(cliente));
     }
 
-    public Cliente alterarCliente(Long id, ClienteRequest clienteRequest) {
-        Cliente clienteAntigo = buscarClienteOuErro(id);
-        Cliente cliente = clienteResponse.paraModel(clienteRequest);
+    public ClienteDTO alterarCliente(Long id, ClienteRequest clienteRequest) {
+        Cliente clienteAntigo = clienteMapper.dTOParaModel(buscarClienteOuErro(id));
+        Cliente cliente = clienteMapper.requestParaModel(clienteRequest);
         cliente.setId(clienteAntigo.getId());
-        return clienteRepository.save(cliente);
+        return clienteMapper.modelParaDTO(clienteRepository.save(cliente));
     }
 
     public void deletarCliente(Long id) {
-        Cliente cliente = buscarClienteOuErro(id);
+        Cliente cliente = clienteMapper.dTOParaModel(buscarClienteOuErro(id));
         clienteRepository.delete(cliente);
         clienteRepository.flush();
     }
