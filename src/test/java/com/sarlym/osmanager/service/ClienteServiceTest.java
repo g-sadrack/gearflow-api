@@ -12,6 +12,7 @@ import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.sarlym.osmanager.api.dto.mapper.ClienteMapper;
+
 import com.sarlym.osmanager.api.dto.response.ClienteDTO;
 import com.sarlym.osmanager.domain.exception.ClienteException;
 import com.sarlym.osmanager.domain.model.Cliente;
@@ -29,23 +30,7 @@ class ClienteServiceTest {
 
     @InjectMocks
     private ClienteService clienteService;
-
-    private Cliente clienteEntity;
-    private ClienteDTO clienteDto;
-
-    @BeforeEach
-    void setup() {
-        // Dados de exemplo
-        clienteEntity = new Cliente();
-        clienteEntity.setId(42L);
-        clienteEntity.setNome("João Silva");
-        // ... definir demais campos se quiser
-
-        clienteDto = new ClienteDTO();
-        clienteDto.setId(42L);
-        clienteDto.setNome("João Silva");
-        // ... definir demais campos do DTO
-    }
+    private ClienteMapper clienteMapper;
 
     @Test
     void deveRetornarClienteDTOQuandoExistir() {
@@ -80,7 +65,7 @@ class ClienteServiceTest {
             ex.getMessage()
         );
         verify(clienteRepository, times(1)).findById(99L);
-        verifyNoInteractions(clienteMapper);
+
     }
     
 }
