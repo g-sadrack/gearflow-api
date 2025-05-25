@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import com.sarlym.osmanager.api.dto.mapper.MecanicoMapper;
 import com.sarlym.osmanager.api.dto.request.MecanicoRequest;
 import com.sarlym.osmanager.api.dto.response.MecanicoDTO;
 import com.sarlym.osmanager.domain.service.MecanicoService;
@@ -21,9 +22,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class MecanicoController {
 
     private final MecanicoService mecanicoService;
+    private final MecanicoMapper mecanicoMapper;
 
-    public MecanicoController(MecanicoService mecanicoService) {
+    public MecanicoController(MecanicoService mecanicoService, MecanicoMapper mecanicoMapper) {
         this.mecanicoService = mecanicoService;
+        this.mecanicoMapper = mecanicoMapper;
     }
 
     @Operation(summary = "Realiza busca de mecanico por ID", description = "Busca um mecanico no sistema utilizando o ID como parametro.", method = "GET")
@@ -35,7 +38,7 @@ public class MecanicoController {
     @GetMapping("/{id}")
     public MecanicoDTO buscarMecanico(
             @Parameter(name = "id", description = "ID único do mecanico", required = true, example = "1") @PathVariable(value = "id") Long id) {
-        return mecanicoService.buscarMecanicoOuErro(id);
+        return mecanicoMapper.modelParaDTO(mecanicoService.buscarMecanicoOuErro(id));
     }
 
     @Operation(summary = "Realiza listagem de mecanicos", description = "Lista os mecanicos cadastrados no sistema, mostrando o nome, especialidade, matricula e se está ativo.", method = "GET")
@@ -45,7 +48,7 @@ public class MecanicoController {
     })
     @GetMapping
     public List<MecanicoDTO> listarMecanicos() {
-        return mecanicoService.listarMecanicos();
+        return mecanicoMapper.modelListaParaDTOLista(mecanicoService.listarMecanicos());
     }
 
     @Operation(summary = "Realiza cadastro de mecanico", description = "Cadastra no sistema um mecanico ao passar o nome, especialidade, matricula e se está ativo.", method = "POST")
@@ -56,7 +59,7 @@ public class MecanicoController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public MecanicoDTO cadastrarMecanico(@RequestBody(required = true) MecanicoRequest mecanicoRequest) {
-        return mecanicoService.cadastrarMecanico(mecanicoRequest);
+        return mecanicoMapper.modelParaDTO(mecanicoService.cadastrarMecanico(mecanicoRequest));
     }
 
     @Operation(summary = "Alteração de mecanico", description = "Altera uma ou mais informações do mecanico", method = "PUT")
@@ -69,7 +72,7 @@ public class MecanicoController {
     public MecanicoDTO alterarMecanico(
             @Parameter(name = "id", description = "ID único do mecanico", required = true, example = "1") @PathVariable(value = "id") Long id,
             @RequestBody(required = true) MecanicoRequest MecanicoRequest) {
-        return mecanicoService.atualizarMecanico(id, MecanicoRequest);
+        return mecanicoMapper.modelParaDTO(mecanicoService.atualizarMecanico(id, MecanicoRequest));
     }
 
     @Operation(summary = "Deletar de mecanico", description = "Deleta um registro de mecanico", method = "DELETE")
