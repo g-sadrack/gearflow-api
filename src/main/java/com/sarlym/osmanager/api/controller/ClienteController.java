@@ -1,5 +1,6 @@
 package com.sarlym.osmanager.api.controller;
 
+import com.sarlym.osmanager.api.dto.mapper.ClienteMapper;
 import com.sarlym.osmanager.api.dto.request.ClienteRequest;
 import com.sarlym.osmanager.api.dto.response.ClienteDTO;
 import com.sarlym.osmanager.domain.service.ClienteService;
@@ -19,9 +20,11 @@ import java.util.List;
 public class ClienteController {
 
     private final ClienteService clienteService;
+    private final ClienteMapper clienteMapper;
 
-    public ClienteController(ClienteService clienteService) {
+    public ClienteController(ClienteService clienteService, ClienteMapper clienteMapper) {
         this.clienteService = clienteService;
+        this.clienteMapper = clienteMapper;
     }
 
     @Operation(summary = "Realiza busca de cliente por ID", description = "Busca um cliente no sistema utilizando o ID como parametro.", method = "GET")
@@ -33,7 +36,7 @@ public class ClienteController {
     @GetMapping("/{id}")
     public ClienteDTO buscarCliente(
             @Parameter(name = "id", description = "ID único do cliente", required = true, example = "1") @PathVariable(value = "id") Long id) {
-        return clienteService.buscarClienteOuErro(id);
+        return clienteMapper.modelParaDTO(clienteService.buscarClienteOuErro(id));
     }
 
     @Operation(summary = "Realiza listagem de clientes", description = "Lista os clientes cadastrados no sistema, mostrando o nome, e-mail e telefone.", method = "GET")
@@ -43,7 +46,7 @@ public class ClienteController {
     })
     @GetMapping
     public List<ClienteDTO> listarClientes() {
-        return clienteService.clientes();
+        return clienteMapper.modelListaParaDTOLista(clienteService.clientes());
     }
 
     @Operation(summary = "Realiza cadastro de cliente", description = "Cadastra no sistema uma pessoa ao passar o nome, e-mail e telefone.", method = "POST")
@@ -54,7 +57,7 @@ public class ClienteController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ClienteDTO cadastrarCliente(@RequestBody(required = true) ClienteRequest clienteRequest) {
-        return clienteService.cadastrarCliente(clienteRequest);
+        return clienteMapper.modelParaDTO(clienteService.cadastrarCliente(clienteRequest));
     }
 
     @Operation(summary = "Alteração de cliente", description = "Altera uma informação do cliente", method = "PUT")
@@ -68,7 +71,7 @@ public class ClienteController {
             @Parameter(name = "id", description = "ID único do cliente", required = true, example = "1") @PathVariable(value = "id") Long id,
             @RequestBody ClienteRequest clienteRequest) {
 
-        return clienteService.alterarCliente(id, clienteRequest);
+        return clienteMapper.modelParaDTO(clienteService.alterarCliente(id, clienteRequest));
     }
 
     @Operation(summary = "Deletar de cliente", description = "Deleta um registro de cliente", method = "DELETE")

@@ -16,9 +16,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sarlym.osmanager.api.core.enums.Status;
+import com.sarlym.osmanager.api.dto.mapper.OrdemServicoMapper;
 import com.sarlym.osmanager.api.dto.request.OrdemServicoRequest;
 import com.sarlym.osmanager.api.dto.response.OrdemServicoDTO;
 import com.sarlym.osmanager.api.dto.response.OrdemServicoResumo;
+import com.sarlym.osmanager.domain.model.OrdemServico;
 import com.sarlym.osmanager.domain.service.OrdemServicoService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,9 +35,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class OrdemDeServicoController {
 
     private OrdemServicoService ordemServicoService;
+    private OrdemServicoMapper ordemServicoMapper;
 
-    public OrdemDeServicoController(OrdemServicoService ordemServicoService) {
+    public OrdemDeServicoController(OrdemServicoService ordemServicoService, OrdemServicoMapper ordemServicoMapper) {
         this.ordemServicoService = ordemServicoService;
+        this.ordemServicoMapper = ordemServicoMapper;
     }
 
     @Operation(summary = "Busca por ordem de serviço", description = "Busca uma OS no sistema utilizando o ID como parametro.", method = "GET")
@@ -47,7 +51,7 @@ public class OrdemDeServicoController {
     @GetMapping("/{id}")
     public OrdemServicoDTO buscamosOrdemServico(
             @Parameter(name = "id", description = "ID único da ordem de serviço", required = true, example = "1") @PathVariable(value = "id") Long id) {
-        return ordemServicoService.buscaOrdemServicoOuErro(id);
+        return ordemServicoMapper.modeloParaDTO(ordemServicoService.buscaOrdemServicoOuErro(id));
     }
 
     @Operation(summary = "Busca por ordem de serviço", description = "Busca uma OS no sistema utilizando vários parametros.", method = "GET")
@@ -63,9 +67,9 @@ public class OrdemDeServicoController {
             @RequestParam(required = false) Long veiculoId,
             @RequestParam(required = false) @DateTimeFormat(iso = ISO.DATE_TIME) LocalDateTime dataInicio,
             @RequestParam(required = false) @DateTimeFormat(iso = ISO.DATE_TIME) LocalDateTime dataFim) {
-        List<OrdemServicoResumo> ordens = ordemServicoService.buscaComFiltros(numeroOs, status, veiculoId, dataInicio,
+        List<OrdemServico> ordens = ordemServicoService.buscaComFiltros(numeroOs, status, veiculoId, dataInicio,
                 dataFim);
-        return ResponseEntity.ok(ordens);
+        return ResponseEntity.ok(ordemServicoMapper.modeloListaParaListaDTOResumo(ordens));
     }
 
     @Operation(summary = "Cadastra ordem de serviço", description = "Cadastra uma nova ordem de serviço ao passar os valores veiculoID, mecanicoID e descrição do problema", method = "POST")

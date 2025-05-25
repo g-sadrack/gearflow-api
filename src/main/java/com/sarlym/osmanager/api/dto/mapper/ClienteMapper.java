@@ -32,4 +32,8 @@ public class ClienteMapper {
         return clientes.stream().map(this::modelParaDTO).toList();
     }
 
+    public void copiaParaNovo(ClienteRequest clienteRequest, Cliente cliente) {
+        modelMapper.map(clienteRequest, cliente);
+    }
+
 }

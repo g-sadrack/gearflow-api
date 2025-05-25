@@ -31,4 +31,8 @@ public class VeiculoMapper {
         return modelMapper.map(veiculoDTO, Veiculo.class);
     }
 
+    public void copiaParaNovo(VeiculoRequest veiculoRequest, Veiculo veiculo) {
+       modelMapper.map(veiculoRequest, veiculo);
+    }
+
 }

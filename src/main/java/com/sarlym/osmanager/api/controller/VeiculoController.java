@@ -1,10 +1,12 @@
 package com.sarlym.osmanager.api.controller;
 
+import com.sarlym.osmanager.api.dto.mapper.VeiculoMapper;
 import com.sarlym.osmanager.api.dto.request.VeiculoRequest;
 import com.sarlym.osmanager.api.dto.response.VeiculoDTO;
 import com.sarlym.osmanager.domain.service.VeiculoService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -19,9 +21,11 @@ import java.util.List;
 public class VeiculoController {
 
     private final VeiculoService veiculoService;
+    private final VeiculoMapper veiculoMapper;
 
-    public VeiculoController(VeiculoService veiculoService) {
+    public VeiculoController(VeiculoService veiculoService, VeiculoMapper veiculoMapper) {
         this.veiculoService = veiculoService;
+        this.veiculoMapper = veiculoMapper;
     }
 
     @Operation(summary = "Lista todos os veiculos", description = "Faz a listagem de todos os veiuclos cadastrados no sistema")
@@ -31,7 +35,7 @@ public class VeiculoController {
     })
     @GetMapping
     public List<VeiculoDTO> listarVeiculos() {
-        return veiculoService.listarVeiculos();
+        return veiculoMapper.modelListaParaDTOLista(veiculoService.listarVeiculos());
     }
 
     @Operation(summary = "Realiza busca de veiculos por ID", description = "Busca um veiculo no sistema utilizando o ID como parametro.", method = "GET")
@@ -41,8 +45,9 @@ public class VeiculoController {
             @ApiResponse(responseCode = "500", description = "Erro ao realizar a busca de cliente"),
     })
     @GetMapping("/{id}")
-    public VeiculoDTO buscarVeiculo(@PathVariable(name = "id") Long id) {
-        return veiculoService.buscarVeiculoOuErro(id);
+    public VeiculoDTO buscarVeiculo(
+            @Parameter(name = "id", description = "ID único do veiculo", required = true, example = "1") @PathVariable(name = "id") Long id) {
+        return veiculoMapper.modeloParaDTO(veiculoService.buscarVeiculoOuErro(id));
     }
 
     @Operation(summary = "Cadastra ordem de veiculo", description = "Cadastra uma nova ordem de serviço ao passar os valores placa, marca, modelo, ano, cor e quilometragem veiculo", method = "POST")
@@ -54,7 +59,7 @@ public class VeiculoController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public VeiculoDTO cadastrarVeiculo(@RequestBody(required = true) VeiculoRequest veiculoRequest) {
-        return veiculoService.cadastrarVeiculo(veiculoRequest);
+        return veiculoMapper.modeloParaDTO(veiculoService.cadastrarVeiculo(veiculoRequest));
     }
 
     @Operation(summary = "Alterar o veiculo", description = "Altera um registro de um veiculo")
@@ -64,19 +69,10 @@ public class VeiculoController {
             @ApiResponse(responseCode = "500", description = "Erro ao realizar atualização")
     })
     @PutMapping("/{id}")
-    public VeiculoDTO alterarVeiculo(@PathVariable(name = "id") Long id,
+    public VeiculoDTO alterarVeiculo(
+            @Parameter(name = "id", description = "ID único do veiculo", required = true, example = "1") @PathVariable(name = "id") Long id,
             @RequestBody(required = true) VeiculoRequest veiculoRequest) {
-        return veiculoService.alterarVeiculo(id, veiculoRequest);
+        return veiculoMapper.modeloParaDTO(veiculoService.alterarVeiculo(id, veiculoRequest));
     }
 
-    @Operation(summary = "Deletar veiculo", description = "Deleta um registro de veiculo", method = "DELETE")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Delete realizado com sucesso"),
-            @ApiResponse(responseCode = "404", description = "ID de serviço não encontrado"),
-    })
-    @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deletarVeiculo(@PathVariable Long id) {
-        veiculoService.deletarVeiculo(id);
-    }
 }
