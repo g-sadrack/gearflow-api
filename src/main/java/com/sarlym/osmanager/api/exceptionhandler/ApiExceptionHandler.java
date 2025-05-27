@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.sarlym.osmanager.domain.exception.EmailJaExistenteException;
 import com.sarlym.osmanager.domain.exception.EntidadeNaoEncontradaException;
 import com.sarlym.osmanager.domain.exception.NegocioException;
 
@@ -44,6 +45,17 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                 .timeStamp(OffsetDateTime.now()).build();
         return handleExceptionInternal(ex, problem, new HttpHeaders(), status, webRequest);
 
+    }
+
+    @ExceptionHandler(EmailJaExistenteException.class)
+    public ResponseEntity<?> handleEmailJaExistenteException(NegocioException ex, WebRequest webRequest) {
+        HttpStatus status = HttpStatus.CONFLICT;
+        ProblemType problemType = ProblemType.ENTIDADE_NAO_ENCONTRADA;
+        String detail = ex.getMessage();
+
+        Problem problem = createProblemBuilder(status, problemType, detail).userMessage(USER_MESSAGE)
+                .timeStamp(OffsetDateTime.now()).build();
+        return handleExceptionInternal(ex, problem, new HttpHeaders(), status, webRequest);
     }
 
     private Problem.ProblemBuilder createProblemBuilder(HttpStatus status, ProblemType problemType, String detail) {
