@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.sarlym.osmanager.api.core.enums.Status;
 import com.sarlym.osmanager.api.dto.mapper.OrdemServicoMapper;
 import com.sarlym.osmanager.api.dto.request.OrdemServicoRequest;
-import com.sarlym.osmanager.api.dto.response.OrdemServicoDTO;
 import com.sarlym.osmanager.domain.exception.EntidadeNaoEncontradaException;
 import com.sarlym.osmanager.domain.model.Mecanico;
 import com.sarlym.osmanager.domain.model.OrdemServico;
@@ -46,7 +45,7 @@ public class OrdemServicoService {
     }
 
     @Transactional
-    public OrdemServicoDTO salvar(OrdemServicoRequest request) {
+    public OrdemServico salvar(OrdemServicoRequest request) {
         Mecanico mecanico = mecanicoService.buscarMecanicoOuErro(request.getMecanico());
         Veiculo veiculo = veiculoService.buscarVeiculoOuErro(request.getVeiculo());
 
@@ -55,7 +54,7 @@ public class OrdemServicoService {
         os.setMecanico(mecanico); // Definido manualmente
         os.setVeiculo(veiculo); // Definido manualmente
         geradorNumOs(os);
-        return ordemServicoMapper.modeloParaDTO(ordemServicoRepository.save(os));
+        return ordemServicoRepository.save(os);
     }
 
     public void geradorNumOs(OrdemServico os) {
@@ -70,7 +69,7 @@ public class OrdemServicoService {
     }
 
     @Transactional
-    public OrdemServicoDTO alterarOrdemServico(Long id, OrdemServicoRequest ordemServicoRequest) {
+    public OrdemServico alterarOrdemServico(Long id, OrdemServicoRequest ordemServicoRequest) {
         OrdemServico ordemServico = buscaOrdemServicoOuErro(id);
         Veiculo veiculo = veiculoService.buscarVeiculoOuErro(ordemServicoRequest.getVeiculo());
         Mecanico mecanico = mecanicoService.buscarMecanicoOuErro(ordemServicoRequest.getMecanico());
@@ -79,7 +78,7 @@ public class OrdemServicoService {
         ordemServico.setVeiculo(veiculo);
         ordemServico.setDescricaoProblema(ordemServicoRequest.getDescricaoProblema());
 
-        return ordemServicoMapper.modeloParaDTO(ordemServicoRepository.save(ordemServico));
+        return ordemServicoRepository.save(ordemServico);
     }
 
     @Transactional

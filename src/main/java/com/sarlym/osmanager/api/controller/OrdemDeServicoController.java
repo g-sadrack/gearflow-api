@@ -84,7 +84,7 @@ public class OrdemDeServicoController {
     })
     @PostMapping
     public OrdemServicoDTO criaOrdemDeServico(@RequestBody(required = true) OrdemServicoRequest ordemServicoRequest) {
-        return ordemServicoService.salvar(ordemServicoRequest);
+        return ordemServicoMapper.modeloParaDTO(ordemServicoService.salvar(ordemServicoRequest));
     }
 
     @Operation(summary = "Alterar o serviço", description = "Altera um registro de uma ordem de serviço")
@@ -97,7 +97,7 @@ public class OrdemDeServicoController {
     public OrdemServicoDTO alteraOrdemServico(
             @Parameter(name = "id", description = "ID único da ordem de serviço", required = true, example = "1") @PathVariable(name = "id") Long id,
             @RequestBody(required = true) OrdemServicoRequest ordemServicoRequest) {
-        return ordemServicoService.alterarOrdemServico(id, ordemServicoRequest);
+        return ordemServicoMapper.modeloParaDTO(ordemServicoService.alterarOrdemServico(id, ordemServicoRequest));
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
