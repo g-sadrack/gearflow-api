@@ -7,6 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -97,5 +98,12 @@ public class OrdemDeServicoController {
             @Parameter(name = "id", description = "ID único da ordem de serviço", required = true, example = "1") @PathVariable(name = "id") Long id,
             @RequestBody(required = true) OrdemServicoRequest ordemServicoRequest) {
         return ordemServicoService.alterarOrdemServico(id, ordemServicoRequest);
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/{id}")
+    public void deletaOrdemServico(
+                 @Parameter(name = "id", description = "ID único da OS", required = true, example = "1") @PathVariable(name = "id") Long id) {
+        ordemServicoService.deletaOrdemServico(id);
     }
 }

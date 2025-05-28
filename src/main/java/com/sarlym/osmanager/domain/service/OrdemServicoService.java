@@ -82,4 +82,13 @@ public class OrdemServicoService {
         return ordemServicoMapper.modeloParaDTO(ordemServicoRepository.save(ordemServico));
     }
 
+    @Transactional
+    public void deletaOrdemServico(Long id) {
+        OrdemServico os = buscaOrdemServicoOuErro(id);
+        os.setAtivo(false);
+        os.setDataFinalizacao(LocalDateTime.now());
+        os.setStatus(Status.FINALIZADA);
+        ordemServicoRepository.save(os);
+    }
+
 }
