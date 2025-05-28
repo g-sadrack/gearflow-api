@@ -2,7 +2,7 @@ package com.sarlym.osmanager.domain.service;
 
 import com.sarlym.osmanager.api.dto.mapper.VeiculoMapper;
 import com.sarlym.osmanager.api.dto.request.VeiculoRequest;
-import com.sarlym.osmanager.domain.exception.NegocioException;
+import com.sarlym.osmanager.domain.exception.EntidadeNaoEncontradaException;
 import com.sarlym.osmanager.domain.model.Veiculo;
 import com.sarlym.osmanager.domain.repository.VeiculoRepository;
 
@@ -27,7 +27,7 @@ public class VeiculoService {
     @Transactional
     public Veiculo buscarVeiculoOuErro(Long id) {
         return veiculoRepository.findById(id)
-                .orElseThrow(() -> new NegocioException(String.format(VEICULO_NAO_ENCONTRADO, id)));
+                .orElseThrow(() -> new EntidadeNaoEncontradaException(String.format(VEICULO_NAO_ENCONTRADO, id)));
     }
 
     public List<Veiculo> listarVeiculos() {

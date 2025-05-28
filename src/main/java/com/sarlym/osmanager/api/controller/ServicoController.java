@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sarlym.osmanager.api.dto.mapper.ServicoMapper;
 import com.sarlym.osmanager.api.dto.request.ServicoRequest;
 import com.sarlym.osmanager.api.dto.response.ServicoDTO;
 import com.sarlym.osmanager.domain.service.ServicoService;
@@ -28,9 +29,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class ServicoController {
 
     private final ServicoService servicoService;
+    private final ServicoMapper servicoMapper;
 
-    public ServicoController(ServicoService servicoService) {
+    public ServicoController(ServicoService servicoService, ServicoMapper servicoMapper) {
         this.servicoService = servicoService;
+        this.servicoMapper = servicoMapper;
     }
 
     @Operation(summary = "Lista os serviços", description = "Lista todos os serviços prestados pela mecanica", method = "GET")
@@ -40,7 +43,7 @@ public class ServicoController {
     })
     @GetMapping
     public List<ServicoDTO> listarServicos() {
-        return servicoService.listarServicos();
+        return servicoMapper.modelLitaParaDTOLista(servicoService.listarServicos());
     }
 
     @Operation(summary = "Realiza busca de serviço por ID", description = "Busca um serviço no sistema utilizando o ID como parametro.", method = "GET")
@@ -51,7 +54,7 @@ public class ServicoController {
     })
     @GetMapping("/{id}")
     public ServicoDTO buscarServico(@PathVariable(name = "id") Long id) {
-        return servicoService.buscarServicoOuErro(id);
+        return servicoMapper.modelParaDTO(servicoService.buscarServicoOuErro(id));
     }
 
     @Operation(summary = "Cadastra ordem de serviço", description = "Cadastra uma nova ordem de serviço ao passar os valores veiculoID, mecanicoID e descrição do problema", method = "POST")
@@ -63,7 +66,7 @@ public class ServicoController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ServicoDTO cadastrarServico(@RequestBody(required = true) ServicoRequest servicoRequest) {
-        return servicoService.cadastrarServico(servicoRequest);
+        return servicoMapper.modelParaDTO(servicoService.cadastrarServico(servicoRequest));
     }
 
     @Operation(summary = "Alterar o serviço", description = "Altera um registro de um serviço")
@@ -73,8 +76,9 @@ public class ServicoController {
             @ApiResponse(responseCode = "500", description = "Erro ao realizar atualização")
     })
     @PutMapping("/{id}")
-    public ServicoDTO alterarServico(@PathVariable Long id, @RequestBody(required = true) ServicoRequest servicoRequest) {
-        return servicoService.alterarServico(id, servicoRequest);
+    public ServicoDTO alterarServico(@PathVariable Long id,
+            @RequestBody(required = true) ServicoRequest servicoRequest) {
+        return servicoMapper.modelParaDTO(servicoService.alterarServico(id, servicoRequest));
     }
 
     @Operation(summary = "Deletar serviço", description = "Deleta um registro de serviço", method = "DELETE")
