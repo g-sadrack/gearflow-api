@@ -32,7 +32,7 @@ public class OrdemServico {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String numero_os;
-    private Status status;
+    private Status status = Status.ABERTA;
     private String descricaoProblema;
     private String diagnosticoTecnico;
     private BigDecimal valorTotal;

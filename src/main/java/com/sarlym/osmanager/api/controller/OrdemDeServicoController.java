@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sarlym.osmanager.api.core.enums.Status;
@@ -72,9 +74,10 @@ public class OrdemDeServicoController {
         return ResponseEntity.ok(ordemServicoMapper.modeloListaParaListaDTOResumo(ordens));
     }
 
+    @ResponseStatus(code = HttpStatus.CREATED)
     @Operation(summary = "Cadastra ordem de serviço", description = "Cadastra uma nova ordem de serviço ao passar os valores veiculoID, mecanicoID e descrição do problema", method = "POST")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso"),
+            @ApiResponse(responseCode = "201", description = "Busca realizada com sucesso"),
             @ApiResponse(responseCode = "404", description = "Ordem de serviço não encontrada"),
             @ApiResponse(responseCode = "500", description = "Erro ao realizar pesquisa")
     })
