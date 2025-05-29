@@ -3,6 +3,8 @@ package com.sarlym.osmanager.domain.service;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,6 +44,11 @@ public class OrdemServicoService {
     public List<OrdemServico> buscaComFiltros(String numeroOs, Status status, Long veiculoId,
             LocalDateTime dataInicio, LocalDateTime dataFim) {
         return ordemServicoRepository.find(numeroOs, status, veiculoId, dataInicio, dataFim);
+    }
+
+    public List<OrdemServico> buscaListaAtivos() {
+        List<OrdemServico> osList = ordemServicoRepository.findAll();
+        return osList.stream().filter(x -> x.getAtivo()).collect(Collectors.toList());
     }
 
     @Transactional
