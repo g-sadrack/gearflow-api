@@ -3,7 +3,6 @@ package com.sarlym.osmanager.domain.service;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -57,9 +56,9 @@ public class OrdemServicoService {
         Veiculo veiculo = veiculoService.buscarVeiculoOuErro(request.getVeiculo());
 
         OrdemServico os = ordemServicoMapper.requestParaModelo(request);
-        System.out.println("\n\n" + os);
-        os.setMecanico(mecanico); // Definido manualmente
-        os.setVeiculo(veiculo); // Definido manualmente
+
+        os.setMecanico(mecanico);
+        os.setVeiculo(veiculo);
         geradorNumOs(os);
         return ordemServicoRepository.save(os);
     }
@@ -91,10 +90,12 @@ public class OrdemServicoService {
     @Transactional
     public void deletaOrdemServico(Long id) {
         OrdemServico os = buscaOrdemServicoOuErro(id);
-        os.setAtivo(false);
-        os.setDataFinalizacao(LocalDateTime.now());
-        os.setStatus(Status.FINALIZADA);
-        ordemServicoRepository.save(os);
+        if (os.getAtivo() == Boolean.TRUE) {
+            os.setAtivo(false);
+            os.setDataFinalizacao(LocalDateTime.now());
+            os.setStatus(Status.FINALIZADA);
+            ordemServicoRepository.save(os);    
+        }
     }
 
 }

@@ -33,7 +33,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
-@RequestMapping(value = "api/ordens-servico", produces = {"application/json"})
+@RequestMapping(value = "api/ordens-servico", produces = { "application/json" })
 @Tag(name = "Ordens-Servico", description = "Operações com as ordens de serviço")
 public class OrdemDeServicoController {
 
@@ -55,6 +55,17 @@ public class OrdemDeServicoController {
     public OrdemServicoDTO buscamosOrdemServico(
             @Parameter(name = "id", description = "ID único da ordem de serviço", required = true, example = "1") @PathVariable(value = "id") Long id) {
         return ordemServicoMapper.modeloParaDTO(ordemServicoService.buscaOrdemServicoOuErro(id));
+    }
+
+    @Operation(summary = "Busca por ordem de serviço das OS ativos", description = "Busca uma OS no sistema retornando apenas os ativos.", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Mecanico não encontrado"),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar a busca de Ordem de Serviço"),
+    })
+    @GetMapping("/lista/ativos")
+    public List<OrdemServicoResumo> buscaFiltrada() {
+        return ordemServicoMapper.modeloListaParaListaDTOResumo(ordemServicoService.buscaListaAtivos());
     }
 
     @Operation(summary = "Busca por ordem de serviço", description = "Busca uma OS no sistema utilizando vários parametros.", method = "GET")
@@ -103,7 +114,7 @@ public class OrdemDeServicoController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     public void deletaOrdemServico(
-                 @Parameter(name = "id", description = "ID único da OS", required = true, example = "1") @PathVariable(name = "id") Long id) {
+            @Parameter(name = "id", description = "ID único da OS", required = true, example = "1") @PathVariable(name = "id") Long id) {
         ordemServicoService.deletaOrdemServico(id);
     }
 }
