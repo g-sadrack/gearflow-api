@@ -1,184 +1,141 @@
-// package com.sarlym.osmanager.service;
+package com.sarlym.osmanager.service;
 
-// import com.sarlym.osmanager.api.dto.mapper.ServicoMapper;
-// import com.sarlym.osmanager.api.dto.request.ServicoRequest;
-// import com.sarlym.osmanager.domain.exception.NegocioException;
-// import com.sarlym.osmanager.domain.model.Servico;
-// import com.sarlym.osmanager.domain.repository.ServicoRepository;
-// import com.sarlym.osmanager.domain.service.ServicoService;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-// import org.junit.jupiter.api.BeforeEach;
-// import org.junit.jupiter.api.Test;
-// import org.mockito.Mock;
-// import org.mockito.MockitoAnnotations;
-// import org.springframework.boot.test.context.SpringBootTest;
-// import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
+import java.util.Optional;
 
-// import java.util.ArrayList;
-// import java.util.List;
-// import java.util.Optional;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-// import static org.junit.jupiter.api.Assertions.*;
-// import static org.mockito.Mockito.*;
+import com.sarlym.osmanager.api.dto.mapper.ServicoMapper;
+import com.sarlym.osmanager.api.dto.request.ServicoRequest;
+import com.sarlym.osmanager.domain.exception.EntidadeNaoEncontradaException;
+import com.sarlym.osmanager.domain.model.Servico;
+import com.sarlym.osmanager.domain.repository.ServicoRepository;
+import com.sarlym.osmanager.domain.service.ServicoService;
 
-// @SpringBootTest
-// class ServicoServiceTest {
+@ExtendWith(MockitoExtension.class)
+class ServicoServiceTest {
 
-//     @Mock
-//     private Servico servico;
-//     @Mock
-//     private Servico servicoAntigo;
-//     @Mock
-//     private Servico servicoAtualizado;
-//     @Mock
-//     private ServicoMapper servicoResponse;
-//     @Mock
-//     private ServicoRepository servicoRepository;
-//     @Mock
-//     private ServicoRequest servicoRequest;
-//     @Mock
-//     private List<Servico> servicos;
+    @Mock
+    private ServicoRepository servicoRepository;
 
-//     private ServicoService servicoService;
+    @Mock
+    private ServicoMapper servicoMapper;
 
-//     @BeforeEach
-//     void setUp() {
-//         MockitoAnnotations.openMocks(this);
-//         servicoService = new ServicoService(servicoRepository, servicoResponse);
-//         startServico();
-//     }
+    @InjectMocks
+    private ServicoService servicoService;
 
-//     @Test
-//     void quandoBuscarServicoPorIdRetornarApenasUm() {
-//         when(servicoRepository.findById(anyLong())).thenReturn(Optional.of(servico));
+    private Servico servico;
+    private ServicoRequest servicoRequest;
 
-//         Servico resultado = servicoService.buscarServicoOuErro(1L);
+    @BeforeEach
+    void setUp() {
+        servico = new Servico();
+        servico.setId(1L);
+        servico.setDescricao("Troca de óleo");
 
-//         assertNotNull(resultado);
-//         assertEquals(servico.getId(), resultado.getId());
-//         verify(servicoRepository, times(1)).findById(servico.getId());
-//     }
+        servicoRequest = new ServicoRequest();
+        servicoRequest.setDescricao("Troca de óleo");
+    }
 
-//     @Test
-//     void quandoBuscarServicoInexistenteRetornarErro() {
-//         when(servicoRepository.findById(anyLong())).thenReturn(Optional.empty());
+    @Test
+    void deve_RetornarServico_quandoExistir() {
+        // Arrange
+        when(servicoRepository.findById(1L)).thenReturn(Optional.of(servico));
 
-//         NegocioException exception = assertThrows(NegocioException.class, () -> {
-//             servicoService.buscarServicoOuErro(2L);
-//         });
+        // Act
+        Servico resultado = servicoService.buscarServicoOuErro(1L);
 
-//         assertEquals("Servico nao encontrado", exception.getMessage());
-//         verify(servicoRepository, times(1)).findById(2L);
-//     }
+        // Assert
+        assertNotNull(resultado);
+        assertEquals("Troca de óleo", resultado.getDescricao());
+        verify(servicoRepository).findById(1L);
+    }
 
-//     @Test
-//     void quandoListarServicosEntaoRetornarSucesso() {
-//         when(servicoRepository.findAll()).thenReturn(servicos);
+    @Test
+    void deve_LancarExcecao_quandoNaoEncontrado() {
+        // Arrange
+        when(servicoRepository.findById(1L)).thenReturn(Optional.empty());
 
-//         List<Servico> resultado = servicoService.listarServicos();
+        // Act & Assert
+        EntidadeNaoEncontradaException exception = assertThrows(EntidadeNaoEncontradaException.class,
+                () -> servicoService.buscarServicoOuErro(1L));
 
-//         assertNotNull(resultado);
-//     }
+        assertEquals("Serviço não encontrado", exception.getMessage());
+        verify(servicoRepository).findById(1L);
+    }
 
-//     @Test
-//     void deveRetornarListaVaziaQuandoNaoExistiremServicos() {
-//         when(servicoRepository.findAll()).thenReturn(List.of());
+    @Test
+    void deve_RetornarListaDeServicos() {
+        // Arrange
+        List<Servico> lista = List.of(servico);
+        when(servicoRepository.findAll()).thenReturn(lista);
 
-//         List<Servico> resultado = servicoService.listarServicos();
+        // Act
+        List<Servico> resultado = servicoService.listarServicos();
 
-//         assertNotNull(resultado);
-//         assertTrue(resultado.isEmpty());
-//         verify(servicoRepository, times(1)).findAll();
-//     }
+        // Assert
+        assertEquals(1, resultado.size());
+        verify(servicoRepository).findAll();
+    }
 
-//     @Test
-//     @Transactional
-//     void quandoCadastrarServicoEntaoRetornarSucesso() {
-//         when(servicoResponse.paraModel(servicoRequest)).thenReturn(servico);
-//         when(servicoRepository.save(servico)).thenReturn(servico);
+    @Test
+    void deve_SalvarServico_quandoRequestValido() {
+        // Arrange
+        when(servicoMapper.requestParaModel(servicoRequest)).thenReturn(servico);
+        when(servicoRepository.save(servico)).thenReturn(servico);
 
-//         Servico resultado = servicoService.cadastrarServico(servicoRequest);
+        // Act
+        Servico resultado = servicoService.cadastrarServico(servicoRequest);
 
-//         assertNotNull(resultado);
-//         verify(servicoRepository, times(1)).save(servico);
-//     }
+        // Assert
+        assertNotNull(resultado);
+        verify(servicoRepository).save(servico);
+    }
 
-//     @Test
-//     @Transactional
-//     void quandoAlterarServicoEntaoRetornarServicoAtualizado() {
-//         when(servicoRepository.findById(servicoAntigo.getId())).thenReturn(Optional.of(servicoAntigo));
-//         when(servicoResponse.paraModel(servicoRequest)).thenReturn(servicoAtualizado);
-//         when(servicoRepository.save(servicoAtualizado)).thenReturn(servicoAtualizado);
+    @Test
+    void deve_AtualizarServico_quandoIdExistir() {
+        // Arrange
+        Servico servicoAtualizado = new Servico();
+        servicoAtualizado.setId(1L);
+        servicoAtualizado.setDescricao("Alinhamento");
 
-//         Servico resultado = servicoService.alterarServico(servicoAntigo.getId(), servicoRequest);
+        when(servicoRepository.findById(1L)).thenReturn(Optional.of(servico));
+        when(servicoMapper.requestParaModel(servicoRequest)).thenReturn(servicoAtualizado);
+        when(servicoRepository.save(servicoAtualizado)).thenReturn(servicoAtualizado);
 
-//         verify(servicoRepository, times(1)).findById(servicoAntigo.getId());
-//         verify(servicoResponse, times(1)).paraModel(servicoRequest);
-//         verify(servicoRepository, times(1)).save(servicoAtualizado);
+        // Act
+        Servico resultado = servicoService.alterarServico(1L, servicoRequest);
 
-//         assertNotNull(resultado);
-//         assertEquals(servicoAtualizado.getId(), resultado.getId());
-//         assertEquals(servicoAtualizado.getDescricao(), resultado.getDescricao());
-//     }
+        // Assert
+        assertEquals("Alinhamento", resultado.getDescricao());
+        assertEquals(1L, resultado.getId());
+        verify(servicoRepository).save(servicoAtualizado);
+    }
 
-//     @Test
-//     @Transactional
-//     void quandoAlterarServicoInexistenteEntaoLancarExcecao() {
-//         when(servicoRepository.findById(anyLong())).thenReturn(Optional.empty());
+    @Test
+    void deve_RemoverServico_QuandoIdExistir() {
+        // Arrange
+        when(servicoRepository.findById(1L)).thenReturn(Optional.of(servico));
+        doNothing().when(servicoRepository).delete(servico);
+        doNothing().when(servicoRepository).flush();
 
-//         NegocioException exception = assertThrows(NegocioException.class, () -> {
-//             servicoService.alterarServico(99L, servicoRequest);
-//         });
+        // Act
+        servicoService.excluirServico(1L);
 
-//         assertEquals("Servico nao encontrado", exception.getMessage());
-//         verify(servicoRepository, times(1)).findById(99L);
-//         verify(servicoResponse, never()).paraModel(any());
-//         verify(servicoRepository, never()).save(any());
-//     }
-
-//     @Test
-//     @Transactional
-//     void quandoExcluirServicoEntaoDeveRemoverComSucesso() {
-//         when(servicoRepository.findById(servico.getId())).thenReturn(Optional.of(servico));
-
-//         servicoService.excluirServico(servico.getId());
-
-//         verify(servicoRepository, times(1)).findById(servico.getId());
-//         verify(servicoRepository, times(1)).delete(servico);
-//         verify(servicoRepository, times(1)).flush();
-//     }
-
-//     @Test
-//     @Transactional
-//     void quandoExcluirServicoInexistenteEntaoLancarExcecao() {
-//         when(servicoRepository.findById(anyLong())).thenReturn(Optional.empty());
-
-//         NegocioException exception = assertThrows(NegocioException.class, () -> {
-//             servicoService.excluirServico(99L);
-//         });
-
-//         assertEquals("Servico nao encontrado", exception.getMessage());
-//         verify(servicoRepository, times(1)).findById(99L);
-//         verify(servicoRepository, never()).delete(any());
-//     }
-
-//     void startServico() {
-//         servicoAntigo = new Servico();
-//         servicoAntigo.setId(2L);
-//         servicoAntigo.setDescricao("Serviço Antigo");
-
-//         servicoAtualizado = new Servico();
-//         servicoAtualizado.setId(3L);
-//         servicoAtualizado.setDescricao("Serviço Atualizado");
-
-//         servico = new Servico();
-//         servico.setId(1L);
-//         servico.setDescricao("Serviço Teste");
-
-//         servicoRequest = new ServicoRequest();
-//         servicoRequest.setDescricao("Novo Serviço");
-
-//         servicos = new ArrayList<>();
-//         servicos.add(servico);
-//     }
-// }
+        // Assert
+        verify(servicoRepository).delete(servico);
+        verify(servicoRepository).flush();
+    }
+}

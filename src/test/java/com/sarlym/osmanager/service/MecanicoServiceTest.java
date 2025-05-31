@@ -1,171 +1,141 @@
-// package com.sarlym.osmanager.service;
+package com.sarlym.osmanager.service;
 
-// import com.sarlym.osmanager.api.dto.mapper.MecanicoMapper;
-// import com.sarlym.osmanager.api.dto.request.MecanicoRequest;
-// import com.sarlym.osmanager.domain.exception.EntidadeNaoEncontradaException;
-// import com.sarlym.osmanager.domain.model.Mecanico;
-// import com.sarlym.osmanager.domain.repository.MecanicoRepository;
-// import com.sarlym.osmanager.domain.service.MecanicoService;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-// import org.junit.jupiter.api.BeforeEach;
-// import org.junit.jupiter.api.Test;
-// import org.mockito.Mock;
-// import org.mockito.MockitoAnnotations;
-// import org.springframework.boot.test.context.SpringBootTest;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
-// import java.time.LocalDateTime;
-// import java.util.ArrayList;
-// import java.util.List;
-// import java.util.Optional;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-// import static org.junit.jupiter.api.Assertions.*;
-// import static org.mockito.Mockito.*;
+import com.sarlym.osmanager.api.dto.mapper.MecanicoMapper;
+import com.sarlym.osmanager.api.dto.request.MecanicoRequest;
+import com.sarlym.osmanager.domain.exception.EntidadeNaoEncontradaException;
+import com.sarlym.osmanager.domain.model.Mecanico;
+import com.sarlym.osmanager.domain.repository.MecanicoRepository;
+import com.sarlym.osmanager.domain.service.MecanicoService;
 
-// @SpringBootTest
-// class MecanicoServiceTest {
+@ExtendWith(MockitoExtension.class)
+class MecanicoServiceTest {
 
-//     @Mock
-//     private Mecanico mecanico;
-//     @Mock
-//     private Mecanico mecanicoAntigo;
-//     @Mock
-//     private Mecanico mecanicoAtualizado;
-//     @Mock
-//     private MecanicoMapper mecanicoResponse;
-//     @Mock
-//     private MecanicoRepository mecanicoRepository;
-//     @Mock
-//     private MecanicoRequest mecanicoRequest;
-//     @Mock
-//     private List<Mecanico> mecanicos;
+    @Mock
+    private MecanicoRepository mecanicoRepository;
 
-//     private MecanicoService mecanicoService;
+    @Mock
+    private MecanicoMapper mecanicoMapper;
 
-//     @BeforeEach
-//     void setUp() {
-//         MockitoAnnotations.openMocks(this);
-//         mecanicoService = new MecanicoService(mecanicoRepository, mecanicoResponse);
-//         startMecanico();
-//     }
+    @InjectMocks
+    private MecanicoService mecanicoService;
 
-//     @Test
-//     void quandoBuscarMecanicoPorIdRetornarApenasUm() {
-//         when(mecanicoRepository.findById(anyLong())).thenReturn(Optional.of(mecanico));
+    private Mecanico mecanico;
+    private MecanicoRequest mecanicoRequest;
 
-//         Mecanico resultado = mecanicoService.buscarMecanicoOuErro(1L);
+    @BeforeEach
+    void setUp() {
+        mecanico = new Mecanico(1L, "Carlos", "Motor", "001", Boolean.TRUE, LocalDateTime.now(), LocalDateTime.now());
+       
+        mecanicoRequest = new MecanicoRequest("Carlos", "Motor", "001", Boolean.TRUE);
+    
+    }
 
-//         assertNotNull(resultado);
-//         assertEquals(mecanico.getId(), resultado.getId());
-//         verify(mecanicoRepository, times(1)).findById(mecanico.getId());
-//     }
+    @Test
+    void deve_RetornarMecanico_quandoExistir() {
+        // Arrange
+        when(mecanicoRepository.findById(1L)).thenReturn(Optional.of(mecanico));
 
-//     @Test
-//     void quandoBuscarMecanicoInexistenteRetornarErro() {
-//         when(mecanicoRepository.findById(anyLong())).thenReturn(Optional.empty());
+        // Act
+        Mecanico resultado = mecanicoService.buscarMecanicoOuErro(1L);
 
-//         EntidadeNaoEncontradaException exception = assertThrows(EntidadeNaoEncontradaException.class, () -> {
-//             mecanicoService.buscarMecanicoOuErro(2L);
-//         });
+        // Assert
+        assertNotNull(resultado);
+        assertEquals("Carlos", resultado.getNome());
+        verify(mecanicoRepository).findById(1L);
+    }
 
-//         assertEquals("Mecanico com id 2, nao encontrado", exception.getMessage());
-//         verify(mecanicoRepository, times(1)).findById(2L);
-//     }
+    @Test
+    void deve_LancarExcecao_quandoNaoExiste() {
+        // Arrange
+        when(mecanicoRepository.findById(1L)).thenReturn(Optional.empty());
 
-//     @Test
-//     void quandoListarMecanicosEntaoRetornarSucesso() {
-//         when(mecanicoRepository.findAll()).thenReturn(mecanicos);
+        // Act & Assert
+        EntidadeNaoEncontradaException exception = assertThrows(EntidadeNaoEncontradaException.class,
+                () -> mecanicoService.buscarMecanicoOuErro(1L));
 
-//         List<Mecanico> resultado = mecanicoService.listarMecanicos();
+        assertTrue(exception.getMessage().contains("Mecanico com id 1, nao encontrado"));
+        verify(mecanicoRepository).findById(1L);
+    }
 
-//         assertNotNull(resultado);
-//     }
+    @Test
+    void deve_RetornarListaDeMecanicos() {
+        // Arrange
+        List<Mecanico> lista = List.of(mecanico);
+        when(mecanicoRepository.findAll()).thenReturn(lista);
 
-//     @Test
-//     void deveRetornarListaVaziaQuandoNaoExistiremMecanicos() {
-//         when(mecanicoRepository.findAll()).thenReturn(List.of());
+        // Act
+        List<Mecanico> resultado = mecanicoService.listarMecanicos();
 
-//         List<Mecanico> resultado = mecanicoService.listarMecanicos();
+        // Assert
+        assertEquals(1, resultado.size());
+        verify(mecanicoRepository).findAll();
+    }
 
-//         assertNotNull(resultado);
-//         assertTrue(resultado.isEmpty());
-//         verify(mecanicoRepository, times(1)).findAll();
-//     }
+    @Test
+    void deve_SalvarMecanico_quandoRequestValido() {
+        // Arrange
+        when(mecanicoMapper.requestParaModel(mecanicoRequest)).thenReturn(mecanico);
+        when(mecanicoRepository.save(mecanico)).thenReturn(mecanico);
 
-//     @Test
-//     void quandoCadastrarMecanicoEntaoRetornarSucesso() {
-//         when(mecanicoResponse.paraModel(mecanicoRequest)).thenReturn(mecanico);
-//         when(mecanicoRepository.save(mecanico)).thenReturn(mecanico);
+        // Act
+        Mecanico resultado = mecanicoService.cadastrarMecanico(mecanicoRequest);
 
-//         Mecanico resultado = mecanicoService.cadastrarMecanico(mecanicoRequest);
+        // Assert
+        assertNotNull(resultado);
+        verify(mecanicoRepository).save(mecanico);
+    }
 
-//         assertNotNull(resultado);
-//         verify(mecanicoRepository, times(1)).save(mecanico);
-//     }
+    @Test
+    void deve_AtualizarMecanico_quandoIdExistir() {
+        // Arrange
+        Mecanico mecanicoAtualizado = new Mecanico();
+        mecanicoAtualizado.setId(1L);
+        mecanicoAtualizado.setNome("Carlos Atualizado");
 
-//     @Test
-//     void quandoAtualizarMecanicoEntaoRetornarMecanicoAtualizado() {
-//         when(mecanicoRepository.findById(mecanicoAntigo.getId())).thenReturn(Optional.of(mecanicoAntigo));
-//         when(mecanicoResponse.paraModel(mecanicoRequest)).thenReturn(mecanicoAtualizado);
-//         when(mecanicoRepository.save(mecanicoAtualizado)).thenReturn(mecanicoAtualizado);
+        when(mecanicoRepository.findById(1L)).thenReturn(Optional.of(mecanico));
+        when(mecanicoMapper.requestParaModel(mecanicoRequest)).thenReturn(mecanicoAtualizado);
+        when(mecanicoRepository.save(mecanicoAtualizado)).thenReturn(mecanicoAtualizado);
 
-//         Mecanico resultado = mecanicoService.atualizarMecanico(mecanicoAntigo.getId(), mecanicoRequest);
+        // Act
+        Mecanico resultado = mecanicoService.atualizarMecanico(1L, mecanicoRequest);
 
-//         verify(mecanicoRepository, times(1)).findById(mecanicoAntigo.getId());
-//         verify(mecanicoResponse, times(1)).paraModel(mecanicoRequest);
-//         verify(mecanicoRepository, times(1)).save(mecanicoAtualizado);
+        // Assert
+        assertEquals("Carlos Atualizado", resultado.getNome());
+        assertEquals(1L, resultado.getId());
+        verify(mecanicoRepository).save(mecanicoAtualizado);
+    }
 
-//         assertNotNull(resultado);
-//         assertEquals(mecanicoAtualizado.getId(), resultado.getId());
-//         assertEquals(mecanicoAtualizado.getNome(), resultado.getNome());
-//     }
+    @Test
+    void deve_RemoverMecanico_quandoIdExistir() {
+        // Arrange
+        when(mecanicoRepository.findById(1L)).thenReturn(Optional.of(mecanico));
+        doNothing().when(mecanicoRepository).delete(mecanico);
+        doNothing().when(mecanicoRepository).flush();
 
-//     @Test
-//     void quandoAtualizarMecanicoInexistenteEntaoLancarExcecao() {
-//         when(mecanicoRepository.findById(anyLong())).thenReturn(Optional.empty());
+        // Act
+        mecanicoService.excluirMecanico(1L);
 
-//         EntidadeNaoEncontradaException exception = assertThrows(EntidadeNaoEncontradaException.class, () -> {
-//             mecanicoService.atualizarMecanico(99L, mecanicoRequest);
-//         });
-
-//         assertEquals("Mecanico com id 99, nao encontrado", exception.getMessage());
-//         verify(mecanicoRepository, times(1)).findById(99L);
-//         verify(mecanicoResponse, never()).paraModel(any());
-//         verify(mecanicoRepository, never()).save(any());
-//     }
-
-//     @Test
-//     void quandoExcluirMecanicoEntaoDeveRemoverComSucesso() {
-//         when(mecanicoRepository.findById(mecanico.getId())).thenReturn(Optional.of(mecanico));
-
-//         mecanicoService.excluirMecanico(mecanico.getId());
-
-//         verify(mecanicoRepository, times(1)).findById(mecanico.getId());
-//         verify(mecanicoRepository, times(1)).delete(mecanico);
-//     }
-
-//     @Test
-//     void quandoExcluirMecanicoInexistenteEntaoLancarExcecao() {
-//         when(mecanicoRepository.findById(anyLong())).thenReturn(Optional.empty());
-
-//         EntidadeNaoEncontradaException exception = assertThrows(EntidadeNaoEncontradaException.class, () -> {
-//             mecanicoService.excluirMecanico(99L);
-//         });
-
-//         assertEquals("Mecanico com id 99, nao encontrado", exception.getMessage());
-//         verify(mecanicoRepository, times(1)).findById(99L);
-//         verify(mecanicoRepository, never()).delete(any());
-//     }
-
-//     void startMecanico() {
-//         mecanicoAntigo = new Mecanico(2L, "Antigo Nome", "Especialidade Antiga", "104525", true, LocalDateTime.now(),
-//                 LocalDateTime.now());
-//         mecanicoAtualizado = new Mecanico(3L, "Novo Nome", "Nova Especialidade", "104525", true, LocalDateTime.now(),
-//                 LocalDateTime.now());
-//         mecanico = new Mecanico(1L, "João Mecânico", "Mecânico Geral", "revisao geral", false, LocalDateTime.now(),
-//                 LocalDateTime.now());
-//         mecanicoRequest = new MecanicoRequest("Joao", "Especialidade Nova", "2311313123", true);
-
-//         mecanicos = new ArrayList<>();
-//         mecanicos.add(mecanico);
-//     }
-// }
+        // Assert
+        verify(mecanicoRepository).delete(mecanico);
+        verify(mecanicoRepository).flush();
+    }
+}
