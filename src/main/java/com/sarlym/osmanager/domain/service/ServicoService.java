@@ -18,8 +18,9 @@ public class ServicoService {
     private ServicoRepository servicoRepository;
     private ServicoMapper servicoMapper;
 
-    public ServicoService(ServicoRepository servicoRepository) {
+    public ServicoService(ServicoRepository servicoRepository, ServicoMapper servicoMapper ) {
         this.servicoRepository = servicoRepository;
+        this.servicoMapper = servicoMapper;
     }
 
     public Servico buscarServicoOuErro(Long id) {
@@ -33,11 +34,13 @@ public class ServicoService {
 
     @Transactional
     public Servico cadastrarServico(ServicoRequest servicoRequest) {
-        return servicoRepository.save(servicoMapper.requestParaModel(servicoRequest));
+        Servico servico = servicoMapper.requestParaModel(servicoRequest);
+        return servicoRepository.save(servico);
     }
 
     @Transactional
     public Servico alterarServico(Long id, ServicoRequest servicoRequest) {
+        //TODO ajustar isso aqui veiii
         Servico servicoAntigo = buscarServicoOuErro(id);
         Servico servico = servicoMapper.requestParaModel(servicoRequest);
         servico.setId(servicoAntigo.getId());
