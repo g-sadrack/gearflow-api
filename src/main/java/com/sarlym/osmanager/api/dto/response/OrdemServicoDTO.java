@@ -23,7 +23,7 @@ public class OrdemServicoDTO {
     private Boolean ativo;
     private VeiculoResumo veiculo;
     private MecanicoResumo mecanico;
-    private List<ItemServicoResumo> servicos;
-    private List<ItemPecaResumo> pecas;
+    private List<ServicoPrestadoResumo> servicos;
+    private List<PecaOrdemServicoResumo> pecas;
 
 }

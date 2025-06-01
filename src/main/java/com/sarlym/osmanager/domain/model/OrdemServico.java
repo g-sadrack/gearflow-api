@@ -43,7 +43,7 @@ public class OrdemServico {
     private LocalDateTime dataAlteracao;
     private LocalDateTime dataFinalizacao;
     private Boolean ativo = Boolean.TRUE;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "veiculo_id")
     private Veiculo veiculo;
@@ -54,9 +54,9 @@ public class OrdemServico {
 
     @OneToMany(mappedBy = "ordemServico")
     @BatchSize(size = 20)
-    private List<ItemServico> servicos = new ArrayList<>();
+    private List<ServicoPrestado> servicos = new ArrayList<>();
 
     @OneToMany(mappedBy = "ordemServico")
     @BatchSize(size = 20)
-    private List<ItemPeca> pecas =  new ArrayList<>();
+    private List<PecaOrdemServico> pecas = new ArrayList<>();
 }
