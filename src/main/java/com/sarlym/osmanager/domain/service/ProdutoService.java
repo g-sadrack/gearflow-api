@@ -1,5 +1,7 @@
 package com.sarlym.osmanager.domain.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.sarlym.osmanager.api.dto.mapper.ProdutoMapper;
@@ -22,6 +24,10 @@ public class ProdutoService {
     public Produto buscaProdutoOuErro(Long id) {
         return produtoRepository.findById(id)
                 .orElseThrow(() -> new EntidadeNaoEncontradaException("Produto não encontrado no estoque"));
+    }
+
+    public List<Produto> listaProdutos() {
+        return produtoRepository.findAll();
     }
 
     public Produto salvar(ProdutoRequest request) {
