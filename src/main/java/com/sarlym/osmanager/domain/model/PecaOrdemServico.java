@@ -13,22 +13,20 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
-public class ItemServico {
+public class PecaOrdemServico {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
     @ManyToOne
-    @JoinColumn(name = "ordem_servico_id")
+    @JoinColumn(name= "ordem_servico_id")
     private OrdemServico ordemServico;
-    
     @ManyToOne
-    @JoinColumn(name = "servico_id")
-    private Servico servico;
-    
+    private Produto peca;
+    private Integer quantidade;
     private BigDecimal valorUnitario;
-    private String observacoes;
+
 }

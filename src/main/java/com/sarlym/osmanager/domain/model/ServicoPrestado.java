@@ -13,20 +13,22 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
-public class Peca {
-
+public class ServicoPrestado {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String codigo;
-    private String nome;
-    private BigDecimal valorUnitario;
-    private Integer quantidadeEstoque;
-    private Integer quantidadeEstoqueMinimo;
+    
     @ManyToOne
-    @JoinColumn(name = "ordem_servico")
+    @JoinColumn(name = "ordem_servico_id")
     private OrdemServico ordemServico;
+    
+    @ManyToOne
+    @JoinColumn(name = "servico_id")
+    private Servico servico;
+    
+    private BigDecimal valorUnitario;
+    private String observacoes;
 }
