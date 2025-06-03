@@ -40,10 +40,8 @@ public class ServicoService {
 
     @Transactional
     public Servico alterarServico(Long id, ServicoRequest servicoRequest) {
-        //TODO ajustar isso aqui veiii
-        Servico servicoAntigo = buscarServicoOuErro(id);
-        Servico servico = servicoMapper.requestParaModel(servicoRequest);
-        servico.setId(servicoAntigo.getId());
+        Servico servico = buscarServicoOuErro(id);
+        servicoMapper.copiaParaNovo(servicoRequest, servico);
         return servicoRepository.save(servico);
     }
 

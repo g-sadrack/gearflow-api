@@ -7,6 +7,8 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,12 +43,8 @@ class ServicoServiceTest {
 
     @BeforeEach
     void setUp() {
-        servico = new Servico();
-        servico.setId(1L);
-        servico.setDescricao("Troca de óleo");
-
-        servicoRequest = new ServicoRequest();
-        servicoRequest.setDescricao("Troca de óleo");
+        servico = new Servico(1L, "001", "Troca de óleo", new BigDecimal(60), 15, LocalDateTime.now(), LocalDateTime.now());
+        servicoRequest = new ServicoRequest("001","Troca de filtro de ar", new BigDecimal(60),60);
     }
 
     @Test
@@ -107,21 +105,17 @@ class ServicoServiceTest {
     @Test
     void deve_AtualizarServico_quandoIdExistir() {
         // Arrange
-        Servico servicoAtualizado = new Servico();
-        servicoAtualizado.setId(1L);
-        servicoAtualizado.setDescricao("Alinhamento");
-
         when(servicoRepository.findById(1L)).thenReturn(Optional.of(servico));
-        when(servicoMapper.requestParaModel(servicoRequest)).thenReturn(servicoAtualizado);
-        when(servicoRepository.save(servicoAtualizado)).thenReturn(servicoAtualizado);
+      //  when(servicoMapper).copiaParaNovo(servicoRequest, servico);
+        when(servicoRepository.save(servico)).thenReturn(servico);
 
         // Act
         Servico resultado = servicoService.alterarServico(1L, servicoRequest);
 
         // Assert
-        assertEquals("Alinhamento", resultado.getDescricao());
-        assertEquals(1L, resultado.getId());
-        verify(servicoRepository).save(servicoAtualizado);
+        assertNotNull(resultado);
+        verify(servicoMapper).copiaParaNovo(servicoRequest, servico);
+        verify(servicoRepository).save(servico);
     }
 
     @Test
