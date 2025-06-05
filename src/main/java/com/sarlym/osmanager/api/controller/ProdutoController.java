@@ -52,6 +52,7 @@ public class ProdutoController {
         return produtoMapper.modelParaDTO(produtoService.atualizarProduto(id, produtoRequest));
     }
 
+
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletarProduto(@PathVariable(name = "id") Long id) {
