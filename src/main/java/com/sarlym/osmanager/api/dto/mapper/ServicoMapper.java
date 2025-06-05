@@ -31,4 +31,8 @@ public class ServicoMapper {
     public Servico dtoParaModel(ServicoDTO servicoDTO) {
         return modelMapper.map(servicoDTO, Servico.class);
     }
+
+    public void copiaParaNovo(ServicoRequest servicoRequest, Servico servico) {
+        modelMapper.map(servicoRequest, servico);
+    }
 }

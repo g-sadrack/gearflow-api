@@ -30,7 +30,7 @@ import com.sarlym.osmanager.domain.exception.EntidadeNaoEncontradaException;
 import com.sarlym.osmanager.domain.model.Mecanico;
 import com.sarlym.osmanager.domain.model.OrdemServico;
 import com.sarlym.osmanager.domain.model.Veiculo;
-import com.sarlym.osmanager.domain.repository.OrdemServicoRepository;
+import com.sarlym.osmanager.domain.repositories.OrdemServicoRepository;
 import com.sarlym.osmanager.domain.service.MecanicoService;
 import com.sarlym.osmanager.domain.service.OrdemServicoService;
 import com.sarlym.osmanager.domain.service.VeiculoService;

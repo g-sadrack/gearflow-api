@@ -25,7 +25,7 @@ import com.sarlym.osmanager.api.dto.mapper.ProdutoMapper;
 import com.sarlym.osmanager.api.dto.request.ProdutoRequest;
 import com.sarlym.osmanager.domain.exception.EntidadeNaoEncontradaException;
 import com.sarlym.osmanager.domain.model.Produto;
-import com.sarlym.osmanager.domain.repository.ProdutoRepository;
+import com.sarlym.osmanager.domain.repositories.ProdutoRepository;
 import com.sarlym.osmanager.domain.service.ProdutoService;
 
 @ExtendWith(MockitoExtension.class)

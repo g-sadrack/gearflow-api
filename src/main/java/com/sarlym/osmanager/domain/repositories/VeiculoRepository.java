@@ -1,4 +1,4 @@
-package com.sarlym.osmanager.domain.repository;
+package com.sarlym.osmanager.domain.repositories;
 
 import com.sarlym.osmanager.domain.model.Veiculo;
 import org.springframework.data.jpa.repository.JpaRepository;

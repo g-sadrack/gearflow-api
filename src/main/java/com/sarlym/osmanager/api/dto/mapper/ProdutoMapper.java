@@ -1,10 +1,13 @@
 package com.sarlym.osmanager.api.dto.mapper;
 
+import java.util.List;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.sarlym.osmanager.api.dto.request.ProdutoRequest;
+import com.sarlym.osmanager.api.dto.response.ProdutoDTO;
 import com.sarlym.osmanager.domain.model.Produto;
 
 @Component
@@ -19,6 +22,14 @@ public class ProdutoMapper {
 
     public void copiaParaNovo(ProdutoRequest request, Produto produto) {
         modelMapper.map(request, produto);
+    }
+
+    public ProdutoDTO modelParaDTO(Produto produto) {
+        return modelMapper.map(produto, ProdutoDTO.class);
+    }
+
+    public List<ProdutoDTO> modeloParaDTOLista(List<Produto> produtos) {
+        return produtos.stream().map(this::modelParaDTO).toList();
     }
 
 }

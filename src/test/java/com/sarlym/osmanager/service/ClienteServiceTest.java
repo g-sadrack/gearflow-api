@@ -26,7 +26,7 @@ import com.sarlym.osmanager.domain.exception.ClienteException;
 import com.sarlym.osmanager.domain.exception.EmailJaExistenteException;
 import com.sarlym.osmanager.domain.model.Cliente;
 import com.sarlym.osmanager.domain.model.Veiculo;
-import com.sarlym.osmanager.domain.repository.ClienteRepository;
+import com.sarlym.osmanager.domain.repositories.ClienteRepository;
 import com.sarlym.osmanager.domain.service.ClienteService;
 
 @ExtendWith(MockitoExtension.class)

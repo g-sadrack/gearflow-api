@@ -1,4 +1,4 @@
-package com.sarlym.osmanager.domain.repository;
+package com.sarlym.osmanager.domain.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
