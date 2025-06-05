@@ -10,7 +10,7 @@ import org.springframework.util.StringUtils;
 import com.sarlym.osmanager.api.core.enums.Status;
 import com.sarlym.osmanager.domain.model.OrdemServico;
 import com.sarlym.osmanager.domain.model.Veiculo;
-import com.sarlym.osmanager.domain.repository.OrdemServicoRepositoryQuerys;
+import com.sarlym.osmanager.domain.repositories.OrdemServicoRepositoryQuerys;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;

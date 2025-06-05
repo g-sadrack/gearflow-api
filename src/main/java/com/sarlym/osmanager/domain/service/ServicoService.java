@@ -8,7 +8,7 @@ import com.sarlym.osmanager.api.dto.mapper.ServicoMapper;
 import com.sarlym.osmanager.api.dto.request.ServicoRequest;
 import com.sarlym.osmanager.domain.exception.EntidadeNaoEncontradaException;
 import com.sarlym.osmanager.domain.model.Servico;
-import com.sarlym.osmanager.domain.repository.ServicoRepository;
+import com.sarlym.osmanager.domain.repositories.ServicoRepository;
 
 import jakarta.transaction.Transactional;
 

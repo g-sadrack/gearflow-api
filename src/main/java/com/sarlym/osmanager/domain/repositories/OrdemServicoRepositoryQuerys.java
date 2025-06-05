@@ -1,4 +1,4 @@
-package com.sarlym.osmanager.domain.repository;
+package com.sarlym.osmanager.domain.repositories;
 
 import java.time.LocalDateTime;
 import java.util.List;

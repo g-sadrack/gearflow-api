@@ -21,7 +21,7 @@ import com.sarlym.osmanager.api.dto.mapper.VeiculoMapper;
 import com.sarlym.osmanager.api.dto.request.VeiculoRequest;
 import com.sarlym.osmanager.domain.exception.EntidadeNaoEncontradaException;
 import com.sarlym.osmanager.domain.model.Veiculo;
-import com.sarlym.osmanager.domain.repository.VeiculoRepository;
+import com.sarlym.osmanager.domain.repositories.VeiculoRepository;
 import com.sarlym.osmanager.domain.service.VeiculoService;
 
 @ExtendWith(MockitoExtension.class)

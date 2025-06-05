@@ -23,7 +23,7 @@ import com.sarlym.osmanager.api.dto.mapper.MecanicoMapper;
 import com.sarlym.osmanager.api.dto.request.MecanicoRequest;
 import com.sarlym.osmanager.domain.exception.EntidadeNaoEncontradaException;
 import com.sarlym.osmanager.domain.model.Mecanico;
-import com.sarlym.osmanager.domain.repository.MecanicoRepository;
+import com.sarlym.osmanager.domain.repositories.MecanicoRepository;
 import com.sarlym.osmanager.domain.service.MecanicoService;
 
 @ExtendWith(MockitoExtension.class)
