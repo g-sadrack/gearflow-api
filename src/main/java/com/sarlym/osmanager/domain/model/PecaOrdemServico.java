@@ -1,6 +1,10 @@
 package com.sarlym.osmanager.domain.model;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -28,5 +32,8 @@ public class PecaOrdemServico {
     private Produto peca;
     private Integer quantidade;
     private BigDecimal valorUnitario;
-
+    @CreationTimestamp
+    private LocalDateTime dataCadastro;
+    @UpdateTimestamp
+    private LocalDateTime dataUltimaAtualizacao;
 }
