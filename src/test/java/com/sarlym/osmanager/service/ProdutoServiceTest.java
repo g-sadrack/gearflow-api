@@ -11,6 +11,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,8 +44,9 @@ public class ProdutoServiceTest {
 
     @BeforeEach
     void setUp() {
-        produto = new Produto(1L, "A001", "Radiador", new BigDecimal(120.00));
-        request =  new ProdutoRequest("002", "Bomba de água", new BigDecimal(90.00));
+        produto = new Produto(1L, "A001", "Radiador", new BigDecimal(120.00), LocalDateTime.now(),
+                LocalDateTime.now());
+        request = new ProdutoRequest("002", "Bomba de água", new BigDecimal(90.00));
     }
 
     @Test
@@ -90,20 +92,20 @@ public class ProdutoServiceTest {
     void deve_SalvarProduto_quandoDadosValidos() {
         // Arrange
         ProdutoRequest request = mock(ProdutoRequest.class);
-        Produto p1 =  new Produto();
+        Produto p1 = new Produto();
         when(produtoMapper.requestParaModelo(request)).thenReturn(p1);
         when(produtoRepository.save(any())).thenReturn(p1);
 
         // Act
         Produto produto = produtoService.salvar(request);
 
-        //Assert
+        // Assert
         assertNotNull(produto);
         verify(produtoRepository).save(produto);
     }
 
     @Test
-    void deve_AtualizarProduto_quandoIdExistir(){
+    void deve_AtualizarProduto_quandoIdExistir() {
         // Arrange
         when(produtoRepository.findById(anyLong())).thenReturn(Optional.of(produto));
         doNothing().when(produtoMapper).copiaParaNovo(request, produto);
@@ -111,8 +113,8 @@ public class ProdutoServiceTest {
 
         // Act
         Produto p = produtoService.atualizarProduto(1L, request);
-        
-        //Assert
+
+        // Assert
         assertNotNull(p);
         verify(produtoMapper).copiaParaNovo(request, p);
         verify(produtoRepository).save(p);
@@ -124,7 +126,7 @@ public class ProdutoServiceTest {
         when(produtoRepository.findById(1L)).thenReturn(Optional.of(produto));
         doNothing().when(produtoRepository).delete(produto);
         doNothing().when(produtoRepository).flush();
-    
+
         // Act
         produtoService.deletarProduto(1L);
 
@@ -132,6 +134,5 @@ public class ProdutoServiceTest {
         verify(produtoRepository).delete(produto);
         verify(produtoRepository).flush();
     }
-    
 
 }
