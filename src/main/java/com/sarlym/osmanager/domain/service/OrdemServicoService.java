@@ -1,5 +1,6 @@
 package com.sarlym.osmanager.domain.service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -10,10 +11,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.sarlym.osmanager.api.core.enums.Status;
 import com.sarlym.osmanager.api.dto.mapper.OrdemServicoMapper;
+import com.sarlym.osmanager.api.dto.mapper.ServicoMapper;
 import com.sarlym.osmanager.api.dto.request.OrdemServicoRequest;
+import com.sarlym.osmanager.api.dto.request.ServicoRequest;
 import com.sarlym.osmanager.domain.exception.EntidadeNaoEncontradaException;
 import com.sarlym.osmanager.domain.model.Mecanico;
 import com.sarlym.osmanager.domain.model.OrdemServico;
+import com.sarlym.osmanager.domain.model.Servico;
+import com.sarlym.osmanager.domain.model.ServicoPrestado;
 import com.sarlym.osmanager.domain.model.Veiculo;
 import com.sarlym.osmanager.domain.repositories.OrdemServicoRepository;
 
@@ -24,13 +29,17 @@ public class OrdemServicoService {
     private MecanicoService mecanicoService;
     private VeiculoService veiculoService;
     private OrdemServicoMapper ordemServicoMapper;
+    private ServicoMapper servicoMapper;
+    private ServicoService servicoService;
 
     public OrdemServicoService(OrdemServicoRepository ordemServicoRepository, MecanicoService mecanicoService,
-            VeiculoService veiculoService, ClienteService clienteService, OrdemServicoMapper ordemServicoMapper) {
+            VeiculoService veiculoService, ClienteService clienteService, OrdemServicoMapper ordemServicoMapper, ServicoMapper servicoMapper, ServicoService servicoService) {
         this.ordemServicoRepository = ordemServicoRepository;
         this.mecanicoService = mecanicoService;
         this.veiculoService = veiculoService;
         this.ordemServicoMapper = ordemServicoMapper;
+        this.servicoMapper = servicoMapper;
+        this.servicoService = servicoService;
     }
 
     @Transactional(readOnly = true)
@@ -71,7 +80,7 @@ public class OrdemServicoService {
         int prefixoCodigo = dataAtual.getYear();
 
         String codigoOs = prefixoCodigo + "-" + sufixoCodigo;
-        os.setNumero_os(codigoOs);
+        os.setNumeroOs(codigoOs);
     }
 
     @Transactional
@@ -96,6 +105,21 @@ public class OrdemServicoService {
             os.setStatus(Status.FINALIZADA);
             ordemServicoRepository.save(os);    
         }
+    }
+
+    public OrdemServico adicionaServico(Long id, ServicoRequest servicoRequest) {
+        // busca OS existente
+        OrdemServico ordemServico = buscaOrdemServicoOuErro(id);
+        // busca de servico existente
+        Servico servico = servicoService.buscarServicoOuErro(servicoRequest.getId());
+        
+        ServicoPrestado servicoPrestado = new ServicoPrestado();
+        servicoPrestado.setOrdemServico(ordemServico);
+        servicoPrestado.setServico(servico);
+
+        ordemServico.getServicos().add(servicoPrestado);
+    
+        return ordemServicoRepository.save(ordemServico);
     }
 
 }
