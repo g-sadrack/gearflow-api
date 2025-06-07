@@ -29,7 +29,7 @@ public class OrdemServicoRepositoryImpl implements OrdemServicoRepositoryQuerys 
     private EntityManager entityManager;
 
     @Override
-    public List<OrdemServico> find(String numero_os, Status status, Long veiculoId, LocalDateTime dataInicio, LocalDateTime dataFim ) {
+    public List<OrdemServico> find(String numeroOs, Status status, Long veiculoId, LocalDateTime dataInicio, LocalDateTime dataFim ) {
 
         // Iniciamos um builder usando o entityManager
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
@@ -48,8 +48,8 @@ public class OrdemServicoRepositoryImpl implements OrdemServicoRepositoryQuerys 
         var predicados = new ArrayList<Predicate>();
 
         // Filtro por número_os (busca parcial com LIKE) WHERE numero_os LIKE '%valor%'
-        if (StringUtils.hasText(numero_os)) {
-            predicados.add(builder.like(root.get("numero_os"), "%" + numero_os + "%"));
+        if (StringUtils.hasText(numeroOs)) {
+            predicados.add(builder.like(root.get("numeroOs"), "%" + numeroOs + "%"));
         }
         // Filtro por status (comparação exata) WHERE status = 'ABERTA'
         if (status != null) {

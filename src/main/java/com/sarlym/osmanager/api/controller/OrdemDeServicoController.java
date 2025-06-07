@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sarlym.osmanager.api.core.enums.Status;
 import com.sarlym.osmanager.api.dto.mapper.OrdemServicoMapper;
 import com.sarlym.osmanager.api.dto.request.OrdemServicoRequest;
+import com.sarlym.osmanager.api.dto.request.ServicoPrestadoRequest;
 import com.sarlym.osmanager.api.dto.response.OrdemServicoDTO;
 import com.sarlym.osmanager.api.dto.response.OrdemServicoResumo;
 import com.sarlym.osmanager.domain.model.OrdemServico;
@@ -116,5 +117,10 @@ public class OrdemDeServicoController {
     public void deletaOrdemServico(
             @Parameter(name = "id", description = "ID único da OS", required = true, example = "1") @PathVariable(name = "id") Long id) {
         ordemServicoService.deletaOrdemServico(id);
+    }
+
+    @PostMapping("/{id}/servico")
+    public OrdemServicoDTO associarServico(@PathVariable(name = "id") Long id, @RequestBody ServicoPrestadoRequest request) {
+        return ordemServicoMapper.modeloParaDTO(ordemServicoService.adicionaServico(id, request));
     }
 }

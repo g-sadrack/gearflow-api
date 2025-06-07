@@ -44,7 +44,7 @@ class ServicoServiceTest {
     @BeforeEach
     void setUp() {
         servico = new Servico(1L, "001", "Troca de óleo", new BigDecimal(60), 15, LocalDateTime.now(), LocalDateTime.now());
-        servicoRequest = new ServicoRequest("001","Troca de filtro de ar", new BigDecimal(60),60);
+        servicoRequest = new ServicoRequest(2L,"001","Troca de filtro de ar",60);
     }
 
     @Test

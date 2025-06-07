@@ -11,7 +11,7 @@ import lombok.Data;
 @Data
 public class OrdemServicoResumo {
 
-    private String numero_os;
+    private String numeroOs;
     private Status status;
     private BigDecimal valorTotal;
     private LocalDateTime dataAbertura;

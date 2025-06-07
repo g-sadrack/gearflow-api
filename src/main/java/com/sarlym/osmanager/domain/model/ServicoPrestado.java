@@ -6,6 +6,8 @@ import java.time.LocalDateTime;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,12 +27,13 @@ public class ServicoPrestado {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
+    @JsonIgnoreProperties
     @JoinColumn(name = "ordem_servico_id")
     private OrdemServico ordemServico;
     @ManyToOne
     @JoinColumn(name = "servico_id")
     private Servico servico;
-    private BigDecimal valorUnitario;
+    private BigDecimal valorServicoPrestado;
     private String observacoes;
     @CreationTimestamp
     private LocalDateTime dataCadastro;
