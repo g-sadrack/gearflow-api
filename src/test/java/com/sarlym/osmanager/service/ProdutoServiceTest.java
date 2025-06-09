@@ -46,7 +46,7 @@ public class ProdutoServiceTest {
     void setUp() {
         produto = new Produto(1L, "A001", "Radiador", new BigDecimal(120.00), LocalDateTime.now(),
                 LocalDateTime.now());
-        request = new ProdutoRequest("002", "Bomba de água", new BigDecimal(90.00));
+        request = new ProdutoRequest(2L,"002", "Bomba de água");
     }
 
     @Test

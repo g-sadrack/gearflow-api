@@ -20,8 +20,8 @@ public interface OrdemServicoRepository extends JpaRepository<OrdemServico, Long
                 JOIN FETCH os.veiculo v
                 JOIN FETCH v.proprietario
                 JOIN FETCH os.mecanico m
-                LEFT JOIN FETCH os.pecas p
-                LEFT JOIN FETCH p.peca
+                LEFT JOIN FETCH os.produtos p
+                LEFT JOIN FETCH p.produto
               WHERE os.id = :id
             """)
     Optional<OrdemServico> findFullById(@Param("id") Long id);
@@ -30,8 +30,8 @@ public interface OrdemServicoRepository extends JpaRepository<OrdemServico, Long
             "veiculo",
             "veiculo.proprietario",
             "mecanico",
-            "pecas",
-            "pecas.peca",
+            "produtos",
+            "produtos.produto",
             "servicos",
             "servicos.servico"
     })

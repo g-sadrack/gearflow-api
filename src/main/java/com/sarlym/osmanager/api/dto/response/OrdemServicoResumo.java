@@ -19,5 +19,6 @@ public class OrdemServicoResumo {
     private VeiculoResumo veiculo;
     private MecanicoResumo mecanico;
     private List<ServicoPrestadoResumo> servicos;
-    private List<PecaOrdemServicoResumo> pecas;
+    private List<ProdutoOrdemServicoResumo> produtos;
+
 }

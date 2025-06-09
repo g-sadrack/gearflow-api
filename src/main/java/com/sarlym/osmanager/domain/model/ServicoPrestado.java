@@ -23,6 +23,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 public class ServicoPrestado {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -39,4 +40,5 @@ public class ServicoPrestado {
     private LocalDateTime dataCadastro;
     @UpdateTimestamp
     private LocalDateTime dataUltimaAtualizacao;
+    
 }

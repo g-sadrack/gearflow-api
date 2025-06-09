@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sarlym.osmanager.api.core.enums.Status;
 import com.sarlym.osmanager.api.dto.mapper.OrdemServicoMapper;
 import com.sarlym.osmanager.api.dto.request.OrdemServicoRequest;
+import com.sarlym.osmanager.api.dto.request.PecaOrdemServicoRequest;
 import com.sarlym.osmanager.api.dto.request.ServicoPrestadoRequest;
 import com.sarlym.osmanager.api.dto.response.OrdemServicoDTO;
 import com.sarlym.osmanager.api.dto.response.OrdemServicoResumo;
@@ -36,12 +36,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RestController
 @RequestMapping(value = "api/ordens-servico", produces = { "application/json" })
 @Tag(name = "Ordens-Servico", description = "Operações com as ordens de serviço")
-public class OrdemDeServicoController {
+public class OrdemServicoController {
 
     private OrdemServicoService ordemServicoService;
     private OrdemServicoMapper ordemServicoMapper;
 
-    public OrdemDeServicoController(OrdemServicoService ordemServicoService, OrdemServicoMapper ordemServicoMapper) {
+    public OrdemServicoController(OrdemServicoService ordemServicoService, OrdemServicoMapper ordemServicoMapper) {
         this.ordemServicoService = ordemServicoService;
         this.ordemServicoMapper = ordemServicoMapper;
     }
@@ -76,7 +76,8 @@ public class OrdemDeServicoController {
             @ApiResponse(responseCode = "500", description = "Erro ao realizar a busca de Ordem de Serviço"),
     })
     @GetMapping
-    public ResponseEntity<List<OrdemServicoResumo>> buscaFiltrada(
+    @ResponseStatus(code = HttpStatus.OK)
+    public List<OrdemServicoResumo> buscaFiltrada(
             @RequestParam(required = false) String numeroOs,
             @RequestParam(required = false) Status status,
             @RequestParam(required = false) Long veiculoId,
@@ -84,7 +85,7 @@ public class OrdemDeServicoController {
             @RequestParam(required = false) @DateTimeFormat(iso = ISO.DATE_TIME) LocalDateTime dataFim) {
         List<OrdemServico> ordens = ordemServicoService.buscaComFiltros(numeroOs, status, veiculoId, dataInicio,
                 dataFim);
-        return ResponseEntity.ok(ordemServicoMapper.modeloListaParaListaDTOResumo(ordens));
+        return ordemServicoMapper.modeloListaParaListaDTOResumo(ordens);
     }
 
     @ResponseStatus(code = HttpStatus.CREATED)
@@ -120,7 +121,15 @@ public class OrdemDeServicoController {
     }
 
     @PostMapping("/{id}/servico")
-    public OrdemServicoDTO associarServico(@PathVariable(name = "id") Long id, @RequestBody ServicoPrestadoRequest request) {
+    public OrdemServicoDTO associarServico(@PathVariable(name = "id") Long id,
+            @RequestBody ServicoPrestadoRequest request) {
         return ordemServicoMapper.modeloParaDTO(ordemServicoService.adicionaServico(id, request));
     }
+
+    @PostMapping("/{id}/peca")
+    public OrdemServicoDTO associarPeca(@PathVariable(name = "id") Long id,
+            @RequestBody PecaOrdemServicoRequest request) {
+        return ordemServicoMapper.modeloParaDTO(ordemServicoService.adicionaProduto(id, request));
+    }
+
 }

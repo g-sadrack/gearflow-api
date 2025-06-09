@@ -61,7 +61,8 @@ public class OrdemServico {
     @BatchSize(size = 20)
     private List<ServicoPrestado> servicos = new ArrayList<>();
 
-    @OneToMany(mappedBy = "ordemServico")
+    @OneToMany(mappedBy = "ordemServico", cascade = CascadeType.ALL, orphanRemoval = true)
     @BatchSize(size = 20)
-    private List<PecaOrdemServico> pecas = new ArrayList<>();
+    private List<ProdutoOrdemServico> produtos = new ArrayList<>();
+
 }
