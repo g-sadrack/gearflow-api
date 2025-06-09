@@ -57,11 +57,11 @@ public class OrdemServico {
     @JoinColumn(name = "mecanico_id")
     private Mecanico mecanico;
 
-    @OneToMany(mappedBy = "ordemServico", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "ordemServico", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @BatchSize(size = 20)
     private List<ServicoPrestado> servicos = new ArrayList<>();
 
-    @OneToMany(mappedBy = "ordemServico", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "ordemServico", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @BatchSize(size = 20)
     private List<ProdutoOrdemServico> produtos = new ArrayList<>();
 
