@@ -1,4 +1,4 @@
--- Inserts básicos
+/*-- Inserts básicos
 INSERT INTO cliente (nome, telefone, email, cpf, data_cadastro, data_atualizacao)
 VALUES
 ('João Silva', '(11) 9999-8888', 'joao.silva@email.com', '12345678901', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
@@ -19,6 +19,7 @@ VALUES
 ('Juliana Rocha', '(71) 4444-5555', 'juliana.rocha@email.com', '89012345678', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 ('Marcos Souza', '(81) 6666-7777', 'marcos.souza@email.com', '90123456789', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 ('Patrícia Nunes', '(91) 8888-9999', 'patricia.nunes@email.com', '01234567890', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+*/
 
 INSERT INTO cliente (cpf, data_atualizacao, data_cadastro, email, nome, telefone) 
 VALUES 
