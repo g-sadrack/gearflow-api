@@ -2,15 +2,12 @@ package com.sarlym.osmanager.api.dto.response;
 
 import java.math.BigDecimal;
 
-import com.sarlym.osmanager.domain.model.Produto;
-
 import lombok.Data;
 
 @Data
-public class PecaOrdemServicoResumo {
+public class ProdutoOrdemServicoResumo {
 
-    private Long id;
-    private Produto peca;
+    private ProdutoResumo produto;
     private Integer quantidade;
     private BigDecimal valorUnitario;
 

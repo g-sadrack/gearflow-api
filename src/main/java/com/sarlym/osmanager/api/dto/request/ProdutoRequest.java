@@ -1,6 +1,5 @@
 package com.sarlym.osmanager.api.dto.request;
 
-import java.math.BigDecimal;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,8 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ProdutoRequest {
 
+    private Long id;
     private String codigo;
     private String nome;
-    private BigDecimal valorUnitario;
 
 }

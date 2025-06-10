@@ -1,8 +1,10 @@
 package com.sarlym.osmanager.domain.service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -11,9 +13,15 @@ import org.springframework.transaction.annotation.Transactional;
 import com.sarlym.osmanager.api.core.enums.Status;
 import com.sarlym.osmanager.api.dto.mapper.OrdemServicoMapper;
 import com.sarlym.osmanager.api.dto.request.OrdemServicoRequest;
+import com.sarlym.osmanager.api.dto.request.PecaOrdemServicoRequest;
+import com.sarlym.osmanager.api.dto.request.ServicoPrestadoRequest;
 import com.sarlym.osmanager.domain.exception.EntidadeNaoEncontradaException;
 import com.sarlym.osmanager.domain.model.Mecanico;
 import com.sarlym.osmanager.domain.model.OrdemServico;
+import com.sarlym.osmanager.domain.model.Produto;
+import com.sarlym.osmanager.domain.model.ProdutoOrdemServico;
+import com.sarlym.osmanager.domain.model.Servico;
+import com.sarlym.osmanager.domain.model.ServicoPrestado;
 import com.sarlym.osmanager.domain.model.Veiculo;
 import com.sarlym.osmanager.domain.repositories.OrdemServicoRepository;
 
@@ -24,13 +32,19 @@ public class OrdemServicoService {
     private MecanicoService mecanicoService;
     private VeiculoService veiculoService;
     private OrdemServicoMapper ordemServicoMapper;
+    private ServicoService servicoService;
+    private ProdutoService produtoService;
 
     public OrdemServicoService(OrdemServicoRepository ordemServicoRepository, MecanicoService mecanicoService,
-            VeiculoService veiculoService, ClienteService clienteService, OrdemServicoMapper ordemServicoMapper) {
+            VeiculoService veiculoService, ClienteService clienteService, OrdemServicoMapper ordemServicoMapper,
+            ServicoService servicoService,
+            ProdutoService produtoService) {
         this.ordemServicoRepository = ordemServicoRepository;
         this.mecanicoService = mecanicoService;
         this.veiculoService = veiculoService;
         this.ordemServicoMapper = ordemServicoMapper;
+        this.servicoService = servicoService;
+        this.produtoService = produtoService;
     }
 
     @Transactional(readOnly = true)
@@ -71,7 +85,7 @@ public class OrdemServicoService {
         int prefixoCodigo = dataAtual.getYear();
 
         String codigoOs = prefixoCodigo + "-" + sufixoCodigo;
-        os.setNumero_os(codigoOs);
+        os.setNumeroOs(codigoOs);
     }
 
     @Transactional
@@ -94,8 +108,64 @@ public class OrdemServicoService {
             os.setAtivo(false);
             os.setDataFinalizacao(LocalDateTime.now());
             os.setStatus(Status.FINALIZADA);
-            ordemServicoRepository.save(os);    
+            ordemServicoRepository.save(os);
         }
+    }
+
+    @Transactional
+    public OrdemServico adicionaServico(Long id, ServicoPrestadoRequest request) {
+        // busca OS existente
+        OrdemServico ordemServico = buscaOrdemServicoOuErro(id);
+        // busca de servico existente
+        Servico servico = servicoService.buscarServicoOuErro(request.getServico());
+
+        ServicoPrestado servicoPrestado = new ServicoPrestado();
+        servicoPrestado.setOrdemServico(ordemServico);
+        servicoPrestado.setServico(servico);
+        servicoPrestado.setValorServicoPrestado(request.getValorServicoPrestado());
+        servicoPrestado.setObservacoes(request.getObservacoes());
+
+        ordemServico.getServicos().add(servicoPrestado);
+        calculaValorTotal(ordemServico);
+
+        return ordemServicoRepository.save(ordemServico);
+    }
+
+    @Transactional
+    public OrdemServico adicionaProduto(Long id, PecaOrdemServicoRequest request) {
+        OrdemServico ordemServico = buscaOrdemServicoOuErro(id);
+        Produto peca = produtoService.buscaProdutoOuErro(request.getProduto());
+
+        ProdutoOrdemServico pecaOrdemServico = new ProdutoOrdemServico();
+        pecaOrdemServico.setOrdemServico(ordemServico);
+        pecaOrdemServico.setProduto(peca);
+        pecaOrdemServico.setQuantidade(request.getQuantidade());
+        pecaOrdemServico.setValorUnitario(request.getValorUnitario());
+
+        ordemServico.getProdutos().add(pecaOrdemServico);
+        calculaValorTotal(ordemServico);
+
+        return ordemServicoRepository.save(ordemServico);
+    }
+
+    public void calculaValorTotal(OrdemServico ordemServico) {
+        BigDecimal valorTotal = BigDecimal.ZERO;
+        List<ProdutoOrdemServico> produtos = ordemServico.getProdutos();
+        List<ServicoPrestado> servicos = ordemServico.getServicos();
+
+        for (ProdutoOrdemServico produto : produtos) {
+            BigDecimal valorProduto = produto.getValorUnitario().multiply(
+                    BigDecimal.valueOf(produto.getQuantidade()));
+            ;
+            valorTotal = valorTotal.add(valorProduto);
+        }
+
+        for (ServicoPrestado servicoPrestado : servicos) {
+            BigDecimal valor = Optional.ofNullable(servicoPrestado.getValorServicoPrestado()).orElse(BigDecimal.ZERO);
+            valorTotal = valorTotal.add(valor);
+        }
+
+        ordemServico.setValorTotal(valorTotal);
     }
 
 }

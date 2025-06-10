@@ -31,14 +31,14 @@ public class Estoque {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @OneToOne
-    @JoinColumn(name = "peca_id", nullable = false, unique = true)
-    private Produto peca;
+    @JoinColumn(name = "produto_id", nullable = false, unique = true)
+    private Produto produto;
     private Integer quantidadeAtual;
     private Integer quantidadeReserva;
     private Integer quantidadeMinima;
     private Integer quantidadeMaxima;
     @ManyToOne
-    @JoinColumn(name = "fornecedor_id")
+    @JoinColumn(name = "fornecedor_id", nullable = false, unique = true)
     private Fornecedor fornecedor;
     private BigDecimal custoMedio;
     private LocalDateTime dataUltimaEntrada;

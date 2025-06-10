@@ -11,8 +11,11 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import com.sarlym.osmanager.api.core.enums.Status;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -31,7 +34,9 @@ public class OrdemServico {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String numero_os;
+    @Column(name = "numero_os")
+    private String numeroOs;
+    @Enumerated(EnumType.STRING)
     private Status status = Status.ABERTA;
     private String descricaoProblema;
     private String diagnosticoTecnico;
@@ -52,11 +57,12 @@ public class OrdemServico {
     @JoinColumn(name = "mecanico_id")
     private Mecanico mecanico;
 
-    @OneToMany(mappedBy = "ordemServico")
+    @OneToMany(mappedBy = "ordemServico", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @BatchSize(size = 20)
     private List<ServicoPrestado> servicos = new ArrayList<>();
 
-    @OneToMany(mappedBy = "ordemServico")
+    @OneToMany(mappedBy = "ordemServico", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @BatchSize(size = 20)
-    private List<PecaOrdemServico> pecas = new ArrayList<>();
+    private List<ProdutoOrdemServico> produtos = new ArrayList<>();
+
 }

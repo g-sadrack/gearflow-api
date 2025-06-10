@@ -12,7 +12,7 @@ import lombok.Data;
 public class OrdemServicoDTO {
 
     private Long id;
-    private String numero_os;
+    private String numeroOs;
     private Status status;
     private String descricaoProblema;
     private String diagnosticoTecnico;
@@ -24,6 +24,6 @@ public class OrdemServicoDTO {
     private VeiculoResumo veiculo;
     private MecanicoResumo mecanico;
     private List<ServicoPrestadoResumo> servicos;
-    private List<PecaOrdemServicoResumo> pecas;
+    private List<ProdutoOrdemServicoResumo> produtos;
 
 }

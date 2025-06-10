@@ -11,7 +11,7 @@ import lombok.Data;
 @Data
 public class OrdemServicoResumo {
 
-    private String numero_os;
+    private String numeroOs;
     private Status status;
     private BigDecimal valorTotal;
     private LocalDateTime dataAbertura;
@@ -19,5 +19,6 @@ public class OrdemServicoResumo {
     private VeiculoResumo veiculo;
     private MecanicoResumo mecanico;
     private List<ServicoPrestadoResumo> servicos;
-    private List<PecaOrdemServicoResumo> pecas;
+    private List<ProdutoOrdemServicoResumo> produtos;
+
 }
