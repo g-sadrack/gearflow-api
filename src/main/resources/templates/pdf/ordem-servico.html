@@ -1,38 +1,52 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
   <meta charset="UTF-8">
   <style>
-    body { font-family: Arial, sans-serif; }
-    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-    th, td { border: 1px solid #333; padding: 8px; }
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th,
+    td {
+      border: 1px solid #333;
+      padding: 8px;
+    }
   </style>
 </head>
+
 <body>
-  <h1>Ordem de Serviço Nº <span th:text="${ordem.id}"></span></h1>
-  <p><strong>Cliente:</strong> <span th:text="${ordem.cliente.nome}"></span></p>
-  <p><strong>Data:</strong> <span th:text="${ordem.data}"></span></p>
+  <h1>Teste Simples</h1>
+  <p th:text="'ID: ' + ${ordem.id}"></p>
+  <p th:text="'Nº de OS: ' + ${ordem.numeroOs}">
+    <hr>
 
-  <h2>Peças</h2>
+    <!-- Corrigido para refletir sua estrutura real -->
+  <p th:text="'Cliente: ' + ${ordem.veiculo?.proprietario?.nome}"></p>
+  <p th:text="'Telefone: ' + ${ordem.veiculo?.proprietario?.telefone}"></p>
   <table>
-    <tr><th>Nome</th><th>Qtd</th><th>Valor</th></tr>
-    <tr th:each="peca : ${ordem.pecas}">
-      <td th:text="${peca.peca.nome}"></td>
-      <td th:text="${peca.quantidade}"></td>
-      <td th:text="${peca.valorUnitario}"></td>
-    </tr>
+    <thead>
+      <tr>
+        <th>Produto</th>
+        <th>Quantidade</th>
+        <th>Preco</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr th:each="'Produto: ' + ${ordem.produtos}"> <!-- Corrigido para refletir sua estrutura real -->
+        <td th:text="'Produto: ' + ${produto.produto?.nome}"></td> <!-- Corrigido para refletir sua estrutura real -->
+        <td th:text="'Produto: ' + ${produto.quantidade}"></td>
+        <td th:text="'Produto: ' + ${produto.produto?.preco}"></td> <!-- Corrigido para refletir sua estrutura real -->
+      </tr>
+    </tbody>
   </table>
-
-  <h2>Serviços</h2>
-  <table>
-    <tr><th>Descrição</th><th>Qtd</th><th>Valor</th></tr>
-    <tr th:each="servico : ${ordem.servicos}">
-      <td th:text="${servico.descricao}"></td>
-      <td th:text="${servico.quantidade}"></td>
-      <td th:text="${servico.valorUnitario}"></td>
-    </tr>
-  </table>
-
-  <h2>Total: R$ <span th:text="${ordem.valorTotal}"></span></h2>
 </body>
+
 </html>
