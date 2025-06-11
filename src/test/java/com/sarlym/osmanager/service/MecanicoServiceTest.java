@@ -22,6 +22,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.sarlym.osmanager.api.dto.mapper.MecanicoMapper;
 import com.sarlym.osmanager.api.dto.request.MecanicoRequest;
 import com.sarlym.osmanager.domain.exception.EntidadeNaoEncontradaException;
+import com.sarlym.osmanager.domain.model.Empresa;
 import com.sarlym.osmanager.domain.model.Mecanico;
 import com.sarlym.osmanager.domain.repositories.MecanicoRepository;
 import com.sarlym.osmanager.domain.service.MecanicoService;
@@ -43,7 +44,7 @@ class MecanicoServiceTest {
 
     @BeforeEach
     void setUp() {
-        mecanico = new Mecanico(1L, "Carlos", "Motor", "001", Boolean.TRUE, LocalDateTime.now(), LocalDateTime.now());
+        mecanico = new Mecanico(1L, "Carlos", "Motor", "001", Boolean.TRUE, LocalDateTime.now(), LocalDateTime.now(), new Empresa());
        
         mecanicoRequest = new MecanicoRequest("Carlos", "Motor", "001", Boolean.TRUE);
     
