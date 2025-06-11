@@ -17,7 +17,10 @@ public class PdfService {
     private TemplateEngine templateEngine;
 
     public byte[] gerarPdf(OrdemServico ordem) { // Renomeie o parâmetro
+<<<<<<< HEAD
         // Inicia um contexto Thymeleaf
+=======
+>>>>>>> 95703c8e056d4e079f394a2a28462fb8b4bc3846
         Context context = new Context();
         context.setVariable("ordem", ordem); // Corrija o nome da variável
 

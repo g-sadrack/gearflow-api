@@ -141,11 +141,17 @@ public class OrdemServicoController {
     }
 
     // Endpoint PDF (mantido como está)
+<<<<<<< HEAD
     @GetMapping("/{id}/pdf") // metodo para gerar o PDF
     public ResponseEntity<byte[]> gerarPdf(@PathVariable Long id) {
         // faz a busca da ordem de servico de acordo com o id
         OrdemServico ordem = ordemServicoService.buscaOrdemServicoOuErro(id);
         
+=======
+    @GetMapping("/{id}/pdf")
+    public ResponseEntity<byte[]> gerarPdf(@PathVariable Long id) {
+        OrdemServico ordem = ordemServicoService.buscaOrdemServicoOuErro(id);
+>>>>>>> 95703c8e056d4e079f394a2a28462fb8b4bc3846
         byte[] pdf = pdfService.gerarPdf(ordem);
         
         HttpHeaders headers = new HttpHeaders();
