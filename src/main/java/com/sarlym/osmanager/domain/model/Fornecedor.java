@@ -11,6 +11,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import com.sarlym.osmanager.api.core.enums.TipoFornecedor;
 
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -36,13 +37,8 @@ public class Fornecedor {
     private String email;
     private String contatoPrincipal;
     private String telefoneContato;
-    private String logradouro;
-    private String numero;
-    private String bairro;
-    private String cidade;
-    private String estado;
-    private String cep;
-    private String pais;
+    @Embedded
+    private Endereco endereco;
     private String site;
     @Enumerated(EnumType.STRING)
     private TipoFornecedor tipoFornecedor;

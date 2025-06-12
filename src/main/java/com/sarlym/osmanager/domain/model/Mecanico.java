@@ -33,7 +33,7 @@ public class Mecanico {
     @UpdateTimestamp
     private LocalDateTime dataAtualizacao;
     @ManyToOne
-    @JoinColumn(name = "mecanico_id")
+    @JoinColumn(name = "empresa_id")
     private Empresa empresa;
 
 }
