@@ -140,7 +140,7 @@ public class OrdemServicoService {
         pecaOrdemServico.setOrdemServico(ordemServico);
         pecaOrdemServico.setProduto(peca);
         pecaOrdemServico.setQuantidade(request.getQuantidade());
-        pecaOrdemServico.setValorUnitario(request.getValorUnitario());
+        pecaOrdemServico.setValor(request.getValorUnitario());
 
         ordemServico.getProdutos().add(pecaOrdemServico);
         calculaValorTotal(ordemServico);
@@ -154,7 +154,7 @@ public class OrdemServicoService {
         List<ServicoPrestado> servicos = ordemServico.getServicos();
 
         for (ProdutoOrdemServico produto : produtos) {
-            BigDecimal valorProduto = produto.getValorUnitario().multiply(
+            BigDecimal valorProduto = produto.getValor().multiply(
                     BigDecimal.valueOf(produto.getQuantidade()));
             ;
             valorTotal = valorTotal.add(valorProduto);

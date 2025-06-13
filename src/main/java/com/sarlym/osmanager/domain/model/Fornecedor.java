@@ -11,6 +11,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import com.sarlym.osmanager.api.core.enums.TipoFornecedor;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -49,6 +50,7 @@ public class Fornecedor {
     private LocalDateTime dataCadastro;
     @UpdateTimestamp
     private LocalDateTime dataUltimaAtualizacao;
+    @Column(name = "eh_ativo")
     private Boolean ativo = true;
 
 }
