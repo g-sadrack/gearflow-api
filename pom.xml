@@ -98,6 +98,25 @@
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-mysql</artifactId> <!-- Se usar MySQL -->
 		</dependency>
+		<!-- Thymeleaf -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+
+		<!-- Flying Saucer PDF (versão que funciona bem com Java 11+) -->
+		<dependency>
+			<groupId>org.xhtmlrenderer</groupId>
+			<artifactId>flying-saucer-pdf-openpdf</artifactId>
+			<version>9.1.22</version>
+		</dependency>
+
+		<!-- OpenPDF (usado por flying-saucer-pdf-openpdf) -->
+		<dependency>
+			<groupId>com.github.librepdf</groupId>
+			<artifactId>openpdf</artifactId>
+			<version>1.3.30</version>
+		</dependency>
 
 	</dependencies>
 

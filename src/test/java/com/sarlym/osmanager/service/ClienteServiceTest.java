@@ -48,8 +48,7 @@ class ClienteServiceTest {
     @BeforeEach
     void setUp() {
 
-        cliente = new Cliente(1L, "Jonas", "40028922", "profeta@gmail.com", "75229917067", LocalDateTime.now(),
-                LocalDateTime.now(), veiculos);
+        cliente = new Cliente(1L, "Jonas", "40028922", "profeta@gmail.com", "75229917067", LocalDateTime.now(), LocalDateTime.now(), veiculos);
         clienteRequest = new ClienteRequest("João", "00289044", "31021769096", "joaum@gmail.com");
 
     }
