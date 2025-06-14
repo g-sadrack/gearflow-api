@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,13 +28,14 @@ public class Mecanico {
     private String nome;
     private String especialidade;
     private String matricula;
+    @Column(name = "eh_ativo")
     private Boolean ativo;
     @CreationTimestamp
     private LocalDateTime dataCadastro;
     @UpdateTimestamp
     private LocalDateTime dataAtualizacao;
     @ManyToOne
-    @JoinColumn(name = "mecanico_id")
+    @JoinColumn(name = "empresa_id")
     private Empresa empresa;
 
 }

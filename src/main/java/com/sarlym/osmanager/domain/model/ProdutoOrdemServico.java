@@ -31,7 +31,7 @@ public class ProdutoOrdemServico {
     @ManyToOne
     private Produto produto;
     private Integer quantidade;
-    private BigDecimal valorUnitario;
+    private BigDecimal valor;
     @CreationTimestamp
     private LocalDateTime dataCadastro;
     @UpdateTimestamp

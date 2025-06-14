@@ -18,13 +18,13 @@ import com.sarlym.osmanager.api.dto.response.EmpresaResumo;
 import com.sarlym.osmanager.domain.service.EmpresaService;
 
 @RestController
-@RequestMapping("/api/empresas")
-public class EmpesaController {
+@RequestMapping(value = "/api/empresas", produces = "application/json")
+public class EmpresaController {
 
     private EmpresaService empresaService;
     private EmpresaMapper empresaMapper;
 
-    public EmpesaController(EmpresaService empresaService, EmpresaMapper empresaMapper) {
+    public EmpresaController(EmpresaService empresaService, EmpresaMapper empresaMapper) {
         this.empresaService = empresaService;
         this.empresaMapper = empresaMapper;
     }

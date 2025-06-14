@@ -3,6 +3,7 @@ package com.sarlym.osmanager.api.dto.mapper;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.sarlym.osmanager.api.dto.request.EmpresaRequest;
@@ -12,6 +13,7 @@ import com.sarlym.osmanager.domain.model.Empresa;
 @Component
 public class EmpresaMapper {
 
+    @Autowired
     ModelMapper modelMapper = new ModelMapper();
 
     public EmpresaResumo modelParaDTO(Empresa empresa) {
