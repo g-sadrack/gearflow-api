@@ -46,6 +46,9 @@ public class Estoque {
     private LocalDateTime dataUltimaEntrada;
     private LocalDateTime dataUltimaSaida;
     private String localizacao;
+    @OneToOne
+    @JoinColumn(name = "empresa_id", nullable = false, unique = true)
+    private Empresa empresa;
     @Enumerated(EnumType.STRING)
     private StatusEstoque StatusEstoque;
     private String lote;
