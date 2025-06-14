@@ -47,8 +47,11 @@ public class OrdemServico {
     @UpdateTimestamp
     private LocalDateTime dataAlteracao;
     private LocalDateTime dataFinalizacao;
+    @Column(name = "eh_ativo")
     private Boolean ativo = Boolean.TRUE;
-
+    @ManyToOne
+    @JoinColumn(name = "empresa_id")
+    private Empresa empresa;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "veiculo_id")
     private Veiculo veiculo;

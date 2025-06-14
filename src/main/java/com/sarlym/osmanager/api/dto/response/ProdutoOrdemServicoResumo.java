@@ -9,6 +9,6 @@ public class ProdutoOrdemServicoResumo {
 
     private ProdutoResumo produto;
     private Integer quantidade;
-    private BigDecimal valorUnitario;
+    private BigDecimal valor;
 
 }

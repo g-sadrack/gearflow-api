@@ -25,7 +25,7 @@ public class Produto {
     private Long id;
     private String codigo;
     private String nome;
-    private BigDecimal valorUnitario;
+    private BigDecimal valor;
     @CreationTimestamp
     private LocalDateTime dataCadastro;
     @UpdateTimestamp
