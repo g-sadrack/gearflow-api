@@ -22,7 +22,7 @@ public class EmpresaService {
     }
 
     public Empresa buscarEmpresaOuErro(Long id) {
-        return empresaRepository.findById(1L)
+        return empresaRepository.findById(id)
                 .orElseThrow(() -> new EntidadeNaoEncontradaException("Empresa nao encontrada"));
     }
 
