@@ -23,6 +23,8 @@ public class Cliente {
     private String telefone;
     private String email;
     private String cpf;
+    @Embedded
+    private Endereco endereco;
     @CreationTimestamp
     private LocalDateTime dataCadastro;
     @UpdateTimestamp

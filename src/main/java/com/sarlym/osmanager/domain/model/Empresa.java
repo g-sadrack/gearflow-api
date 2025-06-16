@@ -21,6 +21,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @NoArgsConstructor
@@ -59,8 +60,10 @@ public class Empresa {
     //private byte[] certificadoDigital; 
     private LocalDate validadeCertificado;
     @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
     private List<OrdemServico> ordensServico = new ArrayList<>();
     @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
     private List<Mecanico> mecanicos = new ArrayList<>();
 
 }
