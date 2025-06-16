@@ -15,6 +15,7 @@ import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @AllArgsConstructor
@@ -36,6 +37,7 @@ public class Mecanico {
     private LocalDateTime dataAtualizacao;
     @ManyToOne
     @JoinColumn(name = "empresa_id")
+    @ToString.Exclude
     private Empresa empresa;
 
 }

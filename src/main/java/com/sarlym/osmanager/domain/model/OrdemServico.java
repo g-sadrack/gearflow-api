@@ -54,18 +54,22 @@ public class OrdemServico {
     private Empresa empresa;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "veiculo_id")
+    @ToString.Exclude
     private Veiculo veiculo;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mecanico_id")
+    @ToString.Exclude
     private Mecanico mecanico;
 
     @OneToMany(mappedBy = "ordemServico", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @BatchSize(size = 20)
+    @ToString.Exclude
     private List<ServicoPrestado> servicos = new ArrayList<>();
 
     @OneToMany(mappedBy = "ordemServico", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @BatchSize(size = 20)
+    @ToString.Exclude
     private List<ProdutoOrdemServico> produtos = new ArrayList<>();
 
 }

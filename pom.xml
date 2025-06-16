@@ -111,11 +111,18 @@
 			<version>9.1.22</version>
 		</dependency>
 
-		<!-- OpenPDF (usado por flying-saucer-pdf-openpdf) -->
+		 <!-- OpenHtmlToPdf (Core) -->
 		<dependency>
-			<groupId>com.github.librepdf</groupId>
-			<artifactId>openpdf</artifactId>
-			<version>1.3.30</version>
+			<groupId>com.openhtmltopdf</groupId>
+			<artifactId>openhtmltopdf-core</artifactId>
+			<version>1.0.10</version>
+		</dependency>
+
+		<!-- Renderizador PDFBox (obrigatório) -->
+		<dependency>
+			<groupId>com.openhtmltopdf</groupId>
+			<artifactId>openhtmltopdf-pdfbox</artifactId>
+			<version>1.0.10</version>
 		</dependency>
 
 	</dependencies>

@@ -25,6 +25,7 @@ import com.sarlym.osmanager.api.dto.request.ClienteRequest;
 import com.sarlym.osmanager.domain.exception.ClienteException;
 import com.sarlym.osmanager.domain.exception.EmailJaExistenteException;
 import com.sarlym.osmanager.domain.model.Cliente;
+import com.sarlym.osmanager.domain.model.Endereco;
 import com.sarlym.osmanager.domain.model.Veiculo;
 import com.sarlym.osmanager.domain.repositories.ClienteRepository;
 import com.sarlym.osmanager.domain.service.ClienteService;
@@ -48,7 +49,7 @@ class ClienteServiceTest {
     @BeforeEach
     void setUp() {
 
-        cliente = new Cliente(1L, "Jonas", "40028922", "profeta@gmail.com", "75229917067", LocalDateTime.now(), LocalDateTime.now(), veiculos);
+        cliente = new Cliente(1L, "Jonas", "40028922", "profeta@gmail.com", "75229917067", new Endereco(), LocalDateTime.now(), LocalDateTime.now(), veiculos);
         clienteRequest = new ClienteRequest("João", "00289044", "31021769096", "joaum@gmail.com");
 
     }

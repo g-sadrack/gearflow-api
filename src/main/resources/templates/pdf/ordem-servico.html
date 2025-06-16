@@ -1,115 +1,125 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Ordem de Serviço</title>
   <style>
+    /* ESTILOS SIMPLIFICADOS PARA OPENPDF */
     body {
       font-family: Arial, sans-serif;
-      background: #fff;
-      margin: 40px;
+      font-size: 12px;
+      line-height: 1.4;
     }
 
     .os-container {
-      width: 800px;
-      margin: auto;
+      width: 95%;
+      margin: 0 auto;
       border: 1px solid #000;
       padding: 20px;
     }
 
     .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 3px solid #add8e6;
-      padding-bottom: 10px;
-      border-radius: 2px;
+      width: 100%;
+      margin-bottom: 10px;
     }
 
-    .header .logo {
+    .logo {
+      float: left;
       width: 200px;
       height: 100px;
       background-color: #ddd;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      text-align: center;
+      line-height: 100px;
       font-weight: bold;
     }
 
-    .header .company-info {
+    .company-info {
+      float: right;
+      width: 300px;
       text-align: right;
-      font-size: 14px;
+      font-size: 12px;
     }
 
     h2 {
       background-color: #add8e6;
       padding: 5px;
-      font-size: 16px;
-      margin-top: 20px;
-      border-radius: 4px;
+      font-size: 14px;
+      margin: 5px 0px;
+      font-weight: bold;
+      clear: both;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 10px;
+      margin-top: 6px;
+      font-size: 12px;
     }
 
-    td, th {
+    th {
+      background-color: #f0f0f0;
+    }
+
+    td,
+    th {
       border: 1px solid #ccc;
-      padding: 6px;
-      font-size: 14px;
-    }
-
-    .no-border td {
-      border: none;
-      padding: 4px 6px;
+      padding: 5px;
+      vertical-align: top;
     }
 
     .signature-section {
-      display: flex;
-      justify-content: space-between;
+      width: 100%;
       margin-top: 50px;
     }
 
     .signature {
-      text-align: center;
+      width: 45%;
       border-top: 1px solid #000;
-      width: 40%;
       padding-top: 5px;
+      text-align: center;
+      display: inline-block;
     }
 
-    .line-space {
-      height: 20px;
+    .text-center {
+      text-align: center;
     }
 
-    .multiline {
-      height: 100px;
-    }
-    .solicitante{
-      text-align: left;
+    .text-right {
+      text-align: right;
     }
 
+    .bg-blue {
+      background-color: #add8e6;
+      padding: 3px 5px;
+    }
+
+    .clear {
+      clear: both;
+    }
   </style>
 </head>
+
 <body>
   <div class="os-container">
     <div class="header">
       <div class="logo">Logo da empresa</div>
       <div class="company-info">
-        <strong>Empresa de CRM de Vendas</strong><br>
-        CNPJ 00.000.000/0001-00<br>
-        Rua do Bom Atendimento, 100<br>
-        Novo Gama -GO<br>
-        Telefone (61) 94002-8922
+        <strong><span th:text="${ordem.empresa?.nomeFantasia}"></span></strong><br />
+        <span th:text="${ordem.empresa?.cnpj}"></span><br />
+        <span th:text="${ordem.empresa?.enderecoFiscal?.logradouro}"></span><br />
+        <span th:text="${ordem.empresa?.enderecoFiscal?.cidade}"></span> -
+        <span th:text="${ordem.empresa?.enderecoFiscal?.uf}"></span><br />
+        <span th:text="${ordem.empresa?.telefone}"></span>
       </div>
+      <div class="clear"></div>
     </div>
 
     <h2>ORDEM DE SERVIÇO</h2>
 
-    <table class="no-border">
+    <table>
       <tr>
-        <td><strong>Nº da Ordem de Serviço:</strong> _________</td>
+        <td><strong>Nº da Ordem de Serviço: </strong><span th:text="${ordem.numeroOs}"></span></td>
       </tr>
     </table>
 
@@ -121,62 +131,90 @@
         <th>Horário da execução</th>
       </tr>
       <tr>
-        <td>__/__/____</td>
-        <td>__:__</td>
-        <td>__/__/____</td>
-        <td>__:__</td>
+        <td><span th:text="${#temporals.format(ordem.dataAbertura, 'dd/MM/yyyy')}"></span></td>
+        <td><span th:text="${#temporals.format(ordem.dataAbertura, 'HH:mm')}"></span></td>
+        <td><span th:text="${#temporals.format(ordem.dataFinalizacao, 'dd/MM/yyyy')}"></span></td>
+        <td><span th:text="${#temporals.format(ordem.dataFinalizacao, 'HH:mm')}"></span></td>
       </tr>
     </table>
 
     <h2>Solicitante</h2>
     <table class="solicitante">
       <tr>
-        <th>Nome do Cliente:</th>
-        <td></td>
+        <th>Nome: </th>
+        <td><span th:text="${ordem.veiculo?.proprietario?.nome}"></span></td>
       </tr>
       <tr>
         <th>CPF / CNPJ:</th>
-        <td></td>
+        <td><span th:text="${ordem.veiculo?.proprietario?.cpf}"></span></td>
       </tr>
       <tr>
-        <th>Endereço completo:</th>
-        <td></td>
+        <th>Telefone: </th>
+        <td><span th:text="${ordem.veiculo?.proprietario?.telefone}"></span></td>
       </tr>
       <tr>
-        <th>Telefone de contato: ( )</th>
-        <td></td>
+        <th>Endereço: </th>
+        <td>
+          Cidade: <span th:text="${ordem.veiculo?.proprietario?.endereco?.cidade}"></span>,
+          Logradouro: <span th:text="${ordem.veiculo?.proprietario?.endereco?.logradouro}"></span>,
+          Lt: <span th:text="${ordem.veiculo?.proprietario?.endereco?.numero}"></span>,
+          Complemento: <span th:text="${ordem.veiculo?.proprietario?.endereco?.complemento}"></span>,
+          Bairro: <span th:text="${ordem.veiculo?.proprietario?.endereco?.bairro}"></span>,
+          CEP: <span th:text="${ordem.veiculo?.proprietario?.endereco?.cep}"></span>,
+          UF: <span th:text="${ordem.veiculo?.proprietario?.endereco?.uf}"></span>.
+        </td>
       </tr>
     </table>
 
     <h2>Descrição do Serviço</h2>
     <table class="multiline">
-      <tr><td></td></tr>
+      <tr>
+        <td><span th:text="${ordem.descricaoProblema}"></span></td>
+      </tr>
     </table>
 
-    <h2>Materiais utilizados</h2>
+    <h2>Custos e materiais utilizados</h2>
     <table>
       <tr>
         <th>Tipo</th>
         <th>Quantidade</th>
-        <th>Valor</th>
-        <th>Observações</th>
+        <th>Valor Unitário</th>
+        <th>Valor Somatório</th>
       </tr>
-      <tr><td></td><td></td><td></td><td></td></tr>
-      <tr><td></td><td></td><td></td><td></td></tr>
-      <tr><td></td><td></td><td></td><td></td></tr>
-      <tr><td></td><td></td><td></td><td></td></tr>
-      <tr><td></td><td></td><td></td><td></td></tr>
+      <tr th:each="produtoOrdem : ${ordem.produtos}">
+        <td th:text="${produtoOrdem.produto.nome}"></td>
+        <td th:text="${produtoOrdem.quantidade}"></td>
+        <td th:text="${#numbers.formatCurrency(produtoOrdem.valor)}"></td>
+        <td th:text="${#numbers.formatCurrency(produtoOrdem.quantidade * produtoOrdem.valor)}"></td>
+      </tr>
+    </table>
+    <table>
+      <tr>
+        <th>Descrição</th>
+        <th>Valor mão de obra</th>
+      </tr>
+      <tr th:each="servicoPrestado : ${ordem.servicos}">
+        <td th:text="${servicoPrestado.servico.descricao}"></td>
+        <td th:text="${#numbers.formatCurrency(servicoPrestado.servico.valor)}"></td>
+      </tr>
     </table>
 
-    <h2 class="background-color-blue">Observações gerais</h2>
+    <h2 class="background-blue">Observações gerais</h2>
     <table class="multiline">
-      <tr><td></td></tr>
+      <tr>
+        ola
+        <td th:text="${ordem.diagnosticoTecnico}"></td>
+      </tr>
     </table>
-
+    <p>
+      <span class="background-blue">Preço total:</span>
+      <span th:text="${#numbers.formatCurrency(ordem.valorTotal)}"></span>
+    </p>
     <div class="signature-section">
       <div class="signature">Assinatura do Cliente</div>
       <div class="signature">Assinatura do representante da empresa</div>
     </div>
   </div>
 </body>
+
 </html>
