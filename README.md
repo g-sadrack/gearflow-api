@@ -58,6 +58,15 @@ Um agradecimento especial para os colaboradores desse projeto.
         </sub>
       </a>
     </td>
+    <td align="center">
+      </a>
+        <a href="#">
+        <img src="https://avatars.githubusercontent.com/u/193547302?v=4" width="100px;" alt="Wendel Nascimento Profile Picture"/><br>
+        <sub>
+          <b>Wendel Nascimento</b>
+        </sub>
+      </a>
+    </td>
   </tr>
 </table>
 
@@ -65,7 +74,7 @@ Um agradecimento especial para os colaboradores desse projeto.
 
 Se você tiver interesse em participar do projeto, você pode clonar esse projeto e realizar uma implementação:
 
-1. `git clone https://github.com/Fernanda-Kipper/text-editor.git`
+1. `git clone https://github.com/g-sadrack/os-manager`
 2. `git checkout -b feature/NAME`
 3. Siga os padrões de commit
 4. Abra um Pull Request e explique o problema resolvido ou a funcionalidade criada. Caso existam modificações visuais, anexe capturas de tela e aguarde a revisão!
