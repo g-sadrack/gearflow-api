@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  # Container da sua aplicação Java
+  java-app:
+    build: .  # Usa o Dockerfile do diretório atual
+    container_name: minha-app-java
+    restart: always
+    ports:
+      - "8080:8080"  # Porta externa:interna
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/manager?createDatabaseIfNotExist=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: password
+    depends_on:
+      banco-mysql:
+        condition: service_healthy
+
+  # Container do MySQL
+  banco-mysql:
+    image: mysql:8.0
+    container_name: banco-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: manager
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 10s
+      retries: 10
+
+# Volume para persistir dados do MySQL
+volumes:
+  mysql-data:
