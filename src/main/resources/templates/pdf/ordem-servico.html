@@ -145,7 +145,7 @@
         <td><span th:text="${ordem.veiculo?.proprietario?.nome}"></span></td>
       </tr>
       <tr>
-        <th>CPF / CNPJ:</th>
+        <th>CPF/CNPJ:</th>
         <td><span th:text="${ordem.veiculo?.proprietario?.cpf}"></span></td>
       </tr>
       <tr>
@@ -184,8 +184,8 @@
       <tr th:each="produtoOrdem : ${ordem.produtos}">
         <td th:text="${produtoOrdem.produto.nome}"></td>
         <td th:text="${produtoOrdem.quantidade}"></td>
-        <td th:text="${#numbers.formatCurrency(produtoOrdem.valor)}"></td>
-        <td th:text="${#numbers.formatCurrency(produtoOrdem.quantidade * produtoOrdem.valor)}"></td>
+        <td th:text="'R$ ' + ${#numbers.formatDecimal(produtoOrdem.valor, 1, 'COMMA', 2, 'POINT')}"></td>
+        <td th:text="'R$ ' + ${#numbers.formatDecimal((produtoOrdem.quantidade * produtoOrdem.valor), 1, 'COMMA', 2, 'POINT')}"></td>
       </tr>
     </table>
     <table>
@@ -195,20 +195,19 @@
       </tr>
       <tr th:each="servicoPrestado : ${ordem.servicos}">
         <td th:text="${servicoPrestado.servico.descricao}"></td>
-        <td th:text="${#numbers.formatCurrency(servicoPrestado.servico.valor)}"></td>
+        <td th:text="'R$ ' + ${#numbers.formatDecimal(servicoPrestado.servico.valor, 1, 'COMMA', 2, 'POINT')}"></td>
       </tr>
     </table>
 
     <h2 class="background-blue">Observações gerais</h2>
     <table class="multiline">
       <tr>
-        ola
         <td th:text="${ordem.diagnosticoTecnico}"></td>
       </tr>
     </table>
     <p>
       <span class="background-blue">Preço total:</span>
-      <span th:text="${#numbers.formatCurrency(ordem.valorTotal)}"></span>
+      <span th:text="'R$ ' + ${#numbers.formatDecimal(ordem.valorTotal, 1, 'COMMA', 2, 'POINT')}"></span>
     </p>
     <div class="signature-section">
       <div class="signature">Assinatura do Cliente</div>
