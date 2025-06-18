@@ -17,12 +17,14 @@ import com.sarlym.osmanager.api.dto.request.EmpresaRequest;
 import com.sarlym.osmanager.api.dto.response.EmpresaResumo;
 import com.sarlym.osmanager.domain.service.EmpresaService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping(value = "/api/empresas", produces = "application/json")
 public class EmpresaController {
 
-    private EmpresaService empresaService;
-    private EmpresaMapper empresaMapper;
+    private final EmpresaService empresaService;
+    private final EmpresaMapper empresaMapper;
 
     public EmpresaController(EmpresaService empresaService, EmpresaMapper empresaMapper) {
         this.empresaService = empresaService;
