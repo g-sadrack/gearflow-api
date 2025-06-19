@@ -1,0 +1,40 @@
+# Ignora arquivos do Git
+.git/
+target/
+.idea/
+*.iml
+
+# Ignora diretórios de build do Maven/Gradle
+target/
+build/
+bin/
+.mvn/
+.gradle/
+
+# Ignora arquivos de IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.classpath
+.project
+.settings/
+
+# Ignora arquivos de sistema
+.DS_Store
+*.swp
+*.bak
+*.log
+
+# Ignora arquivos de configuração local (se houver)
+.env
+*.properties
+
+# Ignora properties de teste/config local
+*.local.properties
+/test/*.properties
+/config/*.properties
+
+# NÃO ignora:
+!src/main/resources/application.properties

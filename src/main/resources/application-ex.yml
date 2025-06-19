@@ -1,0 +1,66 @@
+### ATENÇÃO O NOME DO ARQUIVO DEVE SER application.yml
+# USE ESSE ARQUIVO APENAS COMO TEMPLATE
+# O NOME DO ARQUIVO DEVE SER application.yml ou application-dev.yml para ambientes de desenvolvimento / homoologação / produção
+
+spring:
+
+  application:
+    name: os-manager
+
+  #Configuracoes do datasource
+  datasource:
+      url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/fallback}
+      username: ${SPRING_DATASOURCE_USERNAME:root}
+      password: ${SPRING_DATASOURCE_PASSWORD:}
+
+  # Configuracoes do Hibernate
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+
+  # Configuracoes do Flyway
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+  
+  # Configuracoes do Thymeleaf
+  thymeleaf:
+    locale: pt_BR
+  mvc:
+    locale: pt_BR
+
+# Logging para ver DDL
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+        tool:
+          schema:
+            internal: DEBUG
+        type:
+          descriptor:
+            sql: TRACE
+      springframework:
+        web: DEBUG
+        http:
+          converter: DEBUG
+
+  # Data JPA
+  #spring.jpa.generate-ddl=true
+  jpa:
+    properties:
+      hibernate:
+        hbm2ddl:
+          schema-generation:
+            scripts:
+              action: create
+            create-source: metadata
+            script:
+              create_target: src/main/resources/db/generated-schema.sql
