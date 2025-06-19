@@ -22,8 +22,8 @@ import com.sarlym.osmanager.domain.service.ProdutoService;
 @RequestMapping(value = "api/produtos", produces = { "application/json" })
 public class ProdutoController {
 
-    private ProdutoService produtoService;
-    private ProdutoMapper produtoMapper;
+    private final ProdutoService produtoService;
+    private final ProdutoMapper produtoMapper;
 
     public ProdutoController(ProdutoService produtoService, ProdutoMapper produtoMapper) {
         this.produtoService = produtoService;
