@@ -5,11 +5,8 @@ import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
-import org.springframework.http.ContentDisposition;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -96,7 +93,6 @@ public class OrdemServicoController {
         return ordemServicoMapper.modeloListaParaListaDTOResumo(ordens);
     }
 
-    @ResponseStatus(code = HttpStatus.CREATED)
     @Operation(summary = "Cadastra ordem de serviço", description = "Cadastra uma nova ordem de serviço ao passar os valores veiculoID, mecanicoID e descrição do problema", method = "POST")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Busca realizada com sucesso"),
@@ -104,6 +100,7 @@ public class OrdemServicoController {
             @ApiResponse(responseCode = "500", description = "Erro ao realizar pesquisa")
     })
     @PostMapping
+    @ResponseStatus(code = HttpStatus.CREATED)
     public OrdemServicoDTO criaOrdemDeServico(@RequestBody(required = true) OrdemServicoRequest ordemServicoRequest) {
         return ordemServicoMapper.modeloParaDTO(ordemServicoService.salvar(ordemServicoRequest));
     }
@@ -121,46 +118,73 @@ public class OrdemServicoController {
         return ordemServicoMapper.modeloParaDTO(ordemServicoService.alterarOrdemServico(id, ordemServicoRequest));
     }
 
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = "Deletar o serviço", description = "Deleta um registro de uma ordem de serviço", method = "DELETE")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Delete realizada com sucesso"),
+            @ApiResponse(responseCode = "404", description = "ID de ordem de serviço não encontrado"),
+    })
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletaOrdemServico(
             @Parameter(name = "id", description = "ID único da OS", required = true, example = "1") @PathVariable(name = "id") Long id) {
         ordemServicoService.deletaOrdemServico(id);
     }
 
+    @Operation(summary = "Associa um serviço prestado", description = "Associa um serviço prestado a uma ordem de serviço", method = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Associação realizada com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Ordem de serviço, mecanico ou veiculo não encontrada"),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar associação")
+    })
     @PostMapping("/{id}/servico")
-    public OrdemServicoDTO associarServico(@PathVariable(name = "id") Long id,
+    @ResponseStatus(HttpStatus.CREATED)
+    public OrdemServicoDTO associarServico(
+            @Parameter(name = "id", description = "ID único da OS", required = true, example = "1") @PathVariable(name = "id") Long id,
             @RequestBody ServicoPrestadoRequest request) {
         return ordemServicoMapper.modeloParaDTO(ordemServicoService.adicionaServico(id, request));
     }
 
+    @Operation(summary = "Associa uma peça", description = "Associa uma peça a uma ordem de serviço", method = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Associação realizada com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Ordem de serviço, mecanico ou veiculo não encontrada"),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar associação")
+    })
     @PostMapping("/{id}/peca")
-    public OrdemServicoDTO associarPeca(@PathVariable(name = "id") Long id,
+    @ResponseStatus(HttpStatus.CREATED)
+    public OrdemServicoDTO associarPeca(
+    @Parameter(name = "id", description = "ID único da OS", required = true, example = "1")    
+    @PathVariable(name = "id") Long id,
             @RequestBody PecaOrdemServicoRequest request) {
         return ordemServicoMapper.modeloParaDTO(ordemServicoService.adicionaProduto(id, request));
     }
 
-    // Endpoint PDF (mantido como está)
-    @GetMapping("/{id}/pdf") // metodo para gerar o PDF
-    public ResponseEntity<byte[]> gerarPdf(@PathVariable Long id) {
-        // faz a busca da ordem de servico de acordo com o id
+    @Operation(summary = "Cria PDF da ordem de serviço selecionada", description = "Busca uma OS no sistema utilizando o ID como parametro e gera um PDF.", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Mecanico não encontrado"),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar a busca de Ordem de Serviço"),
+    })
+    @GetMapping(value = "/{id}/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public byte[] gerarPdf(
+    @Parameter(name = "id", description = "ID único da ordem de serviço", required = true, example = "1")    
+    @PathVariable(value = "id") Long id) {
         OrdemServico ordem = ordemServicoService.buscaOrdemServicoOuErro(id);
-        
-        byte[] pdf = pdfService.gerarPdf(ordem);
-        
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_PDF);
-        headers.setContentDisposition(
-            ContentDisposition.builder("attachment")
-                .filename("ordem-servico-" + id + ".pdf")
-                .build());
-        
-        return new ResponseEntity<>(pdf, headers, HttpStatus.OK);
+        return pdfService.gerarPdf(ordem);
     }
 
- // Endpoint HTML (processamento manual)
+    @Operation(summary = "Cria HTML da ordem de serviço selecionada", description = "Busca uma OS no sistema utilizando o ID como parametro e gera um HTML.", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Mecanico não encontrado"),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar a busca de Ordem de Serviço"),
+    })
     @GetMapping(value = "/{id}/html", produces = MediaType.TEXT_HTML_VALUE)
-    public String gerarHtml(@PathVariable Long id) {
+    @ResponseStatus(HttpStatus.OK)
+    public String gerarHtml(
+    @Parameter(name = "id", description = "ID único da ordem de serviço", required = true, example = "1")    
+        @PathVariable(value = "id") Long id) {
         OrdemServico ordem = ordemServicoService.buscaOrdemServicoOuErro(id);
         return pdfService.gerarHtml(ordem);
     }

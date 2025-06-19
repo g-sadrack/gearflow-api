@@ -17,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "api/veiculos", produces = "application/json")
-@Tag(name = "Veiculo", description = "Operações relacionadas aos veículos")
+@Tag(name = "Veiculos", description = "Operações relacionadas aos veículos")
 public class VeiculoController {
 
     private final VeiculoService veiculoService;
