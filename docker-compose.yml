@@ -34,3 +34,4 @@ services:
 # Volume para persistir dados do MySQL
 volumes:
   mysql-data:
+  maven-repo:
