@@ -1,5 +1,5 @@
-# Build stage
-FROM maven:3.9.9-eclipse-temurin-21-alpine as builder
+######### Build stage ########
+FROM maven:3-eclipse-temurin-24-alpine AS builder
 WORKDIR /app
 # 1. Copia apenas o POM para resolver dependências primeiro
 COPY pom.xml .
@@ -9,8 +9,10 @@ RUN mvn dependency:go-offline
 COPY . .
 # 4. Constrói o projeto
 RUN mvn clean package -DskipTests
-# Production stage
-FROM eclipse-temurin:21-jre-alpine
+
+
+###### Production stage ########
+FROM eclipse-temurin:24-jre-alpine
 WORKDIR /app
 COPY --from=builder /app/target/*.jar app.jar
 
