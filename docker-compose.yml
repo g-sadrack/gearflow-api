@@ -2,7 +2,7 @@ services:
   # Container da sua aplicação Java
   java-app:
     build: .  # Usa o Dockerfile do diretório atual
-    container_name: os-manager
+    container_name: java-gearflow-api
     restart: always
     ports:
       - "8080:8080"  # Porta externa:interna
@@ -17,7 +17,7 @@ services:
   # Container do MySQL
   banco-mysql:
     image: mysql:8.0
-    container_name: banco-mysql
+    container_name: mysql-gearflow-api
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: manager

@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.sarlym</groupId>
-	<artifactId>os-manager</artifactId>
+	<artifactId>gearflow-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>os-manager</name>
+	<name>GearFlow API</name>
 	<description>Projeto para emissão de ordem de serviço</description>
 	<url/>
 	<licenses>

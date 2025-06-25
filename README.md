@@ -1,4 +1,4 @@
-<h1 align="center" style="font-weight: bold;">OS - MANAGER 💻</h1>
+<h1 align="center" style="font-weight: bold;">gearflow-api 💻</h1>
 
 <p align="center">
  <a href="#tech">Tecnologias</a> • 
@@ -41,7 +41,7 @@ Para testar esse projeto você precisa ter instalado:
 Para clonar o projeto.
 
 ```bash
-git clone https://github.com/g-sadrack/os-manager.git
+git clone https://github.com/g-sadrack/gearflow-api.git
 ```
 
 <h3>Starting</h3>
@@ -58,7 +58,7 @@ Caso tenha usado a imagem docker, na pasta raiz do projeto execute o seguinte co
 Caso tenha escolhido executar o projeto por linha de comando, execute o seguinte comando:
 
 ```bash
-cd os-manager
+cd gearflow-api
 mvn spring-boot:run
 ```
 <h3>Em execução</h3>
@@ -95,7 +95,7 @@ Um agradecimento especial para os colaboradores desse projeto.
 
 Se você tiver interesse em participar do projeto, você pode clonar esse projeto e realizar uma implementação:
 
-1. `git clone https://github.com/g-sadrack/os-manager`
+1. `git clone https://github.com/g-sadrack/gearflow-api.git`
 2. `git checkout -b feature/NAME`
 3. Siga os padrões de commit
 4. Abra um Pull Request e explique o problema resolvido ou a funcionalidade criada. Caso existam modificações visuais, anexe capturas de tela e aguarde a revisão!
