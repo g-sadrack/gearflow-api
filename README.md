@@ -13,19 +13,28 @@
 
 <h2 id="technologies">💻 Tecnologias</h2>
 
-- Java 17
-- MySQL
+- Java 24
+- MySQL 8
+- Spring Boot 3.5.3
 
 
 <h2 id="started">🚀 Iniciando o Projeto</h2>
 
-Para iniciar o projeto você porde usar alguma IDE de sua preferencia ou na pasta do projeto usar a linha de comando.
-<h3>Pré-requisitos</h3>
+Para iniciar o projeto você pode executar utilizando o docker compose ou por linha de comando / IDE de su preferência.
+
+
+<h3>Executando por docker compose (<strong><i>recomendado</i></strong>)</h3>
+
+Para executar o projeto, é necessário que tenha o docker instalado em seu computador.
+
+<h3>Executando por linha de comando</h3>
+
+<h4> Dependências</h4>
 
 Para testar esse projeto você precisa ter instalado: 
 
-- [Java 17](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html)
-- [MySQL](https://www.mysql.com/downloads/)
+- [Java 24](https://www.oracle.com/br/java/technologies/downloads/)
+- [MySQL 8](https://www.mysql.com/downloads/)
 
 <h3>Clonar</h3>
 
@@ -39,10 +48,22 @@ git clone https://github.com/g-sadrack/os-manager.git
 
 Para iniciar o projeto.
 
+<h4>Executando por docker compose</h4>
+Caso tenha usado a imagem docker, na pasta raiz do projeto execute o seguinte comando:
+
+```./update.sh```
+
+---
+<h4>Executando por linha de comando</h4>
+Caso tenha escolhido executar o projeto por linha de comando, execute o seguinte comando:
+
 ```bash
 cd os-manager
 mvn spring-boot:run
 ```
+<h3>Em execução</h3>
+
+Para ver o projeto em execução, basta acessar o seguinte endereço: [http://localhost:8080](http://localhost:8080) ou acessar a documentação com swagger: [http://localhost:8080/swagger-ui/](http://localhost:8080/swagger-ui/)
 
 <h2 id="colab">🤝 Colaboradores</h2>
 
