@@ -12,10 +12,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 		)
 )
 @SpringBootApplication
-public class GearflowpiApplication {
+public class GearflowApiApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(GearflowpiApplication.class, args);
+		SpringApplication.run(GearflowApiApplication.class, args);
 	}
 
 }

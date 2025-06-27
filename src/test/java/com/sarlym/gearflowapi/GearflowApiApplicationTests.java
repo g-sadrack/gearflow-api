@@ -5,11 +5,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 
 @SpringBootTest
-class GearflowpiApplicationTests {
+class GearflowApiApplicationTests {
 
 	@Test
 	void contextLoads() {
-		GearflowpiApplication.main(new String[]{});
+		GearflowApiApplication.main(new String[]{});
 	}
 
 }
