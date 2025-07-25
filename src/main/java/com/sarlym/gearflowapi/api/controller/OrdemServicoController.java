@@ -87,9 +87,11 @@ public class OrdemServicoController {
             @RequestParam(required = false) Status status,
             @RequestParam(required = false) Long veiculoId,
             @RequestParam(required = false) @DateTimeFormat(iso = ISO.DATE_TIME) LocalDateTime dataInicio,
-            @RequestParam(required = false) @DateTimeFormat(iso = ISO.DATE_TIME) LocalDateTime dataFim) {
+            @RequestParam(required = false) @DateTimeFormat(iso = ISO.DATE_TIME) LocalDateTime dataFim,
+            @RequestParam(required = false) String nomeProprietario
+            ) {
         List<OrdemServico> ordens = ordemServicoService.buscaComFiltros(numeroOs, status, veiculoId, dataInicio,
-                dataFim);
+                dataFim, nomeProprietario);
         return ordemServicoMapper.modeloListaParaListaDTOResumo(ordens);
     }
 

@@ -11,6 +11,6 @@ import com.sarlym.gearflowapi.domain.model.OrdemServico;
 @Repository
 public interface OrdemServicoRepositoryQuerys {
 
-    List<OrdemServico> find(String numero_os, Status status, Long veiculoId, LocalDateTime dataInicio, LocalDateTime dataFim);
+    List<OrdemServico> find(String numero_os, Status status, Long veiculoId, LocalDateTime dataInicio, LocalDateTime dataFim, String nomeProprietario);
     
 }

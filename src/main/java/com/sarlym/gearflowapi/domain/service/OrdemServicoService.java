@@ -55,8 +55,8 @@ public class OrdemServicoService {
     }
 
     public List<OrdemServico> buscaComFiltros(String numeroOs, Status status, Long veiculoId,
-            LocalDateTime dataInicio, LocalDateTime dataFim) {
-        return ordemServicoRepository.find(numeroOs, status, veiculoId, dataInicio, dataFim);
+            LocalDateTime dataInicio, LocalDateTime dataFim, String nomeProprietario) {
+        return ordemServicoRepository.find(numeroOs, status, veiculoId, dataInicio, dataFim, nomeProprietario);
     }
 
     public List<OrdemServico> buscaListaAtivos() {
