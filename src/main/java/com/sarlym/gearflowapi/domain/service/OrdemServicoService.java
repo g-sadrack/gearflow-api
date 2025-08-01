@@ -16,6 +16,7 @@ import com.sarlym.gearflowapi.api.dto.request.OrdemServicoRequest;
 import com.sarlym.gearflowapi.api.dto.request.PecaOrdemServicoRequest;
 import com.sarlym.gearflowapi.api.dto.request.ServicoPrestadoRequest;
 import com.sarlym.gearflowapi.domain.exception.EntidadeNaoEncontradaException;
+import com.sarlym.gearflowapi.domain.model.Cliente;
 import com.sarlym.gearflowapi.domain.model.Mecanico;
 import com.sarlym.gearflowapi.domain.model.OrdemServico;
 import com.sarlym.gearflowapi.domain.model.Produto;
@@ -28,23 +29,25 @@ import com.sarlym.gearflowapi.domain.repositories.OrdemServicoRepository;
 @Service
 public class OrdemServicoService {
 
-    private OrdemServicoRepository ordemServicoRepository;
-    private MecanicoService mecanicoService;
-    private VeiculoService veiculoService;
-    private OrdemServicoMapper ordemServicoMapper;
-    private ServicoService servicoService;
-    private ProdutoService produtoService;
+    private final OrdemServicoRepository ordemServicoRepository;
+    private final MecanicoService mecanicoService;
+    private final VeiculoService veiculoService;
+    private final OrdemServicoMapper ordemServicoMapper;
+    private final ServicoService servicoService;
+    private final ProdutoService produtoService;
+    private final ClienteLookupService clienteLookupService;
 
     public OrdemServicoService(OrdemServicoRepository ordemServicoRepository, MecanicoService mecanicoService,
             VeiculoService veiculoService, ClienteService clienteService, OrdemServicoMapper ordemServicoMapper,
             ServicoService servicoService,
-            ProdutoService produtoService) {
+            ProdutoService produtoService, ClienteLookupService clienteLookupService) {
         this.ordemServicoRepository = ordemServicoRepository;
         this.mecanicoService = mecanicoService;
         this.veiculoService = veiculoService;
         this.ordemServicoMapper = ordemServicoMapper;
         this.servicoService = servicoService;
         this.produtoService = produtoService;
+        this.clienteLookupService = clienteLookupService;
     }
 
     @Transactional(readOnly = true)
@@ -166,6 +169,12 @@ public class OrdemServicoService {
         }
 
         ordemServico.setValorTotal(valorTotal);
+    }
+
+        public List<OrdemServico> listarUltimasOrdensServico(Long id) {
+        Cliente cliente = clienteLookupService.buscar(id);
+        List<OrdemServico> ordensServico = buscaComFiltros(null, null, null, null, null, cliente.getNome());
+        return ordensServico;
     }
 
 }

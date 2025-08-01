@@ -9,9 +9,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import com.sarlym.gearflowapi.api.dto.mapper.ClienteMapper;
+import com.sarlym.gearflowapi.api.dto.mapper.OrdemServicoMapper;
 import com.sarlym.gearflowapi.api.dto.request.ClienteRequest;
 import com.sarlym.gearflowapi.api.dto.response.ClienteDTO;
+import com.sarlym.gearflowapi.api.dto.response.OrdemServicoDTO;
+import com.sarlym.gearflowapi.api.dto.response.OrdemServicoResumo;
+import com.sarlym.gearflowapi.domain.model.OrdemServico;
 import com.sarlym.gearflowapi.domain.service.ClienteService;
+import com.sarlym.gearflowapi.domain.service.OrdemServicoService;
 
 import java.util.List;
 
@@ -21,11 +26,15 @@ import java.util.List;
 public class ClienteController {
 
     private final ClienteService clienteService;
+    private final OrdemServicoService ordemServicoService;
     private final ClienteMapper clienteMapper;
+    private final OrdemServicoMapper ordemServicoMapper;
 
-    public ClienteController(ClienteService clienteService, ClienteMapper clienteMapper) {
+    public ClienteController(ClienteService clienteService, ClienteMapper clienteMapper, OrdemServicoService ordemServicoService, OrdemServicoMapper ordemServicoMapper) {
         this.clienteService = clienteService;
         this.clienteMapper = clienteMapper;
+        this.ordemServicoService = ordemServicoService;
+        this.ordemServicoMapper = ordemServicoMapper;
     }
 
     @Operation(summary = "Realiza busca de cliente por ID", description = "Busca um cliente no sistema utilizando o ID como parametro.", method = "GET")
@@ -50,6 +59,11 @@ public class ClienteController {
         return clienteMapper.modelListaParaDTOLista(clienteService.clientes());
     }
 
+    @GetMapping("/{id}/ordens-servico")
+    public List<OrdemServicoResumo> listarUltimasOrdensServico(@PathVariable(value = "id") Long id) {
+        return ordemServicoMapper.modeloListaParaListaDTOResumo(ordemServicoService.listarUltimasOrdensServico(id));
+    }
+    
     @Operation(summary = "Realiza cadastro de cliente", description = "Cadastra no sistema uma pessoa ao passar o nome, e-mail e telefone.", method = "POST")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Cadastro realizado com sucesso"),
