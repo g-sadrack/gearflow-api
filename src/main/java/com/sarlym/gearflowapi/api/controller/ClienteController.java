@@ -12,9 +12,7 @@ import com.sarlym.gearflowapi.api.dto.mapper.ClienteMapper;
 import com.sarlym.gearflowapi.api.dto.mapper.OrdemServicoMapper;
 import com.sarlym.gearflowapi.api.dto.request.ClienteRequest;
 import com.sarlym.gearflowapi.api.dto.response.ClienteDTO;
-import com.sarlym.gearflowapi.api.dto.response.OrdemServicoDTO;
 import com.sarlym.gearflowapi.api.dto.response.OrdemServicoResumo;
-import com.sarlym.gearflowapi.domain.model.OrdemServico;
 import com.sarlym.gearflowapi.domain.service.ClienteService;
 import com.sarlym.gearflowapi.domain.service.OrdemServicoService;
 
@@ -100,5 +98,4 @@ public class ClienteController {
             @Parameter(name = "id", description = "ID único do cliente", required = true, example = "1") @PathVariable(value = "id") Long id) {
         clienteService.deletarCliente(id);
     }
-
 }
