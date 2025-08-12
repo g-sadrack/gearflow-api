@@ -33,12 +33,12 @@ public class Cliente {
     @ToString.Exclude
     private List<Veiculo> veiculos = new ArrayList<>();
 
-    public void adicionarVeiculo(Veiculo veiculo) {
+    public void associarVeiculo(Veiculo veiculo) {
         veiculos.add(veiculo);
         veiculo.setProprietario(this);
     }
     
-    public void removerVeiculo(Veiculo veiculo) {
+    public void desassociarVeiculo(Veiculo veiculo) {
         veiculos.remove(veiculo);
         veiculo.setProprietario(null);
     }

@@ -5,10 +5,13 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import com.sarlym.gearflowapi.api.dto.mapper.ClienteMapper;
+import com.sarlym.gearflowapi.api.dto.mapper.VeiculoMapper;
 import com.sarlym.gearflowapi.api.dto.request.ClienteRequest;
+import com.sarlym.gearflowapi.api.dto.request.VeiculoRequest;
 import com.sarlym.gearflowapi.domain.exception.ClienteException;
 import com.sarlym.gearflowapi.domain.exception.EmailJaExistenteException;
 import com.sarlym.gearflowapi.domain.model.Cliente;
+import com.sarlym.gearflowapi.domain.model.Veiculo;
 import com.sarlym.gearflowapi.domain.repositories.ClienteRepository;
 
 import java.util.List;
@@ -18,10 +21,14 @@ public class ClienteService {
 
     private final ClienteMapper clienteMapper;
     private final ClienteRepository clienteRepository;
+    private final VeiculoService veiculoService;
+    private final VeiculoMapper veiculoMapper;
 
-    public ClienteService(ClienteRepository clienteRepository, ClienteMapper clienteMapper) {
+    public ClienteService(ClienteRepository clienteRepository, ClienteMapper clienteMapper, VeiculoMapper veiculoMapper, VeiculoService veiculoService) {
         this.clienteRepository = clienteRepository;
         this.clienteMapper = clienteMapper;
+        this.veiculoMapper = veiculoMapper;
+        this.veiculoService = veiculoService;
     }
 
     public Cliente buscarClienteOuErro(Long id) {
@@ -54,5 +61,14 @@ public class ClienteService {
         Cliente cliente = buscarClienteOuErro(id);
         clienteRepository.delete(cliente);
         clienteRepository.flush();
+    }
+
+    @Transactional
+    public void associarVeiculo(Long id, VeiculoRequest veiculoRequest) {
+        Cliente cliente = buscarClienteOuErro(id);
+        Veiculo veiculo = veiculoService.cadastrarVeiculo(veiculoRequest);
+        veiculo.setProprietario(cliente);
+        cliente.associarVeiculo(veiculo);
+        clienteRepository.save(cliente);
     }
 }

@@ -10,9 +10,12 @@ import org.springframework.web.bind.annotation.*;
 
 import com.sarlym.gearflowapi.api.dto.mapper.ClienteMapper;
 import com.sarlym.gearflowapi.api.dto.mapper.OrdemServicoMapper;
+import com.sarlym.gearflowapi.api.dto.mapper.VeiculoMapper;
 import com.sarlym.gearflowapi.api.dto.request.ClienteRequest;
+import com.sarlym.gearflowapi.api.dto.request.VeiculoRequest;
 import com.sarlym.gearflowapi.api.dto.response.ClienteDTO;
 import com.sarlym.gearflowapi.api.dto.response.OrdemServicoResumo;
+import com.sarlym.gearflowapi.api.dto.response.VeiculoDTO;
 import com.sarlym.gearflowapi.domain.service.ClienteService;
 import com.sarlym.gearflowapi.domain.service.OrdemServicoService;
 
@@ -27,12 +30,14 @@ public class ClienteController {
     private final OrdemServicoService ordemServicoService;
     private final ClienteMapper clienteMapper;
     private final OrdemServicoMapper ordemServicoMapper;
+    private final VeiculoMapper veiculoMapper;
 
-    public ClienteController(ClienteService clienteService, ClienteMapper clienteMapper, OrdemServicoService ordemServicoService, OrdemServicoMapper ordemServicoMapper) {
+    public ClienteController(ClienteService clienteService, ClienteMapper clienteMapper, OrdemServicoService ordemServicoService, OrdemServicoMapper ordemServicoMapper, VeiculoMapper veiculoMapper) {
         this.clienteService = clienteService;
         this.clienteMapper = clienteMapper;
         this.ordemServicoService = ordemServicoService;
         this.ordemServicoMapper = ordemServicoMapper;
+        this.veiculoMapper = veiculoMapper;
     }
 
     @Operation(summary = "Realiza busca de cliente por ID", description = "Busca um cliente no sistema utilizando o ID como parametro.", method = "GET")
@@ -98,4 +103,10 @@ public class ClienteController {
             @Parameter(name = "id", description = "ID único do cliente", required = true, example = "1") @PathVariable(value = "id") Long id) {
         clienteService.deletarCliente(id);
     }
+
+    @PostMapping("/{id}/veiculo")
+    public VeiculoDTO associarVeiculo(@PathVariable(value = "id") Long id, @RequestBody(required = true) VeiculoRequest veiculoRequest) {
+        return veiculoMapper.modeloParaDTO(clienteService.associarVeiculo(id, veiculoRequest));
+    }
+
 }
