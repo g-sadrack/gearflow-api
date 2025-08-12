@@ -19,7 +19,7 @@ public class VeiculoMapper {
         return modelMapper.map(veiculoRequest, Veiculo.class);
     }
 
-    public VeiculoDTO modeloParaDTO(Object veiculo) {
+    public VeiculoDTO modeloParaDTO(Veiculo veiculo) {
         return modelMapper.map(veiculo, VeiculoDTO.class);
     }
 

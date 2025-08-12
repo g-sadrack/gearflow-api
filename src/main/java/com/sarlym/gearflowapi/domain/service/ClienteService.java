@@ -5,7 +5,6 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import com.sarlym.gearflowapi.api.dto.mapper.ClienteMapper;
-import com.sarlym.gearflowapi.api.dto.mapper.VeiculoMapper;
 import com.sarlym.gearflowapi.api.dto.request.ClienteRequest;
 import com.sarlym.gearflowapi.api.dto.request.VeiculoRequest;
 import com.sarlym.gearflowapi.domain.exception.ClienteException;
@@ -22,12 +21,11 @@ public class ClienteService {
     private final ClienteMapper clienteMapper;
     private final ClienteRepository clienteRepository;
     private final VeiculoService veiculoService;
-    private final VeiculoMapper veiculoMapper;
 
-    public ClienteService(ClienteRepository clienteRepository, ClienteMapper clienteMapper, VeiculoMapper veiculoMapper, VeiculoService veiculoService) {
+    public ClienteService(ClienteRepository clienteRepository, ClienteMapper clienteMapper,
+            VeiculoService veiculoService) {
         this.clienteRepository = clienteRepository;
         this.clienteMapper = clienteMapper;
-        this.veiculoMapper = veiculoMapper;
         this.veiculoService = veiculoService;
     }
 
@@ -64,11 +62,13 @@ public class ClienteService {
     }
 
     @Transactional
-    public void associarVeiculo(Long id, VeiculoRequest veiculoRequest) {
+    public Cliente associarNovoVeiculo(Long id, VeiculoRequest veiculoRequest) {
         Cliente cliente = buscarClienteOuErro(id);
         Veiculo veiculo = veiculoService.cadastrarVeiculo(veiculoRequest);
+
         veiculo.setProprietario(cliente);
         cliente.associarVeiculo(veiculo);
-        clienteRepository.save(cliente);
+
+        return clienteRepository.save(cliente);
     }
 }
