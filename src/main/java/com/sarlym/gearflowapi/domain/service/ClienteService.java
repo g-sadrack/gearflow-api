@@ -68,7 +68,7 @@ public class ClienteService {
 
         veiculo.setProprietario(cliente);
         cliente.associarVeiculo(veiculo);
-
+        
         return clienteRepository.save(cliente);
     }
 }

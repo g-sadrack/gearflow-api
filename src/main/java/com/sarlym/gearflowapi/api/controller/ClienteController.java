@@ -101,7 +101,7 @@ public class ClienteController {
         clienteService.deletarCliente(id);
     }
 
-    @PostMapping("/{id}/veiculo")
+    @PostMapping("/{id}/associar-veiculo")
     public ClienteDTO associarVeiculo(@PathVariable(value = "id") Long id,
             @RequestBody(required = true) VeiculoRequest veiculoRequest) {
         return clienteMapper.modelParaDTO(clienteService.associarNovoVeiculo(id, veiculoRequest));
